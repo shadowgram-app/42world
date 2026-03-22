@@ -652,6 +652,18 @@
   .btn-share.save:hover { background: #0D47A1; }
   .btn-share.restart { background: transparent; border: 2px solid var(--dark); color: var(--dark); }
   .btn-share.restart:hover { background: #f0ece5; }
+  .btn-download {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 16px 20px; border-radius: 14px; border: none;
+    font-size: 15px; font-weight: 800; cursor: pointer; font-family: inherit;
+    background: linear-gradient(135deg, #B8860B, #D4A017);
+    color: #fff; box-shadow: 0 4px 20px rgba(184,134,11,.4);
+    transition: transform .15s, box-shadow .15s; letter-spacing: .02em;
+    text-decoration: none;
+  }
+  .btn-download:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(184,134,11,.5); }
+  .beta-badge { display:inline-block; font-size:10px; font-weight:700; letter-spacing:1.5px; background:rgba(255,255,255,0.25); border-radius:4px; padding:2px 7px; margin-left:6px; vertical-align:middle; }
+  .download-section { margin: 0 -4px 8px; }
 
   /* ── Upsell tease ───────────────────────────────────────── */
   .upsell-card {
@@ -905,6 +917,16 @@
       <div class="big5-bars" id="big5-bars"></div>
     </div>
 
+    <!-- Download -->
+    <div class="share-section download-section">
+      <div class="share-title">📄 리포트 무료 다운로드 <span style="font-size:10px;color:#B8860B;font-weight:700;letter-spacing:1px;">BETA</span></div>
+      <div class="share-buttons">
+        <button class="btn-download" id="btn-pdf-download" onclick="downloadPDF()">
+          ⬇️ 우리 커플 리포트 PDF 받기 <span class="beta-badge">무료</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Share -->
     <div class="share-section">
       <div class="share-title">📲 공유하기</div>
@@ -938,7 +960,7 @@
         <div class="upsell-item">여행 / 돈 / 미래 계획에서 각자의 방식</div>
         <div class="upsell-item">우리 조합의 숨겨진 슈퍼파워</div>
       </div>
-      <button class="btn-upsell" onclick="goUpsell()">커플 리포트 보러가기 →</button>
+      <button class="btn-upsell" onclick="downloadPDF()">⬇️ 커플 리포트 PDF 무료 받기 →</button>
     </div>
 
     <div class="footer">
@@ -1586,8 +1608,27 @@ function copyLink() {
   });
 }
 
+function downloadPDF() {
+  var typeA = getType(state.scoresA);
+  var typeB = getType(state.scoresB);
+  // 정방향 먼저, 없으면 역방향 시도
+  var keys = [typeA + '_' + typeB, typeB + '_' + typeA];
+  var found = null;
+  for (var i = 0; i < keys.length; i++) {
+    // pdfs 폴더 기준 경로
+    found = keys[i];
+    break;
+  }
+  var pdfUrl = '/couple/pdfs/' + found + '.pdf';
+  var a = document.createElement('a');
+  a.href = pdfUrl;
+  a.download = found + '_KR.pdf';
+  a.click();
+  showToast('리포트 다운로드 시작! 베타 기간 무료 제공 중 🎉');
+}
+
 function goUpsell() {
-  showToast('커플 리포트 준비 중이에요! 곧 오픈합니다 ✨');
+  downloadPDF();
 }
 
 /* ── 카카오톡 공유 (Web Share API + 클립보드 fallback) ───────*/
