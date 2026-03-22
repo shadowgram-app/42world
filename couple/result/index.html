@@ -53,6 +53,13 @@ body { font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-ser
 .btn-buy:hover { opacity:.85; }
 .btn-retry { display:block; padding:13px; background:rgba(184,134,11,0.07); border:1px solid var(--border); border-radius:11px; color:var(--silver); font-size:14px; font-weight:700; text-decoration:none; cursor:pointer; transition:color .2s; text-align:center; margin-top:10px; }
 .btn-retry:hover { color:var(--gold-l); }
+.share-row { display:flex; gap:10px; margin-top:10px; }
+.btn-share { flex:1; padding:13px; background:rgba(184,134,11,0.07); border:1px solid var(--border); border-radius:11px; color:var(--silver); font-size:13px; font-weight:700; cursor:pointer; transition:color .2s, border-color .2s; text-align:center; font-family:inherit; }
+.btn-share:hover { color:var(--gold-l); border-color:var(--gold-l); }
+.names-row { font-size:13px; color:var(--silver); margin-top:8px; }
+.names-row strong { color:#fff; }
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1A2030; border:1px solid var(--border); color:var(--text); padding:12px 24px; border-radius:24px; font-size:13px; z-index:999; opacity:0; transition:opacity .3s; pointer-events:none; }
+.toast.show { opacity:1; }
 
 /* footer */
 footer { border-top:1px solid var(--border); padding:28px 20px; text-align:center; }
@@ -70,6 +77,7 @@ footer { border-top:1px solid var(--border); padding:28px 20px; text-align:cente
 
 <div id="loading">유형 분석 중...</div>
 <div class="wrap" id="main" style="display:none"></div>
+<div class="toast" id="toast"></div>
 
 <footer>
   <div class="footer-links">
@@ -80,7 +88,7 @@ footer { border-top:1px solid var(--border); padding:28px 20px; text-align:cente
   </div>
   <div class="footer-biz">
     상호: 온유컴퍼니MINDWAYS8 · 사업자등록번호: 533-62-00508<br>
-    shadowgram.org · © 2025 Shadowgram
+    42world.kr · © 2025 Shadowgram
   </div>
 </footer>
 
@@ -135,10 +143,25 @@ var COMBOS = {
   'LEADER×LEADER': {title:'더블 리더',       sub:'함께 세상을 바꾸는 커플',                 hook:'두 리더가 만났어요. 엄청난 에너지지만, 방향이 같아야 해요.',            tension:'누가 결정권을 갖는지를 두고 충돌이 클 수 있어요', magic:'두 사람이 합을 맞추면 세상 어떤 목표도 이룰 수 있음'}
 };
 
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
+}
+function shareResult(tA,tB,na,nb){
+  var url='https://42world.kr/couple/result/?a='+tA+'&b='+tB;
+  var title='우리 커플 유형 결과 🔮';
+  var text=(na&&nb?na+' & '+nb+' 커플 유형: ':'')+tA+' × '+tB;
+  if(navigator.share){navigator.share({title:title,text:text,url:url}).catch(function(){});}
+  else{navigator.clipboard&&navigator.clipboard.writeText(url).then(function(){showToast('링크가 복사됐어요! 연인에게 공유해보세요 💑');}).catch(function(){showToast('링크: '+url);});}
+}
+
 (function(){
   var params = new URLSearchParams(window.location.search);
   var tA = (params.get('a')||'').toUpperCase();
   var tB = (params.get('b')||'').toUpperCase();
+  var na = params.get('na')||'';
+  var nb = params.get('nb')||'';
 
   var validTypes = ['SPARK','VISION','STEADY','PLAYER','HARMONY','SOUL','LOGIC','LEADER'];
   if (!validTypes.includes(tA) || !validTypes.includes(tB)) {
@@ -161,6 +184,7 @@ var COMBOS = {
   // 상단
   html += '<div class="result-head">';
   html += '<div class="chips"><span class="chip">' + tA + '</span><span style="color:var(--silver);line-height:26px;font-size:13px;">×</span><span class="chip">' + tB + '</span></div>';
+  if(na && nb) html += '<div class="names-row"><strong>' + na + '</strong> &amp; <strong>' + nb + '</strong></div>';
   html += '<div class="r-title">' + c.title + '</div>';
   html += '<div class="r-sub">' + c.sub + '</div>';
   html += '<div class="r-hook">' + c.hook + '</div>';
@@ -197,7 +221,10 @@ var COMBOS = {
   html += '<div class="cta-price-note">한 번 구매 · PDF 즉시 다운로드</div>';
   html += '<a class="btn-buy" href="/couple/shop/?a=' + tA + '&b=' + tB + '">지금 구매하기 →</a>';
   html += '</div>';
-  html += '<a class="btn-retry" href="/couple/test/">테스트 다시 하기</a>';
+  html += '<div class="share-row">';
+  html += '<button class="btn-share" onclick="shareResult(\''+tA+'\',\''+tB+'\',\''+na+'\',\''+nb+'\')">🔗 결과 공유하기</button>';
+  html += '<a class="btn-share" href="/couple/test/" style="text-decoration:none;">🔄 다시 하기</a>';
+  html += '</div>';
 
   document.getElementById('main').innerHTML = html;
   document.getElementById('loading').style.display = 'none';
