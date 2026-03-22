@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>커플 유형 결과 — 42world</title>
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --bg:#0F121E; --card:#1A2030;
+  --gold:#B8860B; --gold-l:#D4A017;
+  --silver:#8899AA; --text:#E8E4DC;
+  --border:rgba(184,134,11,0.2);
+}
+body { font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+.nav { display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:52px; background:rgba(15,18,30,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:99; }
+.nav a { color:var(--gold-l); font-weight:900; font-size:17px; text-decoration:none; }
+
+.wrap { max-width:560px; margin:0 auto; padding:40px 20px 80px; }
+
+/* header */
+.result-head { text-align:center; margin-bottom:36px; }
+.chips { display:inline-flex; gap:8px; margin-bottom:16px; }
+.chip { padding:5px 14px; border-radius:20px; font-size:12px; font-weight:700; background:rgba(184,134,11,0.12); border:1px solid var(--border); color:var(--gold-l); }
+.r-title { font-size:28px; font-weight:900; color:#fff; margin-bottom:6px; }
+.r-sub { font-size:15px; color:var(--gold-l); font-weight:700; margin-bottom:12px; }
+.r-hook { font-size:14px; color:rgba(232,228,220,0.7); line-height:1.8; }
+
+/* cards */
+.cards-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:28px 0; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px 16px; }
+.card-ico { font-size:24px; margin-bottom:8px; }
+.card-lbl { font-size:11px; font-weight:700; color:var(--silver); letter-spacing:1px; margin-bottom:6px; }
+.card-txt { font-size:13px; color:rgba(232,228,220,0.85); line-height:1.65; }
+
+/* preview section */
+.preview-block { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:24px; }
+.preview-block h3 { font-size:13px; font-weight:700; color:var(--silver); letter-spacing:1px; margin-bottom:14px; }
+.preview-block p { font-size:14px; color:rgba(232,228,220,0.75); line-height:1.8; }
+.blur-wrap { position:relative; margin-top:12px; }
+.blur-txt { font-size:14px; color:rgba(232,228,220,0.6); line-height:1.8; filter:blur(5px); user-select:none; }
+.blur-over { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(15,18,30,0.6); border-radius:10px; }
+.blur-over span { font-size:13px; color:var(--silver); margin-bottom:10px; }
+
+/* CTA */
+.cta-box { background:rgba(184,134,11,0.07); border:1px solid var(--border); border-radius:16px; padding:28px 20px; text-align:center; margin-bottom:16px; }
+.cta-box h2 { font-size:18px; font-weight:900; color:#fff; margin-bottom:8px; }
+.cta-box p { font-size:13px; color:var(--silver); line-height:1.7; margin-bottom:20px; }
+.cta-price { font-size:22px; font-weight:900; color:var(--gold-l); margin-bottom:4px; }
+.cta-price s { font-size:14px; color:var(--silver); margin-right:8px; }
+.cta-price-note { font-size:11px; color:var(--silver); margin-bottom:20px; }
+.btn-buy { display:block; padding:17px; background:linear-gradient(135deg,#B8860B,#D4A017); border:none; border-radius:13px; color:#0F121E; font-size:16px; font-weight:900; text-decoration:none; cursor:pointer; transition:opacity .2s; }
+.btn-buy:hover { opacity:.85; }
+.btn-retry { display:block; padding:13px; background:rgba(184,134,11,0.07); border:1px solid var(--border); border-radius:11px; color:var(--silver); font-size:14px; font-weight:700; text-decoration:none; cursor:pointer; transition:color .2s; text-align:center; margin-top:10px; }
+.btn-retry:hover { color:var(--gold-l); }
+
+/* footer */
+footer { border-top:1px solid var(--border); padding:28px 20px; text-align:center; }
+.footer-links { display:flex; justify-content:center; flex-wrap:wrap; gap:14px; margin-bottom:12px; }
+.footer-links a { font-size:12px; color:var(--silver); text-decoration:none; }
+.footer-links a:hover { color:var(--gold-l); }
+.footer-biz { font-size:11px; color:rgba(136,153,170,0.5); line-height:1.8; }
+
+#loading { text-align:center; padding:80px 20px; color:var(--silver); }
+</style>
+</head>
+<body>
+
+<nav class="nav"><a href="/">42world</a></nav>
+
+<div id="loading">유형 분석 중...</div>
+<div class="wrap" id="main" style="display:none"></div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/couple/shop/">유료 리포트</a>
+    <a href="/legal/terms.html">이용약관</a>
+    <a href="/legal/privacy.html">개인정보처리방침</a>
+    <a href="/legal/refund.html">환불정책</a>
+  </div>
+  <div class="footer-biz">
+    상호: 온유컴퍼니MINDWAYS8 · 사업자등록번호: 533-62-00508<br>
+    shadowgram.org · © 2025 Shadowgram
+  </div>
+</footer>
+
+<script>
+var TYPE_DESCS = {
+  SPARK:  {name:'SPARK',  emoji:'✨', desc:'새로운 아이디어와 가능성으로 빛나는 유형. 에너지가 넘치고 사람들에게 영감을 줘요.'},
+  VISION: {name:'VISION', emoji:'🔭', desc:'깊은 통찰력과 직관을 가진 유형. 미래를 내다보고 본질을 꿰뚫어요.'},
+  STEADY: {name:'STEADY', emoji:'⚓', desc:'안정적이고 신뢰할 수 있는 유형. 소중한 사람들을 끝까지 지켜요.'},
+  PLAYER: {name:'PLAYER', emoji:'🎯', desc:'지금 이 순간을 최대한 즐기는 유형. 어디서든 활기를 불어넣어요.'},
+  HARMONY:{name:'HARMONY',emoji:'🌸', desc:'따뜻한 공감과 포용으로 관계를 빛내는 유형. 모두를 환영해요.'},
+  SOUL:   {name:'SOUL',   emoji:'🌙', desc:'깊은 내면과 예민한 감수성을 가진 유형. 보이지 않는 것에서 아름다움을 찾아요.'},
+  LOGIC:  {name:'LOGIC',  emoji:'🧩', desc:'논리적이고 분석적인 유형. 복잡한 문제를 명확하게 해결해요.'},
+  LEADER: {name:'LEADER', emoji:'🦁', desc:'목표 지향적이고 결단력 있는 유형. 방향을 제시하고 이끌어요.'}
+};
+
+var COMBOS = {
+  'SPARK×SPARK':   {title:'불꽃 더블',       sub:'아이디어가 끝없이 넘치는 커플',           hook:'둘 다 새로운 가능성에 눈이 빛나요. 함께라면 세상이 놀이터.',            tension:'실행 없이 아이디어만 쌓일 수 있어요',        magic:'서로의 상상력에 진심으로 흥분하는 유일한 사람'},
+  'SPARK×VISION':  {title:'빛과 나침반',     sub:'영감과 통찰이 만나는 커플',               hook:'당신의 에너지가 그의 깊은 통찰에 불을 붙여요.',                       tension:'VISION이 혼자만의 시간을 원할 때 충돌',      magic:'서로가 각자의 맹점을 채워주는 환상의 짝'},
+  'SPARK×STEADY':  {title:'가능성과 닻',     sub:'꿈과 현실을 함께 사는 커플',              hook:'SPARK가 띄우는 풍선을 STEADY가 땅에 묶어줘요.',                       tension:'변화 속도가 너무 달라서 피곤할 수 있어요',   magic:'STEADY 덕분에 SPARK의 아이디어가 실제로 이뤄짐'},
+  'SPARK×PLAYER':  {title:'에너지 폭발',     sub:'지금 이 순간을 최대치로 즐기는 커플',     hook:'둘이 함께라면 어디서든 축제예요.',                                    tension:'장기 계획이나 진지한 대화가 약해요',          magic:'함께면 어디서든 파티가 시작됨'},
+  'SPARK×HARMONY': {title:'무대와 빛',       sub:'함께 빛나고 함께 따뜻한 커플',            hook:'SPARK가 무대를 만들면 HARMONY가 모두를 환영해요.',                    tension:'HARMONY의 감정 중시 vs SPARK의 논리 중시',   magic:'가장 활기차고 따뜻한 분위기를 만드는 커플'},
+  'SPARK×SOUL':    {title:'바람과 별',       sub:'자유와 깊이가 공명하는 커플',             hook:'SPARK의 넓이와 SOUL의 깊이가 만나 우주가 생겨요.',                    tension:'SOUL의 예민함에 SPARK가 무심할 수 있어요',   magic:'서로의 다름을 경이롭게 바라봄'},
+  'SPARK×LOGIC':   {title:'아이디어 실험실', sub:'상상이 논리를 만나 폭발하는 커플',        hook:'SPARK가 던진 아이디어를 LOGIC이 해체하고 재조립해요.',                tension:'LOGIC이 너무 비판적으로 느껴질 수 있어요',   magic:'두 사람의 대화는 항상 뭔가 새로운 걸 만들어냄'},
+  'SPARK×LEADER':  {title:'비전 엔진',       sub:'꿈을 현실로 만드는 드림팀 커플',          hook:'SPARK가 가능성을 그리면 LEADER가 실행 계획을 세워요.',                tension:'리더십 충돌 — 누가 이끌지 싸울 수 있어요',   magic:'두 사람이 함께라면 못 이룰 목표가 없음'},
+  'VISION×VISION': {title:'두 개의 나침반',  sub:'가장 깊이 이해하는 커플',                 hook:'말하지 않아도 통하는 게 있어요. 가장 조용하고 가장 깊은 사랑.',         tension:'둘 다 속으로만 삭여 대화가 줄 수 있어요',    magic:'누구도 이해 못하는 서로의 내면을 완전히 이해함'},
+  'VISION×STEADY': {title:'깊이와 뿌리',     sub:'안정과 통찰이 조화로운 커플',             hook:'VISION의 통찰에 STEADY의 현실감이 더해져요.',                         tension:'VISION이 너무 추상적으로 느껴질 수 있어요',  magic:'STEADY가 있어 VISION의 꿈이 삶에 뿌리내림'},
+  'VISION×PLAYER': {title:'영혼과 현재',     sub:'깊이와 활력이 만나는 커플',               hook:'PLAYER의 활기가 VISION의 내면 세계에 생기를 불어넣어요.',             tension:'PLAYER의 즉흥성이 VISION에겐 불안할 수 있어요', magic:'VISION이 PLAYER의 진짜 모습을 가장 잘 이해함'},
+  'VISION×HARMONY':{title:'인사이트와 온기', sub:'깊은 이해와 따뜻함이 공존하는 커플',      hook:'VISION이 본질을 꿰뚫으면 HARMONY가 마음을 어루만져요.',               tension:'HARMONY가 갈등 회피로 솔직함이 줄 수 있어요', magic:'두 사람이 만들어내는 정서적 안전감이 최고'},
+  'VISION×SOUL':   {title:'두 개의 등불',    sub:'내면의 깊이를 함께 탐구하는 커플',        hook:'둘 다 보이지 않는 것에서 아름다움을 찾아요.',                          tension:'현실적인 것들을 둘 다 놓칠 수 있어요',        magic:'서로의 내면 세계를 진심으로 존중하는 드문 관계'},
+  'VISION×LOGIC':  {title:'통찰과 분석',     sub:'진리를 함께 탐구하는 커플',               hook:'VISION의 직관과 LOGIC의 분석이 진실에 가장 빠르게 닿아요.',           tension:'LOGIC이 감정 없이 느껴져 상처받을 수 있어요', magic:'두 사람의 지적 대화는 그 자체로 예술'},
+  'VISION×LEADER': {title:'전략 파트너',     sub:'장기 목표를 함께 그리는 커플',            hook:'VISION의 통찰을 LEADER가 전략으로 만들어요.',                         tension:'LEADER의 실행 압박이 VISION을 지치게 해요',  magic:'가장 강력한 장기 파트너십'},
+  'STEADY×STEADY': {title:'두 개의 닻',      sub:'가장 안정적이고 믿음직한 커플',           hook:'서로에게 세상에서 가장 안전한 사람이에요.',                            tension:'변화와 새로움이 부족할 수 있어요',            magic:'어떤 폭풍도 이 두 사람의 신뢰를 흔들지 못함'},
+  'STEADY×PLAYER': {title:'안정과 활기',     sub:'일상과 모험이 공존하는 커플',             hook:'STEADY의 안정된 일상에 PLAYER가 생기를 더해요.',                      tension:'PLAYER의 즉흥성이 STEADY를 불안하게 만들어요', magic:'STEADY 덕에 PLAYER가 집이라는 개념을 배움'},
+  'STEADY×HARMONY':{title:'따뜻한 집',       sub:'가장 안정적이고 따뜻한 커플',             hook:'둘 다 소중한 사람들을 지키는 걸 가장 중요하게 여겨요.',                tension:'갈등을 너무 피해서 문제가 쌓일 수 있어요',    magic:'집에 오면 항상 따뜻한 무언가가 있는 커플'},
+  'STEADY×SOUL':   {title:'안전한 공간',     sub:'예민한 마음이 쉬는 커플',                 hook:'STEADY의 일관성이 SOUL의 예민한 마음에 안전감을 줘요.',                tension:'SOUL이 더 깊은 대화를 원할 때 답답할 수 있어요', magic:'SOUL이 감정을 가장 편하게 꺼낼 수 있는 관계'},
+  'STEADY×LOGIC':  {title:'현실과 논리',     sub:'실용적으로 함께 성장하는 커플',           hook:'둘 다 감정보다 실제로 돌아가는 것에 집중해요.',                        tension:'감정 표현이 부족해서 멀어질 수 있어요',       magic:'서로 가장 신뢰할 수 있는 사람'},
+  'STEADY×LEADER': {title:'실행 파워',       sub:'계획을 완벽하게 실행하는 커플',           hook:'LEADER가 방향을 잡고 STEADY가 끝까지 실행해요.',                      tension:'LEADER가 너무 빠르게 몰아붙여 STEADY가 지쳐요', magic:'세운 목표는 반드시 이루는 커플'},
+  'PLAYER×PLAYER': {title:'더블 플레이',     sub:'삶 자체가 모험인 커플',                   hook:'둘이 함께면 모든 게 놀이가 돼요. 지루할 틈이 없어요.',                 tension:'진지한 대화나 장기 계획이 둘 다 어려워요',    magic:'서로를 가장 신나게 만드는 유일한 사람'},
+  'PLAYER×HARMONY':{title:'파티 호스트',     sub:'에너지와 따뜻함이 넘치는 커플',           hook:'PLAYER가 분위기를 달구면 HARMONY가 모두를 품어요.',                   tension:'진지한 순간에 둘 다 회피할 수 있어요',        magic:'가장 인기 있고 활기찬 커플'},
+  'PLAYER×SOUL':   {title:'빛과 그늘',       sub:'밝음과 깊음이 서로를 끌어당기는 커플',    hook:'PLAYER의 밝음이 SOUL의 그늘을 따뜻하게 채워요.',                      tension:'SOUL의 깊은 감정을 PLAYER가 가볍게 넘길 수 있어요', magic:'SOUL이 PLAYER의 진짜 내면을 발견함'},
+  'PLAYER×LOGIC':  {title:'행동과 분석',     sub:'즉흥과 논리가 부딪히는 커플',             hook:'PLAYER가 먼저 뛰어들면 LOGIC이 착지 지점을 계산해요.',                tension:'LOGIC이 너무 느리고 비판적으로 느껴질 수 있어요', magic:'두 사람이 팀이 되면 실행력과 정확도를 동시에'},
+  'PLAYER×LEADER': {title:'에너지와 방향',   sub:'활기차게 목표를 향해 달리는 커플',        hook:'PLAYER의 에너지를 LEADER가 올바른 방향으로 이끌어요.',                tension:'LEADER의 통제욕이 PLAYER의 자유를 억누를 수 있어요', magic:'가장 빠르고 역동적으로 목표를 달성하는 커플'},
+  'HARMONY×HARMONY':{title:'두 개의 태양',   sub:'세상에서 가장 따뜻한 커플',               hook:'둘 다 상대를 먼저 생각해요. 그 따뜻함이 서로를 녹여요.',               tension:'둘 다 양보하다 자신의 필요를 잃을 수 있어요', magic:'주변 사람들이 이 커플 곁에 있고 싶어하는 이유'},
+  'HARMONY×SOUL':  {title:'공감의 바다',     sub:'감정의 깊이를 함께 탐구하는 커플',        hook:'둘 다 감정 언어가 유창해요. 서로를 가장 잘 이해해요.',                 tension:'현실 문제보다 감정에 치우칠 수 있어요',       magic:'서로의 감정을 가장 정확하게 읽는 커플'},
+  'HARMONY×LOGIC': {title:'감성과 이성',     sub:'마음과 논리가 균형을 찾는 커플',          hook:'HARMONY의 공감이 LOGIC의 날카로운 분석을 부드럽게 해요.',             tension:'의사결정 방식이 달라서 충돌이 잦을 수 있어요', magic:'둘이 합치면 감성과 논리를 모두 갖춘 최강 팀'},
+  'HARMONY×LEADER':{title:'마음과 전략',     sub:'따뜻한 카리스마의 커플',                  hook:'LEADER의 방향감각에 HARMONY의 인간적 따뜻함이 더해져요.',             tension:'LEADER가 목표 중심일 때 HARMONY가 지쳐요',   magic:'사람을 움직이는 리더십을 함께 만들어냄'},
+  'SOUL×SOUL':     {title:'거울 영혼',       sub:'서로를 가장 깊이 이해하는 커플',          hook:'두 사람의 내면은 서로를 완벽한 거울처럼 비춰요.',                      tension:'둘 다 예민해서 상처가 깊어질 수 있어요',      magic:'세상에서 가장 깊은 감정적 연결'},
+  'SOUL×LOGIC':    {title:'감정과 논리',     sub:'마음과 이성이 균형을 찾는 커플',          hook:'SOUL의 깊은 감정과 LOGIC의 명확한 사고가 서로를 채워요.',              tension:'LOGIC의 냉정함이 SOUL을 깊이 상처낼 수 있어요', magic:'두 사람이 합치면 세상을 가장 잘 이해하는 팀'},
+  'SOUL×LEADER':   {title:'가치와 성과',     sub:'의미와 목표를 함께 추구하는 커플',        hook:'SOUL의 깊은 가치관이 LEADER의 방향에 의미를 더해요.',                  tension:'LEADER의 성과 중심이 SOUL을 지치게 해요',    magic:'가장 의미 있는 일을 함께 만들어가는 커플'},
+  'LOGIC×LOGIC':   {title:'두 개의 체스판',  sub:'서로를 가장 잘 이해하는 지적 커플',       hook:'말하지 않아도 논리가 통해요. 가장 효율적인 사랑.',                      tension:'감정 표현을 둘 다 어색해해서 거리감이 생길 수 있어요', magic:'세상 누구도 이해 못하는 서로의 사고방식을 완전히 이해함'},
+  'LOGIC×LEADER':  {title:'전략 동맹',       sub:'최고의 지적 파트너 커플',                 hook:'LOGIC의 분석과 LEADER의 실행이 만나면 최강이에요.',                   tension:'누가 옳은지를 두고 논쟁이 격해질 수 있어요',  magic:'두 사람이 합치면 어떤 문제도 풀 수 있음'},
+  'LEADER×LEADER': {title:'더블 리더',       sub:'함께 세상을 바꾸는 커플',                 hook:'두 리더가 만났어요. 엄청난 에너지지만, 방향이 같아야 해요.',            tension:'누가 결정권을 갖는지를 두고 충돌이 클 수 있어요', magic:'두 사람이 합을 맞추면 세상 어떤 목표도 이룰 수 있음'}
+};
+
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var tA = (params.get('a')||'').toUpperCase();
+  var tB = (params.get('b')||'').toUpperCase();
+
+  var validTypes = ['SPARK','VISION','STEADY','PLAYER','HARMONY','SOUL','LOGIC','LEADER'];
+  if (!validTypes.includes(tA) || !validTypes.includes(tB)) {
+    document.getElementById('loading').innerHTML = '유형 정보가 없어요. <a href="/couple/test/" style="color:var(--gold-l)">테스트 다시 하기</a>';
+    return;
+  }
+
+  var key = tA+'×'+tB;
+  var c = COMBOS[key] || COMBOS[tB+'×'+tA] || {
+    title:tA+' × '+tB, sub:'특별한 조합의 커플',
+    hook:'두 사람만의 고유한 케미가 있어요.',
+    tension:'서로의 차이를 이해하는 시간이 필요해요',
+    magic:'다름이 서로를 더 완전하게 만들어줘요'
+  };
+  var dA = TYPE_DESCS[tA] || {};
+  var dB = TYPE_DESCS[tB] || {};
+
+  var html = '';
+
+  // 상단
+  html += '<div class="result-head">';
+  html += '<div class="chips"><span class="chip">' + tA + '</span><span style="color:var(--silver);line-height:26px;font-size:13px;">×</span><span class="chip">' + tB + '</span></div>';
+  html += '<div class="r-title">' + c.title + '</div>';
+  html += '<div class="r-sub">' + c.sub + '</div>';
+  html += '<div class="r-hook">' + c.hook + '</div>';
+  html += '</div>';
+
+  // 긴장/케미
+  html += '<div class="cards-2">';
+  html += '<div class="card"><div class="card-ico">⚡</div><div class="card-lbl">긴장 포인트</div><div class="card-txt">' + c.tension + '</div></div>';
+  html += '<div class="card"><div class="card-ico">✨</div><div class="card-lbl">케미 포인트</div><div class="card-txt">' + c.magic + '</div></div>';
+  html += '</div>';
+
+  // 각 유형 간단 소개
+  html += '<div class="preview-block">';
+  html += '<h3>두 사람의 유형</h3>';
+  html += '<p><strong style="color:var(--gold-l)">' + (dA.emoji||'') + ' ' + tA + '</strong><br>' + (dA.desc||'') + '</p>';
+  html += '<p style="margin-top:14px"><strong style="color:var(--gold-l)">' + (dB.emoji||'') + ' ' + tB + '</strong><br>' + (dB.desc||'') + '</p>';
+  html += '</div>';
+
+  // 블러 미리보기
+  html += '<div class="preview-block">';
+  html += '<h3>심층 분석 미리보기</h3>';
+  html += '<p>두 사람이 갈등할 때 어떤 패턴이 반복되는지, 서로를 어떻게 오해하는지, 그리고 관계를 더 깊게 만드는 방법이 담겨 있어요.</p>';
+  html += '<div class="blur-wrap">';
+  html += '<p class="blur-txt">두 사람의 갈등 패턴은 주로 속도 차이에서 시작돼요. 한 사람이 빠르게 결론을 내리려 할 때 다른 사람은 아직 감정을 정리 중이고, 그 간격이 오해를 만들어요. 이 간격을 줄이는 가장 효과적인 방법은...</p>';
+  html += '<div class="blur-over"><span>🔒 유료 리포트에서 확인하세요</span></div>';
+  html += '</div>';
+  html += '</div>';
+
+  // 구매 CTA
+  html += '<div class="cta-box">';
+  html += '<h2>심층 리포트 보기</h2>';
+  html += '<p>' + tA + ' × ' + tB + ' 조합의 관계 패턴, 갈등 해결법,<br>서로를 더 깊이 이해하는 방법이 담겨 있어요.</p>';
+  html += '<div class="cta-price"><s>19,800원</s> 9,900원</div>';
+  html += '<div class="cta-price-note">한 번 구매 · PDF 즉시 다운로드</div>';
+  html += '<a class="btn-buy" href="/couple/shop/?a=' + tA + '&b=' + tB + '">지금 구매하기 →</a>';
+  html += '</div>';
+  html += '<a class="btn-retry" href="/couple/test/">테스트 다시 하기</a>';
+
+  document.getElementById('main').innerHTML = html;
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('main').style.display = 'block';
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>커플 유형 테스트 — 42world</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0F121E; --card: #1A2030;
+  --gold: #B8860B; --gold-l: #D4A017;
+  --silver: #8899AA; --text: #E8E4DC;
+  --border: rgba(184,134,11,0.2);
+}
+body { font-family: 'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* NAV */
+.nav { display:flex; align-items:center; justify-content:space-between; padding:0 20px; height:52px; background:rgba(15,18,30,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:99; }
+.nav a { color:var(--gold-l); font-weight:900; font-size:17px; text-decoration:none; }
+
+/* SCREENS */
+.screen { display:none; }
+.screen.on { display:block; }
+
+/* ── INTRO ── */
+#s-intro { max-width:460px; margin:0 auto; padding:56px 20px 80px; text-align:center; }
+.badge { display:inline-block; background:rgba(184,134,11,0.12); border:1px solid var(--border); color:var(--gold-l); font-size:11px; font-weight:700; letter-spacing:2px; padding:5px 14px; border-radius:20px; margin-bottom:22px; }
+.intro-title { font-size:28px; font-weight:900; color:#fff; line-height:1.3; margin-bottom:10px; }
+.intro-desc { font-size:14px; color:var(--silver); line-height:1.7; margin-bottom:36px; }
+.name-box { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; margin-bottom:22px; text-align:left; }
+.name-box h3 { font-size:12px; color:var(--silver); font-weight:700; letter-spacing:1px; margin-bottom:14px; }
+.name-row { display:flex; gap:12px; }
+.name-field { flex:1; }
+.name-field label { display:block; font-size:11px; color:var(--silver); margin-bottom:5px; }
+.name-field input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text); font-size:14px; font-family:inherit; outline:none; transition:border-color .2s; }
+.name-field input:focus { border-color:rgba(184,134,11,0.5); }
+.name-field input::placeholder { color:rgba(136,153,170,0.4); }
+.btn-go { width:100%; padding:17px; background:linear-gradient(135deg,#B8860B,#D4A017); border:none; border-radius:13px; color:#0F121E; font-size:16px; font-weight:900; cursor:pointer; transition:opacity .2s; }
+.btn-go:hover { opacity:.85; }
+.intro-note { font-size:12px; color:var(--silver); margin-top:12px; }
+
+/* ── QUESTION ── */
+#s-q { max-width:600px; margin:0 auto; padding:24px 20px 80px; }
+.prog-info { display:flex; justify-content:space-between; font-size:12px; color:var(--silver); margin-bottom:8px; }
+.prog-bar { height:4px; background:rgba(136,153,170,0.15); border-radius:4px; overflow:hidden; margin-bottom:28px; }
+.prog-fill { height:100%; background:linear-gradient(90deg,#B8860B,#D4A017); border-radius:4px; transition:width .3s; }
+.q-num { font-size:11px; font-weight:700; color:var(--gold-l); letter-spacing:1px; margin-bottom:8px; }
+.q-text { font-size:18px; font-weight:700; color:#fff; line-height:1.45; margin-bottom:7px; }
+.q-hint { font-size:12px; color:var(--silver); margin-bottom:22px; line-height:1.5; }
+
+/* A/B cards */
+.ab-wrap { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:8px; }
+.ab-card { background:var(--card); border:2px solid var(--border); border-radius:14px; padding:18px 14px; cursor:pointer; text-align:center; transition:border-color .15s, background .15s; user-select:none; }
+.ab-card:hover { border-color:rgba(184,134,11,0.45); }
+.ab-card.sel { border-color:var(--gold-l); background:rgba(184,134,11,0.1); }
+.ab-lbl { font-size:22px; font-weight:900; color:var(--gold-l); margin-bottom:6px; }
+.ab-txt { font-size:13px; color:rgba(232,228,220,0.85); line-height:1.5; }
+
+/* Scale options */
+.scale-wrap { display:flex; flex-direction:column; gap:9px; margin-bottom:8px; }
+.sc-opt { display:flex; align-items:center; gap:14px; background:var(--card); border:2px solid var(--border); border-radius:12px; padding:14px 16px; cursor:pointer; transition:border-color .15s, background .15s; user-select:none; }
+.sc-opt:hover { border-color:rgba(184,134,11,0.45); }
+.sc-opt.sel { border-color:var(--gold-l); background:rgba(184,134,11,0.1); }
+.sc-dot { width:18px; height:18px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; transition:background .15s, border-color .15s; }
+.sc-opt.sel .sc-dot { background:var(--gold-l); border-color:var(--gold-l); }
+.sc-txt { font-size:14px; color:rgba(232,228,220,0.9); line-height:1.4; }
+.sc-txt strong { color:var(--gold-l); }
+
+.q-nav { display:flex; gap:10px; margin-top:24px; }
+.btn-prev { flex:1; padding:13px; background:rgba(184,134,11,0.07); border:1px solid var(--border); border-radius:11px; color:var(--silver); font-size:14px; font-weight:700; cursor:pointer; transition:color .2s; }
+.btn-prev:hover { color:var(--gold-l); }
+.btn-next { flex:2; padding:13px; background:linear-gradient(135deg,#B8860B,#D4A017); border:none; border-radius:11px; color:#0F121E; font-size:14px; font-weight:900; cursor:pointer; transition:opacity .2s; }
+.btn-next:disabled { opacity:.3; cursor:default; }
+
+/* ── RESULT ── */
+#s-result { max-width:520px; margin:0 auto; padding:44px 20px 80px; text-align:center; }
+.chips { display:inline-flex; gap:8px; margin-bottom:18px; }
+.chip { padding:5px 13px; border-radius:20px; font-size:12px; font-weight:700; background:rgba(184,134,11,0.12); border:1px solid var(--border); color:var(--gold-l); }
+.res-title { font-size:26px; font-weight:900; color:#fff; margin-bottom:5px; }
+.res-sub { font-size:14px; color:var(--gold-l); font-weight:700; margin-bottom:10px; }
+.res-hook { font-size:14px; color:rgba(232,228,220,0.7); line-height:1.75; margin-bottom:30px; }
+.res-cards { display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-bottom:30px; }
+.res-card { background:var(--card); border:1px solid var(--border); border-radius:13px; padding:18px 14px; text-align:left; }
+.res-card-ico { font-size:22px; margin-bottom:7px; }
+.res-card-lbl { font-size:11px; font-weight:700; color:var(--silver); letter-spacing:1px; margin-bottom:5px; }
+.res-card-txt { font-size:13px; color:rgba(232,228,220,0.8); line-height:1.6; }
+.btn-detail { display:block; padding:17px; background:linear-gradient(135deg,#B8860B,#D4A017); border:none; border-radius:13px; color:#0F121E; font-size:16px; font-weight:900; text-decoration:none; margin-bottom:10px; cursor:pointer; transition:opacity .2s; }
+.btn-detail:hover { opacity:.85; }
+.btn-retry { display:block; padding:13px; background:rgba(184,134,11,0.07); border:1px solid var(--border); border-radius:11px; color:var(--silver); font-size:14px; font-weight:700; text-decoration:none; cursor:pointer; transition:color .2s; }
+.btn-retry:hover { color:var(--gold-l); }
+</style>
+</head>
+<body>
+
+<nav class="nav"><a href="/">42world</a></nav>
+
+<!-- ① 이름 입력 -->
+<div id="s-intro" class="screen on">
+  <div class="badge">COUPLE TEST</div>
+  <div class="intro-title">우리 커플<br>유형 테스트</div>
+  <div class="intro-desc">두 사람의 이름을 입력하고<br>24문항에 함께 답해보세요.</div>
+  <div class="name-box">
+    <h3>이름 입력 (선택)</h3>
+    <div class="name-row">
+      <div class="name-field">
+        <label>나 (A)</label>
+        <input id="nameA" type="text" placeholder="예: 민철" maxlength="8">
+      </div>
+      <div class="name-field">
+        <label>파트너 (B)</label>
+        <input id="nameB" type="text" placeholder="예: 수연" maxlength="8">
+      </div>
+    </div>
+  </div>
+  <button class="btn-go" onclick="startTest()">검사 시작하기 →</button>
+  <div class="intro-note">24문항 · 약 5분 · 무료</div>
+</div>
+
+<!-- ② 문항 -->
+<div id="s-q" class="screen">
+  <div class="prog-info">
+    <span id="p-count">1 / 24</span>
+    <span id="p-axis"></span>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="p-fill" style="width:0%"></div></div>
+  <div id="q-body"></div>
+  <div class="q-nav">
+    <button class="btn-prev" id="b-prev" onclick="prevQ()">← 이전</button>
+    <button class="btn-next" id="b-next" onclick="nextQ()" disabled>다음 →</button>
+  </div>
+</div>
+
+<!-- ③ 결과 -->
+<div id="s-result" class="screen">
+  <div class="chips">
+    <span class="chip" id="chip-a"></span>
+    <span style="color:var(--silver);line-height:26px;font-size:13px;">×</span>
+    <span class="chip" id="chip-b"></span>
+  </div>
+  <div class="res-title" id="r-title"></div>
+  <div class="res-sub" id="r-sub"></div>
+  <div class="res-hook" id="r-hook"></div>
+  <div class="res-cards">
+    <div class="res-card"><div class="res-card-ico">⚡</div><div class="res-card-lbl">긴장 포인트</div><div class="res-card-txt" id="r-tension"></div></div>
+    <div class="res-card"><div class="res-card-ico">✨</div><div class="res-card-lbl">케미 포인트</div><div class="res-card-txt" id="r-magic"></div></div>
+  </div>
+  <a id="r-link" class="btn-detail" href="#">심층 리포트 보기 →</a>
+  <a class="btn-retry" href="/couple/test/">다시 테스트하기</a>
+</div>
+
+<script>
+// ───────── DATA ─────────
+
+var TYPE_MAP = {
+  ENFP:'SPARK',ENTP:'SPARK',
+  INFJ:'VISION',INTJ:'VISION',
+  ISFJ:'STEADY',ISTJ:'STEADY',
+  ESFP:'PLAYER',ESTP:'PLAYER',
+  ESFJ:'HARMONY',ENFJ:'HARMONY',
+  INFP:'SOUL',ISFP:'SOUL',
+  ISTP:'LOGIC',INTP:'LOGIC',
+  ESTJ:'LEADER',ENTJ:'LEADER'
+};
+
+// Q1-6: EI, Q7-12: SN  →  A=첫번째(E/S), B=두번째(I/N)
+// Q13-18: TF, Q19-24: JP  →  4단계 스케일 (0=A확실, 1=A약간, 2=B약간, 3=B확실)
+var QS = [
+  {n:1, ax:'EI', q:'파티나 모임이 있을 때',                a:'에너지가 올라가고 더 즐거워진다',            b:'에너지가 빠지고 나중에 혼자 쉬고 싶다'},
+  {n:2, ax:'EI', q:'새로운 사람을 만나면',                 a:'먼저 말을 걸고 쉽게 친해진다',               b:'상대가 먼저 다가올 때까지 기다린다'},
+  {n:3, ax:'EI', q:'고민이 생기면',                        a:'친구나 파트너에게 바로 털어놓는다',           b:'혼자 충분히 생각한 뒤 말한다'},
+  {n:4, ax:'EI', q:'주말 계획을 세울 때',                  a:'여러 사람과 어울리는 활동이 먼저 떠오른다',   b:'집에서 조용히 쉬거나 둘이서만 보내고 싶다'},
+  {n:5, ax:'EI', q:'대화할 때 나는',                       a:'생각하면서 말한다 (말이 곧 생각)',             b:'생각을 정리한 뒤 말한다'},
+  {n:6, ax:'EI', q:'무리 안에서 나의 역할',                a:'대화를 이끌거나 분위기 메이커',               b:'조용히 듣거나 1:1 대화를 선호'},
+  {n:7, ax:'SN', q:'무언가를 배울 때',                     a:'일단 해보면서 감각으로 익힌다',               b:'전체 구조와 원리를 먼저 이해하려 한다'},
+  {n:8, ax:'SN', q:'미래에 대해 생각할 때',                a:'현실적·구체적으로 계획을 세운다',             b:'다양한 가능성과 시나리오를 상상한다'},
+  {n:9, ax:'SN', q:'대화 중 더 끌리는 주제',              a:'실용적인 정보, 실제 경험 이야기',             b:'아이디어, 미래, 의미 있는 주제'},
+  {n:10,ax:'SN', q:'문제를 풀 때',                         a:'검증된 방법, 경험을 바탕으로 접근',           b:'새로운 방식, 직관적 접근을 선호'},
+  {n:11,ax:'SN', q:'나에게 더 자연스러운 것',              a:'지금 이 순간에 집중하는 것',                  b:'앞으로 어떻게 될지 상상하는 것'},
+  {n:12,ax:'SN', q:'세부사항 vs 큰 그림 — 더 잘 기억하는 건', a:'세부사항, 구체적 사실',                  b:'전체적인 인상, 패턴'},
+  {n:13,ax:'TF', q:'갈등이 생겼을 때',                     a:'논리적으로 옳고 그름을 따진다',              b:'감정과 관계를 먼저 생각한다'},
+  {n:14,ax:'TF', q:'상대를 위로할 때',                     a:'원인과 해결책을 찾아준다',                    b:'충분히 공감하고 감정을 받아준다'},
+  {n:15,ax:'TF', q:'결정을 내릴 때',                       a:'데이터와 논리로 판단한다',                    b:'사람들의 감정과 가치관을 고려한다'},
+  {n:16,ax:'TF', q:'비판을 들을 때',                       a:'내용이 맞으면 감정 없이 받아들인다',          b:'아무리 맞아도 감정이 먼저 상한다'},
+  {n:17,ax:'TF', q:'공정함이란',                           a:'모두에게 같은 기준을 적용하는 것',            b:'상황과 사람에 맞게 유연하게 판단하는 것'},
+  {n:18,ax:'TF', q:'나의 강점',                            a:'분석력, 논리적 사고',                         b:'공감 능력, 관계 형성'},
+  {n:19,ax:'JP', q:'계획에 대해',                          a:'미리 세우고 그대로 진행하면 안심',            b:'유연하게 바뀌어도 괜찮고 즉흥도 좋아'},
+  {n:20,ax:'JP', q:'집이나 방 정리',                       a:'항상 정리정돈이 되어 있어야 편하다',          b:'필요한 것만 어디 있는지 알면 충분하다'},
+  {n:21,ax:'JP', q:'마감·기한에 대해',                    a:'미리미리 준비하고 여유를 남긴다',             b:'마감 직전에 집중력이 올라 잘 마무리한다'},
+  {n:22,ax:'JP', q:'여행 계획을 세울 때',                  a:'일정, 숙소, 동선을 사전에 확정',              b:'큰 틀만 잡고 현장에서 결정'},
+  {n:23,ax:'JP', q:'일과 놀이의 구분',                     a:'일 마무리 후 놀아야 편하다',                  b:'일과 놀이를 섞어도 별로 개의치 않는다'},
+  {n:24,ax:'JP', q:'예상치 못한 변수가 생기면',            a:'당황스럽고 계획 변경이 스트레스',             b:'오히려 흥미롭고 유연하게 대응'}
+];
+
+var AXIS_LABEL = {EI:'에너지 방향', SN:'정보 인식', TF:'판단 기준', JP:'생활 방식'};
+
+var COMBOS = {
+  'SPARK×SPARK':   {title:'불꽃 더블',       sub:'아이디어가 끝없이 넘치는 커플',           hook:'둘 다 새로운 가능성에 눈이 빛나요. 함께라면 세상이 놀이터.',            tension:'실행 없이 아이디어만 쌓일 수 있어요',        magic:'서로의 상상력에 진심으로 흥분하는 유일한 사람'},
+  'SPARK×VISION':  {title:'빛과 나침반',     sub:'영감과 통찰이 만나는 커플',               hook:'당신의 에너지가 그의 깊은 통찰에 불을 붙여요.',                       tension:'VISION이 혼자만의 시간을 원할 때 충돌',      magic:'서로가 각자의 맹점을 채워주는 환상의 짝'},
+  'SPARK×STEADY':  {title:'가능성과 닻',     sub:'꿈과 현실을 함께 사는 커플',              hook:'SPARK가 띄우는 풍선을 STEADY가 땅에 묶어줘요.',                       tension:'변화 속도가 너무 달라서 피곤할 수 있어요',   magic:'STEADY 덕분에 SPARK의 아이디어가 실제로 이뤄짐'},
+  'SPARK×PLAYER':  {title:'에너지 폭발',     sub:'지금 이 순간을 최대치로 즐기는 커플',     hook:'둘이 함께라면 어디서든 축제예요.',                                    tension:'장기 계획이나 진지한 대화가 약해요',          magic:'함께면 어디서든 파티가 시작됨'},
+  'SPARK×HARMONY': {title:'무대와 빛',       sub:'함께 빛나고 함께 따뜻한 커플',            hook:'SPARK가 무대를 만들면 HARMONY가 모두를 환영해요.',                    tension:'HARMONY의 감정 중시 vs SPARK의 논리 중시',   magic:'가장 활기차고 따뜻한 분위기를 만드는 커플'},
+  'SPARK×SOUL':    {title:'바람과 별',       sub:'자유와 깊이가 공명하는 커플',             hook:'SPARK의 넓이와 SOUL의 깊이가 만나 우주가 생겨요.',                    tension:'SOUL의 예민함에 SPARK가 무심할 수 있어요',   magic:'서로의 다름을 경이롭게 바라봄'},
+  'SPARK×LOGIC':   {title:'아이디어 실험실', sub:'상상이 논리를 만나 폭발하는 커플',        hook:'SPARK가 던진 아이디어를 LOGIC이 해체하고 재조립해요.',                tension:'LOGIC이 너무 비판적으로 느껴질 수 있어요',   magic:'두 사람의 대화는 항상 뭔가 새로운 걸 만들어냄'},
+  'SPARK×LEADER':  {title:'비전 엔진',       sub:'꿈을 현실로 만드는 드림팀 커플',          hook:'SPARK가 가능성을 그리면 LEADER가 실행 계획을 세워요.',                tension:'리더십 충돌 — 누가 이끌지 싸울 수 있어요',   magic:'두 사람이 함께라면 못 이룰 목표가 없음'},
+  'VISION×VISION': {title:'두 개의 나침반',  sub:'가장 깊이 이해하는 커플',                 hook:'말하지 않아도 통하는 게 있어요. 가장 조용하고 가장 깊은 사랑.',         tension:'둘 다 속으로만 삭여 대화가 줄 수 있어요',    magic:'누구도 이해 못하는 서로의 내면을 완전히 이해함'},
+  'VISION×STEADY': {title:'깊이와 뿌리',     sub:'안정과 통찰이 조화로운 커플',             hook:'VISION의 통찰에 STEADY의 현실감이 더해져요.',                         tension:'VISION이 너무 추상적으로 느껴질 수 있어요',  magic:'STEADY가 있어 VISION의 꿈이 삶에 뿌리내림'},
+  'VISION×PLAYER': {title:'영혼과 현재',     sub:'깊이와 활력이 만나는 커플',               hook:'PLAYER의 활기가 VISION의 내면 세계에 생기를 불어넣어요.',             tension:'PLAYER의 즉흥성이 VISION에겐 불안할 수 있어요', magic:'VISION이 PLAYER의 진짜 모습을 가장 잘 이해함'},
+  'VISION×HARMONY':{title:'인사이트와 온기', sub:'깊은 이해와 따뜻함이 공존하는 커플',      hook:'VISION이 본질을 꿰뚫으면 HARMONY가 마음을 어루만져요.',               tension:'HARMONY가 갈등 회피로 솔직함이 줄 수 있어요', magic:'두 사람이 만들어내는 정서적 안전감이 최고'},
+  'VISION×SOUL':   {title:'두 개의 등불',    sub:'내면의 깊이를 함께 탐구하는 커플',        hook:'둘 다 보이지 않는 것에서 아름다움을 찾아요.',                          tension:'현실적인 것들을 둘 다 놓칠 수 있어요',        magic:'서로의 내면 세계를 진심으로 존중하는 드문 관계'},
+  'VISION×LOGIC':  {title:'통찰과 분석',     sub:'진리를 함께 탐구하는 커플',               hook:'VISION의 직관과 LOGIC의 분석이 진실에 가장 빠르게 닿아요.',           tension:'LOGIC이 감정 없이 느껴져 상처받을 수 있어요', magic:'두 사람의 지적 대화는 그 자체로 예술'},
+  'VISION×LEADER': {title:'전략 파트너',     sub:'장기 목표를 함께 그리는 커플',            hook:'VISION의 통찰을 LEADER가 전략으로 만들어요.',                         tension:'LEADER의 실행 압박이 VISION을 지치게 해요',  magic:'가장 강력한 장기 파트너십'},
+  'STEADY×STEADY': {title:'두 개의 닻',      sub:'가장 안정적이고 믿음직한 커플',           hook:'서로에게 세상에서 가장 안전한 사람이에요.',                            tension:'변화와 새로움이 부족할 수 있어요',            magic:'어떤 폭풍도 이 두 사람의 신뢰를 흔들지 못함'},
+  'STEADY×PLAYER': {title:'안정과 활기',     sub:'일상과 모험이 공존하는 커플',             hook:'STEADY의 안정된 일상에 PLAYER가 생기를 더해요.',                      tension:'PLAYER의 즉흥성이 STEADY를 불안하게 만들어요', magic:'STEADY 덕에 PLAYER가 집이라는 개념을 배움'},
+  'STEADY×HARMONY':{title:'따뜻한 집',       sub:'가장 안정적이고 따뜻한 커플',             hook:'둘 다 소중한 사람들을 지키는 걸 가장 중요하게 여겨요.',                tension:'갈등을 너무 피해서 문제가 쌓일 수 있어요',    magic:'집에 오면 항상 따뜻한 무언가가 있는 커플'},
+  'STEADY×SOUL':   {title:'안전한 공간',     sub:'예민한 마음이 쉬는 커플',                 hook:'STEADY의 일관성이 SOUL의 예민한 마음에 안전감을 줘요.',                tension:'SOUL이 더 깊은 대화를 원할 때 답답할 수 있어요', magic:'SOUL이 감정을 가장 편하게 꺼낼 수 있는 관계'},
+  'STEADY×LOGIC':  {title:'현실과 논리',     sub:'실용적으로 함께 성장하는 커플',           hook:'둘 다 감정보다 실제로 돌아가는 것에 집중해요.',                        tension:'감정 표현이 부족해서 멀어질 수 있어요',       magic:'서로 가장 신뢰할 수 있는 사람'},
+  'STEADY×LEADER': {title:'실행 파워',       sub:'계획을 완벽하게 실행하는 커플',           hook:'LEADER가 방향을 잡고 STEADY가 끝까지 실행해요.',                      tension:'LEADER가 너무 빠르게 몰아붙여 STEADY가 지쳐요', magic:'세운 목표는 반드시 이루는 커플'},
+  'PLAYER×PLAYER': {title:'더블 플레이',     sub:'삶 자체가 모험인 커플',                   hook:'둘이 함께면 모든 게 놀이가 돼요. 지루할 틈이 없어요.',                 tension:'진지한 대화나 장기 계획이 둘 다 어려워요',    magic:'서로를 가장 신나게 만드는 유일한 사람'},
+  'PLAYER×HARMONY':{title:'파티 호스트',     sub:'에너지와 따뜻함이 넘치는 커플',           hook:'PLAYER가 분위기를 달구면 HARMONY가 모두를 품어요.',                   tension:'진지한 순간에 둘 다 회피할 수 있어요',        magic:'가장 인기 있고 활기찬 커플'},
+  'PLAYER×SOUL':   {title:'빛과 그늘',       sub:'밝음과 깊음이 서로를 끌어당기는 커플',    hook:'PLAYER의 밝음이 SOUL의 그늘을 따뜻하게 채워요.',                      tension:'SOUL의 깊은 감정을 PLAYER가 가볍게 넘길 수 있어요', magic:'SOUL이 PLAYER의 진짜 내면을 발견함'},
+  'PLAYER×LOGIC':  {title:'행동과 분석',     sub:'즉흥과 논리가 부딪히는 커플',             hook:'PLAYER가 먼저 뛰어들면 LOGIC이 착지 지점을 계산해요.',                tension:'LOGIC이 너무 느리고 비판적으로 느껴질 수 있어요', magic:'두 사람이 팀이 되면 실행력과 정확도를 동시에'},
+  'PLAYER×LEADER': {title:'에너지와 방향',   sub:'활기차게 목표를 향해 달리는 커플',        hook:'PLAYER의 에너지를 LEADER가 올바른 방향으로 이끌어요.',                tension:'LEADER의 통제욕이 PLAYER의 자유를 억누를 수 있어요', magic:'가장 빠르고 역동적으로 목표를 달성하는 커플'},
+  'HARMONY×HARMONY':{title:'두 개의 태양',   sub:'세상에서 가장 따뜻한 커플',               hook:'둘 다 상대를 먼저 생각해요. 그 따뜻함이 서로를 녹여요.',               tension:'둘 다 양보하다 자신의 필요를 잃을 수 있어요', magic:'주변 사람들이 이 커플 곁에 있고 싶어하는 이유'},
+  'HARMONY×SOUL':  {title:'공감의 바다',     sub:'감정의 깊이를 함께 탐구하는 커플',        hook:'둘 다 감정 언어가 유창해요. 서로를 가장 잘 이해해요.',                 tension:'현실 문제보다 감정에 치우칠 수 있어요',       magic:'서로의 감정을 가장 정확하게 읽는 커플'},
+  'HARMONY×LOGIC': {title:'감성과 이성',     sub:'마음과 논리가 균형을 찾는 커플',          hook:'HARMONY의 공감이 LOGIC의 날카로운 분석을 부드럽게 해요.',             tension:'의사결정 방식이 달라서 충돌이 잦을 수 있어요', magic:'둘이 합치면 감성과 논리를 모두 갖춘 최강 팀'},
+  'HARMONY×LEADER':{title:'마음과 전략',     sub:'따뜻한 카리스마의 커플',                  hook:'LEADER의 방향감각에 HARMONY의 인간적 따뜻함이 더해져요.',             tension:'LEADER가 목표 중심일 때 HARMONY가 지쳐요',   magic:'사람을 움직이는 리더십을 함께 만들어냄'},
+  'SOUL×SOUL':     {title:'거울 영혼',       sub:'서로를 가장 깊이 이해하는 커플',          hook:'두 사람의 내면은 서로를 완벽한 거울처럼 비춰요.',                      tension:'둘 다 예민해서 상처가 깊어질 수 있어요',      magic:'세상에서 가장 깊은 감정적 연결'},
+  'SOUL×LOGIC':    {title:'감정과 논리',     sub:'마음과 이성이 균형을 찾는 커플',          hook:'SOUL의 깊은 감정과 LOGIC의 명확한 사고가 서로를 채워요.',              tension:'LOGIC의 냉정함이 SOUL을 깊이 상처낼 수 있어요', magic:'두 사람이 합치면 세상을 가장 잘 이해하는 팀'},
+  'SOUL×LEADER':   {title:'가치와 성과',     sub:'의미와 목표를 함께 추구하는 커플',        hook:'SOUL의 깊은 가치관이 LEADER의 방향에 의미를 더해요.',                  tension:'LEADER의 성과 중심이 SOUL을 지치게 해요',    magic:'가장 의미 있는 일을 함께 만들어가는 커플'},
+  'LOGIC×LOGIC':   {title:'두 개의 체스판',  sub:'서로를 가장 잘 이해하는 지적 커플',       hook:'말하지 않아도 논리가 통해요. 가장 효율적인 사랑.',                      tension:'감정 표현을 둘 다 어색해해서 거리감이 생길 수 있어요', magic:'세상 누구도 이해 못하는 서로의 사고방식을 완전히 이해함'},
+  'LOGIC×LEADER':  {title:'전략 동맹',       sub:'최고의 지적 파트너 커플',                 hook:'LOGIC의 분석과 LEADER의 실행이 만나면 최강이에요.',                   tension:'누가 옳은지를 두고 논쟁이 격해질 수 있어요',  magic:'두 사람이 합치면 어떤 문제도 풀 수 있음'},
+  'LEADER×LEADER': {title:'더블 리더',       sub:'함께 세상을 바꾸는 커플',                 hook:'두 리더가 만났어요. 엄청난 에너지지만, 방향이 같아야 해요.',            tension:'누가 결정권을 갖는지를 두고 충돌이 클 수 있어요', magic:'두 사람이 합을 맞추면 세상 어떤 목표도 이룰 수 있음'}
+};
+
+// ───────── STATE ─────────
+var S = {
+  nameA:'나', nameB:'파트너',
+  cur:0,
+  ans: new Array(24).fill(null)
+};
+
+// ───────── UTIL ─────────
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(el){ el.classList.remove('on'); });
+  document.getElementById(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+
+// ───────── START ─────────
+function startTest() {
+  S.nameA = document.getElementById('nameA').value.trim() || '나';
+  S.nameB = document.getElementById('nameB').value.trim() || '파트너';
+  S.cur = 0;
+  S.ans = new Array(24).fill(null);
+  show('s-q');
+  render();
+}
+
+// ───────── RENDER ─────────
+function render() {
+  var i = S.cur;
+  var q = QS[i];
+  var isAB = i < 12;
+
+  document.getElementById('p-count').textContent = (i+1) + ' / 24';
+  document.getElementById('p-axis').textContent = AXIS_LABEL[q.ax];
+  document.getElementById('p-fill').style.width = Math.round(i/24*100) + '%';
+
+  var html = '<div class="q-num">Q' + q.n + ' · ' + AXIS_LABEL[q.ax] + '</div>';
+  html += '<div class="q-text">' + q.q + '</div>';
+
+  if (isAB) {
+    html += '<div class="q-hint">두 사람의 공통 성향을 하나 선택해주세요</div>';
+    html += '<div class="ab-wrap">';
+    html += '<div class="ab-card' + (S.ans[i]===0?' sel':'') + '" onclick="pickAB(0)"><div class="ab-lbl">A</div><div class="ab-txt">' + q.a + '</div></div>';
+    html += '<div class="ab-card' + (S.ans[i]===1?' sel':'') + '" onclick="pickAB(1)"><div class="ab-lbl">B</div><div class="ab-txt">' + q.b + '</div></div>';
+    html += '</div>';
+  } else {
+    html += '<div class="q-hint">' + S.nameA + '와 ' + S.nameB + ' 중 누가 더 A에 가깝고 B에 가까운가요?</div>';
+    var opts = [
+      {v:0, txt:'<strong>' + S.nameA + '</strong>에 가까워요 (확실히)'},
+      {v:1, txt:'약간 <strong>' + S.nameA + '</strong>에 가까워요'},
+      {v:2, txt:'약간 <strong>' + S.nameB + '</strong>에 가까워요'},
+      {v:3, txt:'<strong>' + S.nameB + '</strong>에 가까워요 (확실히)'}
+    ];
+    html += '<div class="scale-wrap">';
+    opts.forEach(function(o){
+      html += '<div class="sc-opt' + (S.ans[i]===o.v?' sel':'') + '" onclick="pickSC(' + o.v + ')"><div class="sc-dot"></div><div class="sc-txt">' + o.txt + '</div></div>';
+    });
+    html += '</div>';
+  }
+
+  document.getElementById('q-body').innerHTML = html;
+  document.getElementById('b-prev').disabled = (i === 0);
+  var nxt = document.getElementById('b-next');
+  nxt.disabled = (S.ans[i] === null);
+  nxt.textContent = (i === 23) ? '결과 보기 →' : '다음 →';
+}
+
+function pickAB(v) {
+  S.ans[S.cur] = v;
+  render();
+  if (S.cur < 23) { setTimeout(nextQ, 280); }
+}
+
+function pickSC(v) {
+  S.ans[S.cur] = v;
+  render();
+}
+
+function nextQ() {
+  if (S.ans[S.cur] === null) return;
+  if (S.cur === 23) { calc(); return; }
+  S.cur++;
+  render();
+}
+
+function prevQ() {
+  if (S.cur === 0) return;
+  S.cur--;
+  render();
+}
+
+// ───────── CALC ─────────
+function calc() {
+  var sA = {EI:0,SN:0,TF:0,JP:0};
+  var sB = {EI:0,SN:0,TF:0,JP:0};
+
+  // Q1-6 EI: A=E(+1) B=I(-1) — 두 사람 공통
+  for (var i=0;i<6;i++) { var v=S.ans[i]===0?1:-1; sA.EI+=v; sB.EI+=v; }
+  // Q7-12 SN: A=S(+1) B=N(-1) — 두 사람 공통
+  for (var i=6;i<12;i++) { var v=S.ans[i]===0?1:-1; sA.SN+=v; sB.SN+=v; }
+  // Q13-18 TF: 4단계 (0=A확실+2, 1=A약간+1, 2=B약간, 3=B확실) A=T(+), B=F(-)
+  for (var i=12;i<18;i++) {
+    var v=S.ans[i]; var a2,b2;
+    if(v===0){a2=2;b2=-2;}else if(v===1){a2=1;b2=-1;}else if(v===2){a2=-1;b2=1;}else{a2=-2;b2=2;}
+    sA.TF+=a2; sB.TF+=b2;
+  }
+  // Q19-24 JP: 4단계 A=J(+), B=P(-)
+  for (var i=18;i<24;i++) {
+    var v=S.ans[i]; var a2,b2;
+    if(v===0){a2=2;b2=-2;}else if(v===1){a2=1;b2=-1;}else if(v===2){a2=-1;b2=1;}else{a2=-2;b2=2;}
+    sA.JP+=a2; sB.JP+=b2;
+  }
+
+  function mbti(s){ return (s.EI>=0?'E':'I')+(s.SN>=0?'S':'N')+(s.TF>=0?'T':'F')+(s.JP>=0?'J':'P'); }
+  var tA = TYPE_MAP[mbti(sA)] || 'SPARK';
+  var tB = TYPE_MAP[mbti(sB)] || 'SPARK';
+  showResult(tA, tB);
+}
+
+// ───────── RESULT ─────────
+function showResult(tA, tB) {
+  var key = tA + '×' + tB;
+  var c = COMBOS[key] || COMBOS[tB+'×'+tA] || {
+    title: tA+' × '+tB, sub:'특별한 조합의 커플',
+    hook:'두 사람만의 고유한 케미가 있어요.',
+    tension:'서로의 차이를 이해하는 시간이 필요해요',
+    magic:'다름이 서로를 더 완전하게 만들어줘요'
+  };
+
+  document.getElementById('chip-a').textContent = S.nameA + ' · ' + tA;
+  document.getElementById('chip-b').textContent = S.nameB + ' · ' + tB;
+  document.getElementById('r-title').textContent = c.title;
+  document.getElementById('r-sub').textContent = c.sub;
+  document.getElementById('r-hook').textContent = c.hook;
+  document.getElementById('r-tension').textContent = c.tension;
+  document.getElementById('r-magic').textContent = c.magic;
+  document.getElementById('r-link').href = '/couple/result/?a='+tA+'&b='+tB;
+
+  show('s-result');
+}
+</script>
+</body>
+</html>

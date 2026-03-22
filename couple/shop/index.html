@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>커플 리포트 구매 — 42world</title>
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root { --bg:#0F121E; --card:#1A2030; --gold:#B8860B; --gold-l:#D4A017; --silver:#8899AA; --text:#E8E4DC; --border:rgba(184,134,11,0.2); }
+body { font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+.nav { display:flex; align-items:center; padding:0 20px; height:52px; background:rgba(15,18,30,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:99; }
+.nav a { color:var(--gold-l); font-weight:900; font-size:17px; text-decoration:none; }
+
+.wrap { max-width:500px; margin:0 auto; padding:40px 20px 80px; }
+.badge { display:inline-block; background:rgba(184,134,11,0.12); border:1px solid var(--border); color:var(--gold-l); font-size:11px; font-weight:700; letter-spacing:2px; padding:5px 14px; border-radius:20px; margin-bottom:18px; }
+.shop-title { font-size:26px; font-weight:900; color:#fff; margin-bottom:8px; }
+.shop-sub { font-size:14px; color:var(--silver); line-height:1.7; margin-bottom:32px; }
+
+.product-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px 22px; margin-bottom:20px; }
+.product-name { font-size:16px; font-weight:900; color:#fff; margin-bottom:6px; }
+.product-desc { font-size:13px; color:var(--silver); line-height:1.7; margin-bottom:20px; }
+.includes { margin-bottom:20px; }
+.includes h4 { font-size:12px; font-weight:700; color:var(--silver); letter-spacing:1px; margin-bottom:10px; }
+.include-item { display:flex; align-items:center; gap:10px; font-size:13px; color:rgba(232,228,220,0.85); margin-bottom:8px; }
+.include-item::before { content:'✓'; color:var(--gold-l); font-weight:700; flex-shrink:0; }
+.price-row { display:flex; align-items:baseline; gap:10px; margin-bottom:6px; }
+.price-now { font-size:26px; font-weight:900; color:var(--gold-l); }
+.price-orig { font-size:14px; color:var(--silver); text-decoration:line-through; }
+.price-note { font-size:12px; color:var(--silver); margin-bottom:20px; }
+.btn-buy { width:100%; padding:17px; background:linear-gradient(135deg,#B8860B,#D4A017); border:none; border-radius:13px; color:#0F121E; font-size:16px; font-weight:900; cursor:pointer; transition:opacity .2s; }
+.btn-buy:hover { opacity:.85; }
+.btn-buy:disabled { opacity:.4; cursor:default; }
+
+.notice { background:rgba(136,153,170,0.06); border:1px solid rgba(136,153,170,0.15); border-radius:12px; padding:16px 18px; margin-bottom:16px; font-size:13px; color:var(--silver); line-height:1.7; }
+
+footer { border-top:1px solid var(--border); padding:28px 20px; text-align:center; }
+.footer-links { display:flex; justify-content:center; flex-wrap:wrap; gap:14px; margin-bottom:12px; }
+.footer-links a { font-size:12px; color:var(--silver); text-decoration:none; }
+.footer-links a:hover { color:var(--gold-l); }
+.footer-biz { font-size:11px; color:rgba(136,153,170,0.5); line-height:1.8; }
+</style>
+</head>
+<body>
+<nav class="nav"><a href="/">42world</a></nav>
+
+<div class="wrap">
+  <div class="badge">COUPLE REPORT</div>
+  <div class="shop-title">커플 심층 리포트</div>
+  <div class="shop-sub">두 사람의 유형 조합을 깊이 분석한<br>PDF 리포트를 즉시 다운로드하세요.</div>
+
+  <div class="product-card">
+    <div class="product-name" id="product-name">커플 유형 리포트</div>
+    <div class="product-desc">두 사람의 관계 패턴, 갈등 원인, 소통 방식, 그리고 더 깊은 관계를 만드는 방법이 담겨 있어요.</div>
+    <div class="includes">
+      <h4>리포트 포함 내용</h4>
+      <div class="include-item">두 사람의 유형별 심층 분석</div>
+      <div class="include-item">반복되는 갈등 패턴과 원인</div>
+      <div class="include-item">서로를 오해하는 이유</div>
+      <div class="include-item">관계를 깊게 만드는 실전 팁</div>
+      <div class="include-item">PDF 즉시 다운로드 (30p+)</div>
+    </div>
+    <div class="price-row">
+      <span class="price-orig">19,800원</span>
+      <span class="price-now">9,900원</span>
+    </div>
+    <div class="price-note">한 번 구매 · 기간 제한 없음 · 구매자 본인만 사용</div>
+    <button class="btn-buy" id="btn-buy" onclick="handleBuy()">카카오페이로 결제하기</button>
+  </div>
+
+  <div class="notice">
+    결제 후 다운로드 링크가 이메일로 발송됩니다.<br>
+    문의: shadowgram.org | 환불은 <a href="/legal/refund.html" style="color:var(--gold-l)">환불정책</a>을 확인해 주세요.
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="/legal/terms.html">이용약관</a>
+    <a href="/legal/privacy.html">개인정보처리방침</a>
+    <a href="/legal/refund.html">환불정책</a>
+  </div>
+  <div class="footer-biz">
+    상호: 온유컴퍼니MINDWAYS8 · 사업자등록번호: 533-62-00508<br>
+    shadowgram.org · © 2025 Shadowgram
+  </div>
+</footer>
+
+<script>
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var a = (params.get('a')||'').toUpperCase();
+  var b = (params.get('b')||'').toUpperCase();
+  if (a && b) {
+    document.getElementById('product-name').textContent = a + ' × ' + b + ' 커플 리포트';
+  }
+})();
+
+function handleBuy() {
+  alert('결제 시스템 준비 중입니다.\nshadowgram.org 에서 확인해 주세요.');
+}
+</script>
+</body>
+</html>

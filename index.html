@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>42world — 우리 커플 유형 테스트</title>
+<meta name="description" content="24문항으로 알아보는 커플 심리 유형. 무료로 시작하세요.">
+<meta property="og:title" content="우리 커플 유형은? — 42world">
+<meta property="og:description" content="24문항으로 알아보는 커플 심리 유형. 무료로 시작하세요.">
+<meta property="og:url" content="https://42world.kr">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --dark: #1A2030;
+  --gold: #B8860B;
+  --gold-l: #D4A017;
+  --silver: #8899AA;
+  --bg: #0F121E;
+  --card: #1A2030;
+  --border: rgba(184,134,11,0.2);
+  --text: #E8E4DC;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── NAV ── */
+.nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 56px;
+  position: sticky; top: 0; z-index: 999;
+  background: rgba(15,18,30,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-size: 18px; font-weight: 900; color: var(--gold-l); text-decoration: none; letter-spacing: .04em; }
+.nav-logo span { color: var(--silver); font-weight: 300; font-size: 10px; letter-spacing: 2px; margin-left: 6px; }
+
+/* ── HERO ── */
+.hero {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 80px 24px 100px;
+  text-align: center;
+  max-width: 600px; margin: 0 auto;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(184,134,11,0.12); border: 1px solid var(--border);
+  color: var(--gold-l); font-size: 11px; font-weight: 700; letter-spacing: 2px;
+  padding: 6px 16px; border-radius: 20px; margin-bottom: 28px;
+}
+.hero-title {
+  font-size: clamp(30px, 7vw, 48px);
+  font-weight: 900; color: #fff; line-height: 1.25;
+  margin-bottom: 20px;
+}
+.hero-title em { color: var(--gold-l); font-style: normal; }
+.hero-desc {
+  font-size: 16px; color: var(--silver); line-height: 1.8;
+  margin-bottom: 40px; max-width: 440px;
+}
+.btn-hero {
+  display: inline-block;
+  padding: 18px 48px;
+  background: linear-gradient(135deg, #B8860B, #D4A017);
+  border: none; border-radius: 14px;
+  color: #0F121E; font-size: 17px; font-weight: 900;
+  letter-spacing: .04em; cursor: pointer; text-decoration: none;
+  transition: opacity .2s, transform .2s;
+}
+.btn-hero:hover { opacity: .88; transform: translateY(-2px); }
+.hero-sub { font-size: 12px; color: var(--silver); margin-top: 14px; }
+
+/* ── HOW ── */
+.how {
+  padding: 80px 24px;
+  max-width: 700px; margin: 0 auto;
+}
+.section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  color: var(--gold-l); text-align: center; margin-bottom: 40px;
+}
+.steps { display: flex; flex-direction: column; gap: 24px; }
+.step {
+  display: flex; align-items: flex-start; gap: 20px;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+}
+.step-num {
+  width: 36px; height: 36px; flex-shrink: 0;
+  background: rgba(184,134,11,0.15); border: 1px solid var(--border);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; color: var(--gold-l);
+}
+.step-body h3 { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.step-body p { font-size: 13px; color: var(--silver); line-height: 1.6; }
+
+/* ── TYPES PREVIEW ── */
+.types-section { padding: 60px 24px 80px; }
+.types-section .section-label { margin-bottom: 32px; }
+.types-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px; max-width: 700px; margin: 0 auto 40px;
+}
+.type-pill {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 10px; text-align: center;
+}
+.type-pill .name { font-size: 13px; font-weight: 900; color: var(--gold-l); }
+.type-pill .mbti { font-size: 10px; color: var(--silver); margin-top: 3px; }
+.types-cta { text-align: center; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 24px; text-align: center;
+}
+.footer-links {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;
+  margin-bottom: 16px;
+}
+.footer-links a {
+  font-size: 12px; color: var(--silver); text-decoration: none;
+}
+.footer-links a:hover { color: var(--gold-l); }
+.footer-biz { font-size: 11px; color: rgba(136,153,170,0.6); line-height: 1.8; }
+
+@media (max-width: 480px) {
+  .types-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="/">42world<span>COUPLE</span></a>
+</nav>
+
+<section class="hero">
+  <div class="hero-badge">COUPLE PSYCHOLOGY TEST</div>
+  <h1 class="hero-title">우리 커플<br><em>어떤 유형</em>일까?</h1>
+  <p class="hero-desc">
+    두 사람의 성격 유형을 분석해<br>
+    64가지 커플 조합 중 여러분의 유형을 찾아드려요.
+  </p>
+  <a class="btn-hero" href="/couple/test/">무료로 시작하기 →</a>
+  <p class="hero-sub">24문항 · 약 5분 · 완전 무료</p>
+</section>
+
+<section class="how">
+  <div class="section-label">HOW IT WORKS</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>이름 입력 후 24문항 답변</h3>
+        <p>두 사람의 이름을 입력하고, 24개 질문에 함께 답해요. Q1~12는 A/B 선택, Q13~24는 두 사람 중 누가 더 가까운지 4단계로 고릅니다.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>커플 유형 즉시 확인</h3>
+        <p>각자의 Shadowgram 유형과 64가지 커플 조합 중 여러분의 유형이 바로 나와요. 긴장 포인트와 케미 포인트도 함께.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>심층 리포트로 더 깊게</h3>
+        <p>무료 결과가 궁금증을 불러일으킨다면, 유료 리포트로 두 사람의 관계를 더 깊이 들여다볼 수 있어요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="types-section">
+  <div class="section-label">8 TYPES</div>
+  <div class="types-grid">
+    <div class="type-pill"><div class="name">SPARK</div><div class="mbti">ENFP · ENTP</div></div>
+    <div class="type-pill"><div class="name">VISION</div><div class="mbti">INFJ · INTJ</div></div>
+    <div class="type-pill"><div class="name">STEADY</div><div class="mbti">ISFJ · ISTJ</div></div>
+    <div class="type-pill"><div class="name">PLAYER</div><div class="mbti">ESFP · ESTP</div></div>
+    <div class="type-pill"><div class="name">HARMONY</div><div class="mbti">ESFJ · ENFJ</div></div>
+    <div class="type-pill"><div class="name">SOUL</div><div class="mbti">INFP · ISFP</div></div>
+    <div class="type-pill"><div class="name">LOGIC</div><div class="mbti">ISTP · INTP</div></div>
+    <div class="type-pill"><div class="name">LEADER</div><div class="mbti">ESTJ · ENTJ</div></div>
+  </div>
+  <div class="types-cta">
+    <a class="btn-hero" href="/couple/test/">테스트 시작하기 →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="/couple/shop/">유료 리포트</a>
+    <a href="/legal/terms.html">이용약관</a>
+    <a href="/legal/privacy.html">개인정보처리방침</a>
+    <a href="/legal/refund.html">환불정책</a>
+  </div>
+  <div class="footer-biz">
+    상호: 온유컴퍼니MINDWAYS8 · 사업자등록번호: 533-62-00508<br>
+    shadowgram.org · © 2025 Shadowgram
+  </div>
+</footer>
+
+</body>
+</html>
