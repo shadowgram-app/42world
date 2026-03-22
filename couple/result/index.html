@@ -811,8 +811,8 @@ function getReport(){
   const a=(params.get('a')||'SPARK').toUpperCase();
   const b=(params.get('b')||'VISION').toUpperCase();
   const combo=`${a}_${b}`;
-  const url=`/couple/reports/combo/${combo}_KR.pdf`;
-  const filename=`Shadowgram_Couple_${combo}_KR.pdf`;
+  const url=`/couple/pdfs/${combo}.pdf`;
+  const filename=`42world_Couple_${combo}_KR.pdf`;
   showToast(`📥 ${a} × ${b} 커플 리포트를 다운로드합니다!`);
   setTimeout(()=>{
     const l=document.createElement('a');
