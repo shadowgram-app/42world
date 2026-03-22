@@ -9,8 +9,8 @@
 <title>커플 유형 테스트 — Shadowgram Couple</title>
 <meta property="og:title" content="우리 커플 유형은? — Shadowgram Couple">
 <meta property="og:description" content="연인과 함께 24문항으로 커플 유형을 알아보세요.">
-<meta property="og:image" content="https://42world.kr/couple/kr/og.png">
-<meta property="og:url" content="https://42world.kr/couple/kr">
+<meta property="og:image" content="https://42world.kr/couple/og.png">
+<meta property="og:url" content="https://42world.kr/couple">
 <style>
   /* ── Reset & Base ───────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -806,14 +806,14 @@
 <!-- ── Global Nav ── -->
 <nav class="sg-nav">
   <button class="hw-btn" id="hw-btn" onclick="hwToggle()" aria-label="menu"><span></span><span></span><span></span></button>
-  <a class="sg-logo" href="/couple/kr/"><img src="/logo.png" alt="" style="width:26px;height:26px;border-radius:50%;flex-shrink:0;"><span class="sg-s1">SHADOW</span><span class="sg-s2">GRAM</span><span class="sg-dot"> · </span><span class="sg-s3">COUPLE</span></a>
+  <a class="sg-logo" href="/"><img src="/logo.png" alt="" style="width:26px;height:26px;border-radius:50%;flex-shrink:0;"><span class="sg-s1">SHADOW</span><span class="sg-s2">GRAM</span><span class="sg-dot"> · </span><span class="sg-s3">COUPLE</span></a>
 </nav>
 
 <!-- ═══════════════════════════════════════════════════════════
      SCREEN 1: INTRO
 ══════════════════════════════════════════════════════════════ -->
 <div id="screen-intro" class="screen" style="display:flex;padding-top:52px;">
-  <div class="intro-logo">42world.kr/couple/kr</div>
+  <div class="intro-logo">42world.kr/couple</div>
   <h1 class="intro-title">우리 커플 유형은<br><span>뭘까요?</span></h1>
   <p class="intro-sub">
     연인과 함께 24문항에 답하면<br>
@@ -828,7 +828,7 @@
   <button class="btn-start" onclick="startTest()">지금 시작하기 →</button>
   <p class="intro-note">* MBTI® 기반이 아닌 Shadowgram 독자 프레임워크입니다</p>
   <div class="footer" style="opacity:.5;font-size:10px;padding:24px 0 16px;">
-    shadowgram.org · © 2025 Shadowgram<br>
+    42world.kr · © 2025 42world<br>
     개인정보 문의 · <a href="mailto:joculsion@gmail.com" style="color:var(--silver);text-decoration:underline;">joculsion@gmail.com</a>
   </div>
 </div>
@@ -893,7 +893,7 @@
     <!-- THE RESULT CARD -->
     <div class="result-card" id="result-card">
       <div class="rc-top" id="rc-top">
-        <div class="rc-watermark">shadowgram.org</div>
+        <div class="rc-watermark">42world.kr</div>
         <div class="rc-types">
           <span class="rc-type-badge" id="rc-typeA">—</span>
           <span class="rc-x">×</span>
@@ -979,7 +979,7 @@
     </div>
 
     <div class="footer">
-      shadowgram.org · © 2025 Shadowgram<br>
+      42world.kr · © 2025 42world<br>
       * MBTI® is a registered trademark of The Myers &amp; Briggs Foundation.<br>
       Shadowgram은 독자적 프레임워크로, The Myers &amp; Briggs Foundation과 무관합니다.<br>
       <span style="margin-top:8px;display:inline-block;">개인정보 문의 · <a href="mailto:joculsion@gmail.com" style="color:var(--silver);text-decoration:underline;">joculsion@gmail.com</a></span>
@@ -1221,7 +1221,7 @@ function showScreen(id) {
 }
 
 function startTest() {
-  window.location.href = '/couple/kr/test/';
+  window.location.href = '/couple/test/';
 }
 
 function restart() {
@@ -1615,7 +1615,7 @@ function renderBig5Radar(sA, sB) {
    SHARE / CTA
 ═════════════════════════════════════════════════════════════*/
 function copyLink() {
-  var url = 'https://42world.kr/couple/kr';
+  var url = 'https://42world.kr/couple';
   navigator.clipboard.writeText(url).then(function() {
     showToast('링크가 복사됐어요! 연인에게 공유해보세요 💑');
   }).catch(function() {
@@ -1636,7 +1636,7 @@ function shareKakao() {
 
   var shareTitle = '우리 커플 유형은 ✨ ' + combo.title;
   var shareText  = combo.sub + '\n너도 테스트해봐 👇';
-  var shareUrl   = 'https://42world.kr/couple/kr';
+  var shareUrl   = 'https://42world.kr/couple';
 
   // 모바일 Web Share API (iOS/Android 네이티브 공유시트 — 카카오 포함)
   if (navigator.share) {
@@ -1674,7 +1674,7 @@ function fallbackCopy(text) {
     document.execCommand('copy');
     showToast('링크 복사 완료! 카카오톡에 붙여넣기 하세요 🔗');
   } catch(e) {
-    showToast('링크: 42world.kr/couple/kr');
+    showToast('링크: 42world.kr/couple');
   }
   document.body.removeChild(ta);
 }
@@ -1725,7 +1725,7 @@ function saveResultImage() {
   c.font = '500 18px Arial, sans-serif';
   c.fillStyle = 'rgba(255,255,255,0.35)';
   c.textAlign = 'right';
-  c.fillText('42world.kr/couple/kr', W - 28, 40);
+  c.fillText('42world.kr/couple', W - 28, 40);
 
   // ── type badges
   var bx = 32, by = 60;
@@ -1899,7 +1899,7 @@ function saveResultImage() {
   c.font='400 13px Arial, sans-serif';
   c.fillStyle='rgba(255,255,255,0.3)';
   c.textAlign='center';
-  c.fillText('shadowgram.org  \u00b7  \u00a9 2025 Shadowgram', W/2, H-24);
+  c.fillText('42world.kr  \u00b7  \u00a9 2025 42world', W/2, H-24);
 
   // ── download
   try {
@@ -2012,32 +2012,14 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')hwClose();});
 <div class="hw-drawer" id="hw-drawer">
   <div class="hw-drawer-head">
     <div>
-      <div class="hw-drawer-logo"><span style="font-weight:300;color:#A0A8B8;">SHADOW</span>GRAM</div>
-      <div style="font-size:10px;letter-spacing:2px;color:#8899AA;margin-top:3px;">Shadowgram Couple</div>
+      <div class="hw-drawer-logo"><span style="font-weight:300;color:#A0A8B8;">42</span>world</div>
+      <div style="font-size:10px;letter-spacing:2px;color:#8899AA;margin-top:3px;">커플 케미 테스트</div>
     </div>
     <button class="hw-close-btn" onclick="hwClose()" aria-label="close">&#x2715;</button>
   </div>
   <div class="hw-section">
-    <a class="hw-item" href="/"><span class="hw-item-icon">&#x1F3E0;</span> Home</a>
-  </div>
-  <div class="hw-section">
-    <div class="hw-section-label">Self</div>
-    <span class="hw-item hw-parent"><span class="hw-item-icon">&#x1F31F;</span> Shadowgram Self <span class="hw-badge">PT-BR</span></span>
-    <a class="hw-item hw-sub" href="/self/pt/?fresh=1"><span class="hw-item-icon">&#x270F;</span> Test</a>
-    <a class="hw-item hw-sub" href="/blog/"><span class="hw-item-icon">&#x1F4DD;</span> Blog</a>
-    <a class="hw-item hw-sub" href="/blog/faq.html"><span class="hw-item-icon">&#x2753;</span> FAQ</a>
-  </div>
-  <div class="hw-section">
-    <div class="hw-section-label">Couple</div>
-    <span class="hw-item hw-parent"><span class="hw-item-icon">&#x1F491;</span> Shadowgram Couple <span class="hw-badge">KR</span></span>
-    <a class="hw-item hw-sub" href="/couple/kr/"><span class="hw-item-icon">&#x270F;</span> Test</a>
-    <a class="hw-item hw-sub" href="/couple/kr/shop/"><span class="hw-item-icon">&#x1F6CD;</span> Shop</a>
-    <a class="hw-item hw-sub" href="/couple/kr/blog/"><span class="hw-item-icon">&#x1F4DD;</span> Blog</a>
-  </div>
-  <div class="hw-section">
-    <div class="hw-section-label">Coming Soon</div>
-    <a class="hw-item hw-disabled" href="#"><span class="hw-item-icon">&#x1F3E2;</span> Shadowgram Team <span class="hw-badge soon">Soon</span></a>
-    <a class="hw-item hw-disabled" href="#"><span class="hw-item-icon">&#x1F319;</span> leftnoon Community <span class="hw-badge soon">Soon</span></a>
+    <a class="hw-item" href="/"><span class="hw-item-icon">&#x1F3E0;</span> 홈</a>
+    <a class="hw-item" href="/couple/"><span class="hw-item-icon">&#x1F491;</span> 커플 케미 테스트</a>
   </div>
 </div>
 </body>
