@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>42world — 사이(between)에서 피어나는 관계 이야기</title>
+<meta name="description" content="우리 사이(between)는 어떤 케미? 커플·친구·가족의 관계 유형을 알아보세요.">
+<meta property="og:title" content="42world — 우리 사이 케미 테스트">
+<meta property="og:description" content="64가지 커플 유형으로 알아보는 우리의 관계 케미">
+<meta property="og:url" content="https://42world.kr">
+<meta name="twitter:card" content="summary_large_image">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --dark: #1A2030;
+    --gold: #B8860B;
+    --gold-l: #D4A017;
+    --silver: #8899AA;
+    --bg: #0F121E;
+    --card: #1A2030;
+    --border: rgba(184,134,11,0.2);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Montserrat', 'Apple SD Gothic Neo', sans-serif;
+    background: var(--bg);
+    color: #E8E4DC;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  .gnav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 56px;
+    position: sticky; top: 0; z-index: 999;
+    background: rgba(15,18,30,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .gnav-logo {
+    font-size: 20px; font-weight: 900;
+    letter-spacing: .04em; text-decoration: none;
+    color: #D4A017;
+  }
+  .gnav-logo span { color: #8899AA; font-weight: 300; font-size: 11px; letter-spacing: 2px; margin-left: 8px; }
+  .gnav-links { display: flex; gap: 8px; }
+  .gnav-link {
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    color: #8899AA; text-decoration: none;
+    background: rgba(184,134,11,0.1); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px;
+    transition: all .2s;
+  }
+  .gnav-link:hover { color: #D4A017; border-color: rgba(184,134,11,0.5); }
+  .gnav-link.active { color: #D4A017; background: rgba(184,134,11,0.18); border-color: rgba(184,134,11,0.5); }
+
+  /* HERO */
+  .hero {
+    min-height: calc(100vh - 56px);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 24px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 40%, rgba(184,134,11,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-num {
+    font-size: 11px; letter-spacing: 4px; font-weight: 700;
+    color: #D4A017; text-transform: uppercase; margin-bottom: 20px;
+    opacity: 0; animation: fadeUp .6s .1s ease forwards;
+  }
+  .hero-title {
+    font-size: clamp(36px, 10vw, 72px);
+    font-weight: 900; line-height: 1.1;
+    color: #fff; margin-bottom: 12px;
+    opacity: 0; animation: fadeUp .6s .2s ease forwards;
+  }
+  .hero-title .gold { color: #D4A017; }
+  .hero-sub {
+    font-size: clamp(14px, 3vw, 17px);
+    color: rgba(255,255,255,.55); line-height: 1.8;
+    max-width: 480px; margin: 0 auto 48px;
+    font-weight: 300;
+    opacity: 0; animation: fadeUp .6s .3s ease forwards;
+  }
+  .hero-pills {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center; margin-bottom: 48px;
+    opacity: 0; animation: fadeUp .6s .4s ease forwards;
+  }
+  .pill {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(184,134,11,.3);
+    border-radius: 40px; padding: 8px 18px;
+    font-size: 13px; color: rgba(255,255,255,.7);
+    font-weight: 500;
+  }
+  .btn-start {
+    background: linear-gradient(135deg, #B8860B, #D4A017);
+    color: #fff; border: none; border-radius: 60px;
+    padding: 18px 52px; font-size: 17px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 6px 28px rgba(184,134,11,.45);
+    transition: transform .15s, box-shadow .15s;
+    letter-spacing: .04em;
+    opacity: 0; animation: fadeUp .6s .5s ease forwards;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(184,134,11,.55); }
+  .hero-note {
+    margin-top: 20px; font-size: 12px; color: rgba(255,255,255,.3);
+    opacity: 0; animation: fadeUp .6s .6s ease forwards;
+  }
+
+  /* CARDS */
+  .cards-section {
+    max-width: 800px; margin: 0 auto; padding: 0 20px 100px;
+  }
+  .section-label {
+    text-align: center; font-size: 10px; letter-spacing: 3px;
+    color: var(--silver); text-transform: uppercase; margin-bottom: 28px;
+  }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 16px; }
+  .svc-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 28px 24px;
+    text-decoration: none; display: block;
+    transition: transform .25s, border-color .25s, box-shadow .25s;
+    position: relative; overflow: hidden;
+  }
+  .svc-card:hover { transform: translateY(-4px); border-color: rgba(184,134,11,.4); box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+  .svc-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,#8A6409,#D4A017); opacity:0; transition:opacity .25s; }
+  .svc-card:hover::before { opacity:1; }
+  .svc-card.soon { opacity: .45; pointer-events: none; cursor: default; }
+  .card-icon { font-size: 28px; margin-bottom: 14px; }
+  .card-tag {
+    display: inline-block; font-size: 9px; letter-spacing: 2px; font-weight: 700;
+    color: #D4A017; background: rgba(184,134,11,.1); border: 1px solid rgba(184,134,11,.2);
+    padding: 3px 8px; border-radius: 4px; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .card-tag.soon-tag { color: #556; background: rgba(80,80,120,.2); border-color: rgba(80,80,120,.2); }
+  .card-title { font-size: 19px; font-weight: 800; color: #E8E4DC; margin-bottom: 6px; }
+  .card-desc { font-size: 12px; color: var(--silver); line-height: 1.75; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border); padding: 32px 24px;
+    text-align: center; font-size: 11px; color: var(--silver);
+    line-height: 1.9;
+  }
+  footer a { color: var(--silver); text-decoration: none; }
+  footer a:hover { color: #D4A017; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(18px);} to{opacity:1;transform:translateY(0);} }
+  @media(max-width:480px) { .cards-grid { grid-template-columns: 1fr; } .gnav-links { gap: 6px; } }
+</style>
+</head>
+<body>
+
+<nav class="gnav">
+  <a class="gnav-logo" href="/">42world<span>BETWEEN</span></a>
+  <div class="gnav-links">
+    <a class="gnav-link active" href="/couple/kr/">💑 커플</a>
+    <a class="gnav-link soon" href="#">👫 친구</a>
+    <a class="gnav-link soon" href="#">👨‍👩‍👧 가족</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-num">42 = 사이(between) · 8×8 = 64 케미</div>
+  <h1 class="hero-title">우리 <span class="gold">사이</span>는<br>어떤 케미?</h1>
+  <p class="hero-sub">두 사람 사이의 이야기를 심리 유형으로 풀어보는<br>관계 케미 탐색 플랫폼</p>
+  <div class="hero-pills">
+    <span class="pill">💑 연애 커플</span>
+    <span class="pill">💍 웨딩 준비</span>
+    <span class="pill">👫 친구 사이</span>
+    <span class="pill">👨‍👩‍👧 부모-자녀</span>
+  </div>
+  <a class="btn-start" href="/couple/kr/">커플 케미 알아보기 →</a>
+  <p class="hero-note">24문항 · 무료 · 공유 가능</p>
+</section>
+
+<section class="cards-section">
+  <div class="section-label">서비스 둘러보기</div>
+  <div class="cards-grid">
+
+    <a class="svc-card" href="/couple/kr/">
+      <div class="card-icon">💑</div>
+      <span class="card-tag">LIVE</span>
+      <div class="card-title">커플 케미</div>
+      <div class="card-desc">연인의 심리 유형으로 알아보는 64가지 커플 케미. K-drama 주인공처럼 우리만의 로맨스 스타일 발견.</div>
+    </a>
+
+    <div class="svc-card soon">
+      <div class="card-icon">💍</div>
+      <span class="card-tag soon-tag">준비중</span>
+      <div class="card-title">웨딩 케미</div>
+      <div class="card-desc">결혼 준비 커플을 위한 심층 가치관 분석. 웨딩홀·스드메 파트너 제공 서비스.</div>
+    </div>
+
+    <div class="svc-card soon">
+      <div class="card-icon">👫</div>
+      <span class="card-tag soon-tag">준비중</span>
+      <div class="card-title">친구 케미</div>
+      <div class="card-desc">베프와의 우정 케미 분석. 우리 둘이 찰떡궁합인 이유를 K-drama로 확인.</div>
+    </div>
+
+    <div class="svc-card soon">
+      <div class="card-icon">👨‍👩‍👧</div>
+      <span class="card-tag soon-tag">준비중</span>
+      <div class="card-title">가족 케미</div>
+      <div class="card-desc">부모-자녀 사이의 소통 유형 분석. 세대 차이를 이해하는 새로운 방법.</div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  42world.kr · © 2025 42world<br>
+  <a href="mailto:joculsion@gmail.com">joculsion@gmail.com</a><br><br>
+  * MBTI® is a registered trademark of The Myers &amp; Briggs Foundation.<br>
+  42world는 독자적 프레임워크로, The Myers &amp; Briggs Foundation과 무관합니다.
+</footer>
+
+</body>
+</html>
