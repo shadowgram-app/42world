@@ -94,8 +94,10 @@
     .rc-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
     .rc-img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--silver);font-size:12px;opacity:0.4;}
     .rc-img-placeholder .ph-icon{font-size:40px;opacity:0.3;}
-    /* 하단: 배우(배역) + 사용자 이름 */
+    /* 하단 hook 영역 */
     .rc-bottom{padding:10px 18px 12px;text-align:center;background:linear-gradient(0deg,rgba(0,0,0,0.6) 0%,transparent 100%);}
+    /* 캡처 전용 주소 바 — 버튼 대신 이미지 최하단에 표시 */
+    .rc-capture-bar{padding:10px 0;text-align:center;background:linear-gradient(135deg,#C9A84C,#E8D090);border-radius:0 0 18px 18px;font-size:10px;letter-spacing:3px;font-weight:900;color:rgba(10,10,20,0.6);display:none;}
     /* 주연배우(배역) 줄 */
     .rc-actors{display:none;}
     .rc-actor-person{display:flex;flex-direction:column;align-items:center;gap:1px;}
@@ -110,8 +112,7 @@
     .rc-cast-vs{font-size:18px;color:rgba(201,168,76,0.4);font-weight:300;margin:0 2px;}
     .rc-combo-badge{display:none;}
     .rc-url{display:none;}
-    .rc-save-btn{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:0 0 18px 18px;padding:12px 14px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;}
-    .rc-btn-url{font-size:9px;letter-spacing:2px;color:rgba(10,10,20,0.5);font-weight:400;}
+    .rc-save-btn{display:flex;align-items:center;justify-content:center;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:0 0 18px 18px;padding:14px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;}
     /* 리포트 CTA */
     .report-cta{margin:0 20px 24px;background:linear-gradient(135deg,#1E1030,#102030);border:1.5px solid var(--gold);border-radius:20px;padding:24px 20px;text-align:center;position:relative;overflow:hidden;}
     .report-cta::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,var(--gold-glow) 0%,transparent 60%);pointer-events:none;}
@@ -333,9 +334,10 @@
       <div class="rc-bottom">
         <div class="rc-why" id="rc-why"></div>
       </div>
+      <!-- 캡처 전용 바: 저장 시만 보임 -->
+      <div class="rc-capture-bar" id="rc-capture-bar">42WORLD.KR</div>
       <button class="rc-save-btn" id="rc-save-btn" onclick="saveCard()">
         <span>📸 결과카드 저장</span>
-        <a class="rc-btn-url" href="https://42world.kr" onclick="event.stopPropagation();">42WORLD.KR</a>
       </button>
     </div>
   </div>
@@ -654,11 +656,14 @@ renderPage();
 function saveCard(){
   const card=document.getElementById('result-card');
   const btn=document.getElementById('rc-save-btn');
-  btn.querySelector('span').textContent='⏳ 저장 중...';
   btn.disabled=true;
 
-  // html2canvas 동적 로드
   function doCapture(){
+    // 캡처 전: 버튼 숨기고, 캡처 전용 주소 바 표시
+    const capBar=document.getElementById('rc-capture-bar');
+    btn.style.display='none';
+    if(capBar) capBar.style.display='block';
+    const cardH=card.offsetHeight;
     html2canvas(card,{
       backgroundColor:'#0D0F1C',
       scale:2,
@@ -666,22 +671,24 @@ function saveCard(){
       allowTaint:false,
       logging:false,
       width:card.offsetWidth,
-      height:card.offsetHeight
+      height:cardH
     }).then(canvas=>{
+      // 캡처 후: 원복
+      btn.style.display='';
+      if(capBar) capBar.style.display='none';
+      btn.disabled=false;
       const params=new URLSearchParams(window.location.search);
       const a=params.get('a')||'SPARK', b=params.get('b')||'VISION';
       const na=params.get('na')||'', nb=params.get('nb')||'';
       const nameStr=na&&nb?`${na}×${nb}`:`${a}_${b}`;
-      // 이미지 저장
       const link=document.createElement('a');
       link.download=`42world_${nameStr}.png`;
       link.href=canvas.toDataURL('image/png');
       link.click();
-      btn.querySelector('span').textContent='✅ 저장 완료!';
-      btn.disabled=false;
-      setTimeout(()=>{btn.querySelector('span').textContent='📸 결과카드 저장';},3000);
+      showToast('✅ 저장 완료! 인스타에 올려봐요 🔥');
     }).catch(()=>{
-      btn.querySelector('span').textContent='📸 결과카드 저장';
+      btn.style.display='';
+      if(capBar) capBar.style.display='none';
       btn.disabled=false;
       showToast('저장 실패. 스크린샷을 이용해 주세요 📱');
     });
@@ -694,7 +701,6 @@ function saveCard(){
     s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
     s.onload=doCapture;
     s.onerror=()=>{
-      btn.textContent='📸 결과카드 저장하기 →';
       btn.disabled=false;
       showToast('저장 기능을 불러올 수 없어요. 스크린샷을 이용해 주세요 📱');
     };
@@ -727,7 +733,7 @@ function saveCard(){
     if(saveBtn){
       saveBtn.onclick=null;
       saveBtn.style.background='linear-gradient(135deg,#B8860B,#D4A017)';
-      saveBtn.innerHTML='<span>✏️ 나도 테스트하기 →</span><a class="rc-btn-url" href="https://42world.kr" onclick="event.stopPropagation();">42WORLD.KR</a>';
+      saveBtn.innerHTML='<span>✏️ 나도 테스트하기 →</span>';
       saveBtn.onclick=()=>{window.location.href='/';};
     }
   } else {
