@@ -85,6 +85,8 @@
     /* 상단: 드라마 제목 + 이유 */
     .rc-top{padding:14px 18px 12px;text-align:center;background:linear-gradient(180deg,rgba(201,168,76,0.12) 0%,transparent 100%);border-bottom:1px solid rgba(201,168,76,0.15);}
     .rc-brand{font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:6px;opacity:0.6;}
+    .rc-like-drama{font-size:11px;color:#C8C4D8;line-height:1.6;padding:0 4px;margin-bottom:4px;opacity:0.85;}
+    .rc-like-drama em{font-style:normal;color:var(--gold);font-weight:700;}
     .rc-drama-title{font-size:15px;font-weight:900;color:var(--gold);letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:6px;}
     .rc-drama-icon{font-size:14px;}
     .rc-why{font-size:11px;color:#C8C4D8;line-height:1.6;padding:0 4px;font-style:italic;opacity:0.9;}
@@ -105,11 +107,12 @@
     .rc-cast{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;}
     .rc-cast-person{display:flex;flex-direction:column;align-items:center;gap:1px;}
     .rc-cast-name{font-size:14px;font-weight:900;color:var(--white);}
-    .rc-cast-label{font-size:8px;color:var(--silver);letter-spacing:0.5px;opacity:0.6;}
+    .rc-cast-label{display:none;}
     .rc-cast-vs{font-size:18px;color:rgba(201,168,76,0.4);font-weight:300;margin:0 2px;}
-    .rc-combo-badge{font-size:9px;color:var(--silver);letter-spacing:1px;margin-bottom:3px;opacity:0.55;}
-    .rc-url{font-size:8px;letter-spacing:2px;color:var(--gold);opacity:0.45;margin-top:3px;}
-    .rc-save-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:0 0 18px 18px;padding:14px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;}
+    .rc-combo-badge{display:none;}
+    .rc-url{display:none;}
+    .rc-save-btn{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:0 0 18px 18px;padding:12px 14px;font-size:14px;font-weight:900;font-family:inherit;cursor:pointer;}
+    .rc-btn-url{font-size:9px;letter-spacing:2px;color:rgba(10,10,20,0.5);font-weight:400;}
     /* 리포트 CTA */
     .report-cta{margin:0 20px 24px;background:linear-gradient(135deg,#1E1030,#102030);border:1.5px solid var(--gold);border-radius:20px;padding:24px 20px;text-align:center;position:relative;overflow:hidden;}
     .report-cta::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,var(--gold-glow) 0%,transparent 60%);pointer-events:none;}
@@ -315,7 +318,8 @@
     <div class="result-card" id="result-card">
       <div class="rc-top">
         <!-- 상단: 드라마 제목 + 왜 그런지 -->
-        <div class="rc-brand">SHADOWGRAM · COUPLE</div>
+        <div class="rc-brand">42WORLD · COUPLE</div>
+        <div class="rc-like-drama" id="rc-like-drama"></div>
         <div class="rc-drama-title">
           <span class="rc-drama-icon">🎬</span>
           <span id="rc-drama-title">—</span>
@@ -357,9 +361,11 @@
             <span class="rc-cast-label">B 유형</span>
           </div>
         </div>
-        <div class="rc-url">42world.kr</div>
       </div>
-      <button class="rc-save-btn" id="rc-save-btn" onclick="saveCard()">📸 결과카드 저장 · 공유하기 →</button>
+      <button class="rc-save-btn" id="rc-save-btn" onclick="saveCard()">
+        <span>📸 결과카드 저장 · 공유하기 →</span>
+        <a class="rc-btn-url" href="https://42world.kr" onclick="event.stopPropagation();">42WORLD.KR</a>
+      </button>
     </div>
   </div>
 
@@ -627,29 +633,35 @@ renderPage();
       const ko=d.ko;
 
       // ① 상단: 드라마 제목
-      document.getElementById('rc-drama-title').textContent=ko.drama||ko.combination_name||key;
+      const drama = ko.drama || ko.combination_name || key;
+      document.getElementById('rc-drama-title').textContent = drama;
 
-      // ② 상단: 왜 이 조합인지 (훅 문구 — 대사 형식 정리)
-      const rawHook=(ko.hook||'').replace(/"/g,'').trim();
-      // 대화체 훅이면 따옴표로 감싸서 예쁘게
-      const whyText = rawHook ? `"${rawHook}"` : (ko.subtitle||'');
-      document.getElementById('rc-why').textContent=whyText;
-
-      // ③ 조합 배지
-      document.getElementById('rc-combo-badge').textContent=
-        `✦ ${ko.combination_name||key} ✦`;
-
-      // ④ 하단 첫째 줄: 주연배우(배역) — 언어팩 기반
+      // ① 상단: "우리 커플은 마치 ..." 문구
       const actorM = ko.actor_m || '';
       const actorF = ko.actor_f || '';
       const roleM  = ko.role_m  || ko.char_m || '';
       const roleF  = ko.role_f  || ko.char_f || '';
+      const likeEl = document.getElementById('rc-like-drama');
+      if(likeEl && drama && actorM && actorF){
+        const rM = roleM ? `(${roleM})` : '';
+        const rF = roleF ? `(${roleF})` : '';
+        likeEl.innerHTML = `우리 커플은 마치 <em>"${drama}"</em>의 ${actorM}${rM}, ${actorF}${rF} 같아요.`;
+      }
+
+      // ② 상단: 왜 이 조합인지 (훅 문구)
+      const rawHook=(ko.hook||'').replace(/"/g,'').trim();
+      const whyText = rawHook ? `"${rawHook}"` : (ko.subtitle||'');
+      document.getElementById('rc-why').textContent=whyText;
+
+      // ③ 조합 배지 — 숨김 처리됨 (CSS display:none)
+
+      // ④ 하단 첫째 줄: 주연배우(배역)
       document.getElementById('rc-actor-name-a').textContent = actorM || a;
       document.getElementById('rc-actor-role-a').textContent = roleM ? `(${roleM})` : '';
       document.getElementById('rc-actor-name-b').textContent = actorF || b;
       document.getElementById('rc-actor-role-b').textContent = roleF ? `(${roleF})` : '';
 
-      // ⑤ 하단 둘째 줄: 사용자 이름 (입력한 경우만 표시)
+      // ⑤ 하단 둘째 줄: 사용자 이름 (입력한 경우만 표시, 유형 라벨 없이 이름만)
       if(na || nb){
         const userRow = document.getElementById('rc-user-row');
         if(userRow) userRow.style.display='flex';
