@@ -85,11 +85,10 @@
     /* 상단: 드라마 제목 + 이유 */
     .rc-top{padding:14px 18px 12px;text-align:center;background:linear-gradient(180deg,rgba(201,168,76,0.12) 0%,transparent 100%);border-bottom:1px solid rgba(201,168,76,0.15);}
     .rc-brand{font-size:8px;letter-spacing:3px;color:var(--gold);margin-bottom:6px;opacity:0.6;}
-    .rc-like-drama{font-size:11px;color:#C8C4D8;line-height:1.6;padding:0 4px;margin-bottom:4px;opacity:0.85;}
-    .rc-like-drama em{font-style:normal;color:var(--gold);font-weight:700;}
-    .rc-drama-title{font-size:15px;font-weight:900;color:var(--gold);letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:6px;}
-    .rc-drama-icon{font-size:14px;}
-    .rc-why{font-size:11px;color:#C8C4D8;line-height:1.6;padding:0 4px;font-style:italic;opacity:0.9;}
+    .rc-like-drama{font-size:11px;color:#C8C4D8;line-height:1.8;padding:0 4px;margin-bottom:6px;opacity:0.85;}
+    .rc-like-drama em{font-style:normal;color:var(--gold);font-weight:900;font-size:15px;}
+    .rc-personalize{font-size:12px;font-weight:700;color:var(--white);margin-bottom:6px;letter-spacing:0.5px;}
+    .rc-why{font-size:11px;color:#C8C4D8;line-height:1.6;padding:6px 4px;font-style:italic;opacity:0.9;}
     /* 이미지 */
     .rc-img-wrap{width:100%;aspect-ratio:1/1;background:linear-gradient(135deg,#0A0A18,#0F1525);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
     .rc-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
@@ -98,7 +97,7 @@
     /* 하단: 배우(배역) + 사용자 이름 */
     .rc-bottom{padding:10px 18px 12px;text-align:center;background:linear-gradient(0deg,rgba(0,0,0,0.6) 0%,transparent 100%);}
     /* 주연배우(배역) 줄 */
-    .rc-actors{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:5px;}
+    .rc-actors{display:none;}
     .rc-actor-person{display:flex;flex-direction:column;align-items:center;gap:1px;}
     .rc-actor-name{font-size:12px;font-weight:700;color:var(--gold);}
     .rc-actor-role{font-size:9px;color:rgba(201,168,76,0.7);letter-spacing:0.3px;}
@@ -317,14 +316,10 @@
   <div class="result-card-wrap fade-in" style="animation-delay:1.6s;" id="result-card-outer">
     <div class="result-card" id="result-card">
       <div class="rc-top">
-        <!-- 상단: 드라마 제목 + 왜 그런지 -->
+        <!-- 상단: "우리 커플은 마치 ..." + 개인화 -->
         <div class="rc-brand">42WORLD · COUPLE</div>
         <div class="rc-like-drama" id="rc-like-drama"></div>
-        <div class="rc-drama-title">
-          <span class="rc-drama-icon">🎬</span>
-          <span id="rc-drama-title">—</span>
-        </div>
-        <div class="rc-why" id="rc-why">—</div>
+        <div class="rc-personalize" id="rc-personalize"></div>
       </div>
       <!-- 이미지 -->
       <div class="rc-img-wrap">
@@ -334,36 +329,12 @@
           <div>이미지 준비 중</div>
         </div>
       </div>
-      <!-- 하단: 주연배우(배역) + 사용자 이름 -->
+      <!-- 하단: hook 문구 -->
       <div class="rc-bottom">
-        <div class="rc-combo-badge" id="rc-combo-badge">—</div>
-        <!-- 주연배우(배역) 줄 -->
-        <div class="rc-actors">
-          <div class="rc-actor-person">
-            <span class="rc-actor-name" id="rc-actor-name-a">—</span>
-            <span class="rc-actor-role" id="rc-actor-role-a">—</span>
-          </div>
-          <span class="rc-actor-vs">×</span>
-          <div class="rc-actor-person">
-            <span class="rc-actor-name" id="rc-actor-name-b">—</span>
-            <span class="rc-actor-role" id="rc-actor-role-b">—</span>
-          </div>
-        </div>
-        <!-- 사용자 이름 줄 (입력한 경우만 표시) -->
-        <div class="rc-cast" id="rc-user-row" style="display:none;">
-          <div class="rc-cast-person">
-            <span class="rc-cast-name" id="rc-cast-name-a">—</span>
-            <span class="rc-cast-label">A 유형</span>
-          </div>
-          <span class="rc-cast-vs">×</span>
-          <div class="rc-cast-person">
-            <span class="rc-cast-name" id="rc-cast-name-b">—</span>
-            <span class="rc-cast-label">B 유형</span>
-          </div>
-        </div>
+        <div class="rc-why" id="rc-why"></div>
       </div>
       <button class="rc-save-btn" id="rc-save-btn" onclick="saveCard()">
-        <span>📸 결과카드 저장 · 공유하기 →</span>
+        <span>📸 결과카드 저장</span>
         <a class="rc-btn-url" href="https://42world.kr" onclick="event.stopPropagation();">42WORLD.KR</a>
       </button>
     </div>
@@ -632,11 +603,8 @@ renderPage();
       if(!d) return;
       const ko=d.ko;
 
-      // ① 상단: 드라마 제목
+      // ① 상단: 드라마 제목 + "우리 커플은 마치 ..." 문구
       const drama = ko.drama || ko.combination_name || key;
-      document.getElementById('rc-drama-title').textContent = drama;
-
-      // ① 상단: "우리 커플은 마치 ..." 문구
       const actorM = ko.actor_m || '';
       const actorF = ko.actor_f || '';
       const roleM  = ko.role_m  || ko.char_m || '';
@@ -645,29 +613,21 @@ renderPage();
       if(likeEl && drama && actorM && actorF){
         const rM = roleM ? `(${roleM})` : '';
         const rF = roleF ? `(${roleF})` : '';
-        likeEl.innerHTML = `우리 커플은 마치 <em>"${drama}"</em>의 ${actorM}${rM}, ${actorF}${rF} 같아요.`;
+        likeEl.innerHTML = `우리 커플은 마치 <em>"${drama}"</em>의<br>${actorM}${rM}, ${actorF}${rF} 같아요.`;
       }
 
-      // ② 상단: 왜 이 조합인지 (훅 문구)
+      // ② 개인화 라인: TypeA(nameA) × TypeB(nameB)
+      const personalEl = document.getElementById('rc-personalize');
+      if(personalEl){
+        const dispA = na ? `${a}(${na})` : a;
+        const dispB = nb ? `${b}(${nb})` : b;
+        personalEl.textContent = `${dispA} × ${dispB}`;
+      }
+
+      // ③ 이미지 아래 hook 문구
       const rawHook=(ko.hook||'').replace(/"/g,'').trim();
       const whyText = rawHook ? `"${rawHook}"` : (ko.subtitle||'');
       document.getElementById('rc-why').textContent=whyText;
-
-      // ③ 조합 배지 — 숨김 처리됨 (CSS display:none)
-
-      // ④ 하단 첫째 줄: 주연배우(배역)
-      document.getElementById('rc-actor-name-a').textContent = actorM || a;
-      document.getElementById('rc-actor-role-a').textContent = roleM ? `(${roleM})` : '';
-      document.getElementById('rc-actor-name-b').textContent = actorF || b;
-      document.getElementById('rc-actor-role-b').textContent = roleF ? `(${roleF})` : '';
-
-      // ⑤ 하단 둘째 줄: 사용자 이름 (입력한 경우만 표시, 유형 라벨 없이 이름만)
-      if(na || nb){
-        const userRow = document.getElementById('rc-user-row');
-        if(userRow) userRow.style.display='flex';
-        document.getElementById('rc-cast-name-a').textContent = na || a;
-        document.getElementById('rc-cast-name-b').textContent = nb || b;
-      }
 
       // ⑤ 이미지 — images_v2 우선, 없으면 images fallback
       const imgEl=document.getElementById('rc-img');
@@ -694,7 +654,7 @@ renderPage();
 function saveCard(){
   const card=document.getElementById('result-card');
   const btn=document.getElementById('rc-save-btn');
-  btn.textContent='⏳ 저장 중...';
+  btn.querySelector('span').textContent='⏳ 저장 중...';
   btn.disabled=true;
 
   // html2canvas 동적 로드
@@ -711,23 +671,17 @@ function saveCard(){
       const params=new URLSearchParams(window.location.search);
       const a=params.get('a')||'SPARK', b=params.get('b')||'VISION';
       const na=params.get('na')||'', nb=params.get('nb')||'';
-      const drama=document.getElementById('rc-drama-title').textContent||'';
       const nameStr=na&&nb?`${na}×${nb}`:`${a}_${b}`;
       // 이미지 저장
       const link=document.createElement('a');
       link.download=`42world_${nameStr}.png`;
       link.href=canvas.toDataURL('image/png');
       link.click();
-      // 저장 후 바로 공유 옵션 제공
-      btn.textContent='✅ 저장! 이제 인스타에 올려봐요 🔥';
+      btn.querySelector('span').textContent='✅ 저장 완료!';
       btn.disabled=false;
-      // 공유 메시지도 같이 클립보드에 올려두기
-      const shareUrl=getShareUrl();
-      const msg=(na&&nb?`${na} × ${nb}의 커플 유형 — ${drama}\n`:`우리 커플 유형 — ${drama}\n`)+'당신들도 체크해봐요 👉 '+shareUrl;
-      if(navigator.clipboard) navigator.clipboard.writeText(msg).catch(()=>{});
-      setTimeout(()=>{btn.textContent='📸 결과카드 저장 · 공유하기 →';},4000);
+      setTimeout(()=>{btn.querySelector('span').textContent='📸 결과카드 저장';},3000);
     }).catch(()=>{
-      btn.textContent='📸 결과카드 저장 · 공유하기 →';
+      btn.querySelector('span').textContent='📸 결과카드 저장';
       btn.disabled=false;
       showToast('저장 실패. 스크린샷을 이용해 주세요 📱');
     });
@@ -773,7 +727,7 @@ function saveCard(){
     if(saveBtn){
       saveBtn.onclick=null;
       saveBtn.style.background='linear-gradient(135deg,#B8860B,#D4A017)';
-      saveBtn.innerHTML='✏️ 나도 테스트하기 →';
+      saveBtn.innerHTML='<span>✏️ 나도 테스트하기 →</span><a class="rc-btn-url" href="https://42world.kr" onclick="event.stopPropagation();">42WORLD.KR</a>';
       saveBtn.onclick=()=>{window.location.href='/';};
     }
   } else {
@@ -832,9 +786,11 @@ function shareInsta(){
   const params=new URLSearchParams(window.location.search);
   const na=params.get('na')||'', nb=params.get('nb')||'';
   const names=[na,nb].filter(Boolean).join(' × ');
-  const drama=document.getElementById('rc-drama-title')?.textContent||'';
-  const roleA=document.getElementById('rc-actor-role-a')?.textContent||'';
-  const roleB=document.getElementById('rc-actor-role-b')?.textContent||'';
+  // rc-like-drama에서 em 태그(드라마 제목) 추출
+  const likeEl=document.getElementById('rc-like-drama');
+  const dramaEl=likeEl?likeEl.querySelector('em'):null;
+  const drama=(dramaEl?.textContent||'').replace(/^[""]|[""]$/g,'').trim();
+  const roleA='', roleB='';
   // rc-why = hook 문구 (combo.json에서 렌더링된 값)
   const whyRaw=document.getElementById('rc-why')?.textContent||'';
   const hook=whyRaw.replace(/^[""]|[""]$/g,'').trim();
