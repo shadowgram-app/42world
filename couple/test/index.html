@@ -16,7 +16,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(201,168,76,0.04) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(138,112,192,0.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
-.wrap{max-width:520px;margin:0 auto;padding:24px 16px 80px;position:relative;z-index:1;}
+.wrap{max-width:520px;margin:0 auto;padding:76px 16px 80px;position:relative;z-index:1;}
 
 /* 시작 화면 */
 #start-screen{text-align:center;}
@@ -116,9 +116,41 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* 토스트 */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(30,35,50,0.96);border:1px solid var(--border);border-radius:12px;padding:12px 20px;font-size:13px;color:var(--text);opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ── 햄버거 NAV ── */
+  .sg-nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(13,17,23,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(184,134,11,0.18);}
+  .sg-logo{font-size:13px;letter-spacing:3px;text-decoration:none;display:flex;align-items:center;gap:0;white-space:nowrap;}
+  .sg-s1{color:#A0A8B8;font-weight:300;} .sg-s2{color:#C9A84C;font-weight:800;} .sg-dot{color:rgba(184,134,11,0.45);font-weight:300;font-size:13px;} .sg-s3{color:#8899AA;font-weight:400;font-size:10px;letter-spacing:2px;}
+  .hw-btn{background:rgba(184,134,11,0.12);border:1px solid rgba(184,134,11,0.3);border-radius:8px;width:38px;height:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;flex-shrink:0;transition:background .2s;}
+  .hw-btn:hover{background:rgba(184,134,11,0.22);}
+  .hw-btn span{display:block;width:18px;height:2px;background:#C9A84C;border-radius:2px;transition:all .25s;}
+  .hw-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hw-btn.open span:nth-child(2){opacity:0;}
+  .hw-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .hw-overlay{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0);pointer-events:none;transition:background .3s;}
+  .hw-overlay.open{background:rgba(0,0,0,0.6);pointer-events:all;}
+  .hw-drawer{position:fixed;top:0;left:-290px;bottom:0;z-index:9999;width:270px;background:#0C0F1A;border-right:1px solid rgba(184,134,11,0.18);display:flex;flex-direction:column;transition:left .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
+  .hw-drawer.open{left:0;}
+  .hw-drawer-head{padding:48px 24px 18px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;}
+  .hw-drawer-logo{font-size:13px;letter-spacing:3px;font-weight:700;color:#C9A84C;}
+  .hw-close-btn{background:none;border:none;color:#A0A8B8;font-size:20px;cursor:pointer;padding:4px 8px;line-height:1;transition:color .2s;}
+  .hw-close-btn:hover{color:#C9A84C;}
+  .hw-section{padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .hw-section-label{font-size:10px;letter-spacing:2px;color:#445;padding:10px 24px 4px;text-transform:uppercase;}
+  .hw-item{display:flex;align-items:center;gap:10px;padding:12px 24px;color:#B0B8C8;text-decoration:none;font-size:13px;transition:background .2s,color .2s;}
+  .hw-item:hover{background:rgba(184,134,11,0.08);color:#C9A84C;}
+  .hw-item-icon{font-size:15px;}
+  .hw-badge{font-size:9px;letter-spacing:1px;font-weight:700;background:rgba(184,134,11,0.2);color:#C9A84C;border:1px solid rgba(184,134,11,0.3);padding:2px 6px;border-radius:4px;margin-left:auto;}
+  .hw-sub{padding-left:44px;font-size:12px;color:#8898A8;display:flex;align-items:center;gap:10px;padding-top:10px;padding-bottom:10px;text-decoration:none;transition:background .2s,color .2s;}
+  .hw-sub:hover{color:#C9A84C;background:rgba(184,134,11,0.06);}
+  .hw-parent{display:flex;align-items:center;gap:10px;padding:12px 24px;color:#E8E4DC;font-size:13px;cursor:default;}
 </style>
 </head>
 <body>
+<nav class="sg-nav">
+  <button class="hw-btn" id="hw-btn" onclick="hwToggle()" aria-label="menu"><span></span><span></span><span></span></button>
+  <a class="sg-logo" href="/"><span class="sg-s1">42</span><span class="sg-s2">WORLD</span><span class="sg-dot"> · </span><span class="sg-s3">COUPLE</span></a>
+</nav>
 <div class="wrap">
 
   <!-- ── 시작 화면 ── -->
@@ -647,6 +679,45 @@ function showToast(msg){
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
+</script>
+
+<div class="hw-overlay" id="hw-overlay" onclick="hwClose()"></div>
+<div class="hw-drawer" id="hw-drawer">
+  <div class="hw-drawer-head">
+    <div>
+      <div class="hw-drawer-logo"><span style="font-weight:300;color:#A0A8B8;">42</span>WORLD</div>
+      <div style="font-size:10px;letter-spacing:2px;color:#8899AA;margin-top:3px;">42WORLD Couple</div>
+    </div>
+    <button class="hw-close-btn" onclick="hwClose()">&#x2715;</button>
+  </div>
+  <div class="hw-section">
+    <a class="hw-item" href="/"><span class="hw-item-icon">🏠</span> 홈</a>
+  </div>
+  <div class="hw-section">
+    <div class="hw-section-label">Couple</div>
+    <span class="hw-parent"><span class="hw-item-icon">💑</span> 42WORLD Couple <span class="hw-badge">KR</span></span>
+    <a class="hw-item hw-sub" href="/"><span class="hw-item-icon">✏️</span> 테스트</a>
+    <a class="hw-item hw-sub" href="/couple/shop/"><span class="hw-item-icon">🛍️</span> 리포트 구매</a>
+  </div>
+  <div class="hw-section">
+    <div class="hw-section-label">Legal</div>
+    <a class="hw-item" href="/legal/terms.html"><span class="hw-item-icon">📄</span> 이용약관</a>
+    <a class="hw-item" href="/legal/privacy.html"><span class="hw-item-icon">🔒</span> 개인정보처리방침</a>
+    <a class="hw-item" href="/legal/refund.html"><span class="hw-item-icon">💰</span> 환불정책</a>
+  </div>
+</div>
+<script>
+function hwToggle(){
+  const btn=document.getElementById('hw-btn'),drawer=document.getElementById('hw-drawer'),overlay=document.getElementById('hw-overlay');
+  const open=drawer.classList.toggle('open');
+  btn.classList.toggle('open',open);overlay.classList.toggle('open',open);
+}
+function hwClose(){
+  document.getElementById('hw-btn').classList.remove('open');
+  document.getElementById('hw-drawer').classList.remove('open');
+  document.getElementById('hw-overlay').classList.remove('open');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')hwClose();});
 </script>
 </body>
 </html>
