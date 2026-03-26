@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta property="og:title" content="우리 커플 케미 결과가 나왔어요 👀">
   <meta property="og:description" content="이 조합이 끌리는 이유가 있었네요 😮">
-  <meta property="og:image" content="https://shadowgram.org/og-result.png">
+  <meta property="og:image" content="https://42world.kr/og-result.png">
   <meta name="twitter:card" content="summary_large_image">
-  <title>Shadowgram Couple — 결과</title>
+  <title>42WORLD Couple — 결과</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
     :root{--dark:#0A0A14;--card:#13131F;--border:#1E1E30;--gold:#C9A84C;--gold-glow:rgba(201,168,76,0.3);--silver:#7A8899;--white:#F0EEF8;--dim:#4A4860;}
@@ -238,7 +238,7 @@
 <body>
 <nav class="sg-nav">
   <button class="hw-btn" id="hw-btn" onclick="hwToggle()" aria-label="menu"><span></span><span></span><span></span></button>
-  <a class="sg-logo" href="/couple/kr/"><img src="/logo.png" alt="" style="width:26px;height:26px;border-radius:50%;flex-shrink:0;"><span class="sg-s1">SHADOW</span><span class="sg-s2">GRAM</span><span class="sg-dot"> · </span><span class="sg-s3">COUPLE</span></a>
+  <a class="sg-logo" href="/couple/kr/"><img src="/logo.png" alt="" style="width:26px;height:26px;border-radius:50%;flex-shrink:0;"><span class="sg-s1">42</span><span class="sg-s2">WORLD</span><span class="sg-dot"> · </span><span class="sg-s3">COUPLE</span></a>
 </nav>
 <div id="stars"></div>
 <div class="wrap">
@@ -247,7 +247,7 @@
   <div class="drama-hero fade-in" style="animation-delay:0.2s;padding-top:56px;margin-bottom:20px;">
     <div class="drama-hero-inner">
       <div class="dh-top">
-        <div class="dh-brand">✦ SHADOWGRAM · COUPLE ✦</div>
+        <div class="dh-brand">✦ 42WORLD · COUPLE ✦</div>
         <div class="dh-drama-title">
           <span>🎬</span>
           <span id="dh-drama-title">—</span>
@@ -330,7 +330,7 @@
   </div>
 
   <div class="hero">
-    <div class="reveal-badge">✦ Shadowgram Couple · 결과 ✦</div>
+    <div class="reveal-badge">✦ 42WORLD Couple · 결과 ✦</div>
     <div class="chem-ring-wrap">
       <svg width="180" height="180" viewBox="0 0 180 180">
         <defs>
@@ -441,7 +441,7 @@
     <div class="result-card" id="result-card">
       <div class="rc-top">
         <!-- 상단: 드라마 제목 + 왜 그런지 -->
-        <div class="rc-brand">SHADOWGRAM · COUPLE</div>
+        <div class="rc-brand">42WORLD · COUPLE</div>
         <div class="rc-drama-title">
           <span class="rc-drama-icon">🎬</span>
           <span id="rc-drama-title">—</span>
@@ -483,7 +483,7 @@
             <span class="rc-cast-label">B 유형</span>
           </div>
         </div>
-        <div class="rc-url">shadowgram.org/couple/kr</div>
+        <div class="rc-url">42world.kr/couple/result</div>
       </div>
       <button class="rc-save-btn" id="rc-save-btn" onclick="saveCard()">📸 결과카드 저장 · 공유하기 →</button>
     </div>
@@ -930,7 +930,7 @@ function saveCard(){
       const nameStr=na&&nb?`${na}×${nb}`:`${a}_${b}`;
       // 이미지 저장
       const link=document.createElement('a');
-      link.download=`shadowgram_${nameStr}.png`;
+      link.download=`42world_${nameStr}.png`;
       link.href=canvas.toDataURL('image/png');
       link.click();
       // 저장 후 바로 공유 옵션 제공
@@ -1022,7 +1022,7 @@ function getShareUrl(){
   const sp=new URLSearchParams({a,b,ref:'share'});
   if(na) sp.set('na',na);
   if(nb) sp.set('nb',nb);
-  return 'https://shadowgram.org/couple/kr/result/?'+sp.toString();
+  return 'https://42world.kr/couple/result/?'+sp.toString();
 }
 function shareKakao(){
   const url=getShareUrl();
@@ -1034,7 +1034,7 @@ function shareKakao(){
     Kakao.Share.sendDefault({objectType:'feed',content:{
       title,
       description:'당신들도 체크해봐요 — 64가지 조합 중 우리만의 커플 유형이 나와요',
-      imageUrl:'https://shadowgram.org/og-couple.png',
+      imageUrl:'https://42world.kr/og-couple.png',
       link:{mobileWebUrl:url,webUrl:url}
     },buttons:[{title:'결과 보러 가기 →',link:{mobileWebUrl:url,webUrl:url}}]});
   }else{
@@ -1077,7 +1077,7 @@ function getReport(){
   const b=(params.get('b')||'VISION').toUpperCase();
   const combo=`${a}_${b}`;
   const url=`/couple/kr/reports/combo/${combo}_KR.pdf`;
-  const filename=`Shadowgram_Couple_${combo}_KR.pdf`;
+  const filename=`42WORLD_Couple_${combo}_KR.pdf`;
   showToast(`📥 ${a} × ${b} 커플 리포트를 다운로드합니다!`);
   setTimeout(()=>{
     const l=document.createElement('a');
@@ -1111,19 +1111,24 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')hwClose();});
 <div class="hw-drawer" id="hw-drawer">
   <div class="hw-drawer-head">
     <div>
-      <div class="hw-drawer-logo"><span style="font-weight:300;color:#A0A8B8;">SHADOW</span>GRAM</div>
-      <div style="font-size:10px;letter-spacing:2px;color:#8899AA;margin-top:3px;">Shadowgram Couple</div>
+      <div class="hw-drawer-logo"><span style="font-weight:300;color:#A0A8B8;">42</span>WORLD</div>
+      <div style="font-size:10px;letter-spacing:2px;color:#8899AA;margin-top:3px;">42WORLD Couple</div>
     </div>
     <button class="hw-close-btn" onclick="hwClose()" aria-label="close">&#x2715;</button>
   </div>
   <div class="hw-section">
-    <a class="hw-item" href="/couple/kr/"><span class="hw-item-icon">&#x1F3E0;</span> Home</a>
+    <a class="hw-item" href="/"><span class="hw-item-icon">&#x1F3E0;</span> 홈</a>
   </div>
   <div class="hw-section">
     <div class="hw-section-label">Couple</div>
-    <a class="hw-item" href="/couple/kr/"><span class="hw-item-icon">&#x270F;</span> 테스트 하기</a>
-    <a class="hw-item" href="/couple/kr/shop/"><span class="hw-item-icon">&#x1F6CD;</span> Shop</a>
-    <a class="hw-item" href="/couple/kr/blog/"><span class="hw-item-icon">&#x1F4DD;</span> Blog</a>
+    <a class="hw-item" href="/"><span class="hw-item-icon">&#x270F;</span> 테스트 하기</a>
+    <a class="hw-item" href="/couple/shop/"><span class="hw-item-icon">&#x1F6CD;</span> Shop</a>
+  </div>
+  <div class="hw-section">
+    <div class="hw-section-label">Legal</div>
+    <a class="hw-item" href="/legal/terms.html"><span class="hw-item-icon">&#x1F4C4;</span> 이용약관</a>
+    <a class="hw-item" href="/legal/privacy.html"><span class="hw-item-icon">&#x1F512;</span> 개인정보처리방침</a>
+    <a class="hw-item" href="/legal/refund.html"><span class="hw-item-icon">&#x1F4B0;</span> 환불정책</a>
   </div>
 </div>
 <script>
