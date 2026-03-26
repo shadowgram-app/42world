@@ -164,13 +164,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="name-card">
       <div class="name-row">
         <div class="name-badge a">A</div>
-        <input class="name-input" id="name-a" type="text" placeholder="첫 번째 사람 이름" maxlength="10" oninput="checkNames()"/>
+        <input class="name-input" id="name-a" type="text" placeholder="남자 이름 (남자가 먼저 입력)" maxlength="10" oninput="checkNames()"/>
       </div>
     </div>
     <div class="name-card">
       <div class="name-row">
         <div class="name-badge b">B</div>
-        <input class="name-input" id="name-b" type="text" placeholder="두 번째 사람 이름" maxlength="10" oninput="checkNames()"/>
+        <input class="name-input" id="name-b" type="text" placeholder="여자 이름 (여자가 입력)" maxlength="10" oninput="checkNames()"/>
       </div>
     </div>
 
@@ -180,6 +180,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       · 1단계 (Q1~12): A/B 중 하나 선택<br>
       · 2단계 (Q13~24): 4가지 중 하나 선택<br>
       · 두 사람 모두 선택해야 다음으로 넘어가요
+    </div>
+    <div style="background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:var(--silver);line-height:1.8;text-align:left;">
+      ⚠️ <b style="color:var(--gold);">A = 남자 / B = 여자</b>로 입력해야 드라마 포스터 매칭이 정확해요.<br>순서가 바뀌면 남주·여주 유형이 반대로 표시될 수 있어요!
     </div>
 
     <button class="btn-start" id="btn-start" disabled onclick="startQuiz()">
