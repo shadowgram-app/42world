@@ -298,7 +298,7 @@
   <!-- 드라마 이미지 바로 아래 저장 버튼 -->
   <div style="padding:0 20px;margin-bottom:20px;">
     <button id="save-btn-hero" onclick="saveCard()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,0.35);">
-      📸 결과카드 저장하기
+      📸 결과카드 저장하기 (이미지 다운로드)
     </button>
   </div>
 
@@ -504,16 +504,8 @@
   </div>
 
   <!-- 공유 / 수신자 CTA (JS로 전환) -->
-  <!-- 내가 보낸 경우: 공유 버튼 -->
-  <div id="section-share" class="share-section fade-in" style="animation-delay:1.7s;display:none;">
-    <div class="share-card">
-      <h3>우리 커플 완전 신박해 💫</h3>
-      <p>당신들도 체크해봐요 — 64가지 조합 중 당신만의 커플 유형이 나와요 🙈</p>
-      <div class="share-btns">
-        <button class="btn-insta" onclick="shareInsta()">📸 공유하기 (인스타·문자·더보기)</button>
-      </div>
-    </div>
-  </div>
+  <!-- 내가 보낸 경우: 공유 버튼 (카드 저장으로 대체, 숨김) -->
+  <div id="section-share" class="share-section fade-in" style="animation-delay:1.7s;display:none;"></div>
   <!-- 받은 사람인 경우: 나도 테스트하기 -->
   <div id="section-received" class="share-section fade-in" style="animation-delay:1.7s;display:none;">
     <div class="share-card" style="background:linear-gradient(135deg,#0A2A1A,#0A1830);border-color:#2A5040;">
@@ -961,12 +953,13 @@ renderPage();
 
 // ── 결과카드 저장 (html2canvas)
 function saveCard(){
-  const card=document.getElementById('result-card');
+  // 캡처 대상: drama-hero-inner (이미지+오버레이+유형카드 전체)
+  const card=document.querySelector('.drama-hero-inner');
   const btn=document.getElementById('save-btn-hero');
+  const origText=btn.textContent;
   btn.textContent='⏳ 저장 중...';
   btn.disabled=true;
 
-  // html2canvas 동적 로드
   function doCapture(){
     html2canvas(card,{
       backgroundColor:'#0D0F1C',
@@ -980,23 +973,16 @@ function saveCard(){
       const params=new URLSearchParams(window.location.search);
       const a=params.get('a')||'SPARK', b=params.get('b')||'VISION';
       const na=params.get('na')||'', nb=params.get('nb')||'';
-      const drama=document.getElementById('rc-drama-title').textContent||'';
       const nameStr=na&&nb?`${na}×${nb}`:`${a}_${b}`;
-      // 이미지 저장
       const link=document.createElement('a');
       link.download=`42world_${nameStr}.png`;
       link.href=canvas.toDataURL('image/png');
       link.click();
-      // 저장 후 바로 공유 옵션 제공
-      btn.textContent='✅ 저장! 이제 인스타에 올려봐요 🔥';
+      btn.textContent='✅ 저장 완료!';
       btn.disabled=false;
-      // 공유 메시지도 같이 클립보드에 올려두기
-      const shareUrl=getShareUrl();
-      const msg=(na&&nb?`${na} × ${nb}의 커플 유형 — ${drama}\n`:`우리 커플 유형 — ${drama}\n`)+'당신들도 체크해봐요 👉 '+shareUrl;
-      if(navigator.clipboard) navigator.clipboard.writeText(msg).catch(()=>{});
-      setTimeout(()=>{btn.textContent='📸 결과카드 저장 · 공유하기 →';},4000);
+      setTimeout(()=>{btn.textContent=origText;},3000);
     }).catch(()=>{
-      btn.textContent='📸 결과카드 저장 · 공유하기 →';
+      btn.textContent=origText;
       btn.disabled=false;
       showToast('저장 실패. 스크린샷을 이용해 주세요 📱');
     });
@@ -1009,7 +995,7 @@ function saveCard(){
     s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
     s.onload=doCapture;
     s.onerror=()=>{
-      btn.textContent='📸 결과카드 저장하기 →';
+      btn.textContent=origText;
       btn.disabled=false;
       showToast('저장 기능을 불러올 수 없어요. 스크린샷을 이용해 주세요 📱');
     };
