@@ -284,6 +284,13 @@
     </div>
   </div>
 
+  <!-- 드라마 이미지 바로 아래 저장 버튼 -->
+  <div style="padding:0 20px;margin-bottom:20px;">
+    <button id="save-btn-hero" onclick="saveCard()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,0.35);">
+      📸 결과카드 저장하기
+    </button>
+  </div>
+
   <!-- ★ 빛과 그림자 ★ -->
   <div class="light-shadow-wrap fade-in" style="animation-delay:0.5s;">
     <div class="ls-title">두 유형의 빛과 그림자</div>
@@ -481,7 +488,7 @@
         </div>
         <div class="rc-url">42world.kr/couple/result</div>
       </div>
-      <button class="rc-save-btn" id="rc-save-btn" onclick="saveCard()">📸 결과카드 저장 · 공유하기 →</button>
+      <div id="rc-save-btn" style="display:none;"></div>
     </div>
   </div>
 
@@ -939,7 +946,7 @@ renderPage();
 // ── 결과카드 저장 (html2canvas)
 function saveCard(){
   const card=document.getElementById('result-card');
-  const btn=document.getElementById('rc-save-btn');
+  const btn=document.getElementById('save-btn-hero');
   btn.textContent='⏳ 저장 중...';
   btn.disabled=true;
 
