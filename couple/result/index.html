@@ -90,6 +90,13 @@
     .dh-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
     .dh-img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--silver);font-size:12px;opacity:0.4;}
     .dh-img-placeholder .ph-icon{font-size:40px;opacity:0.3;}
+    /* 드라마 타이틀 오버레이 (이미지 위) */
+    .dh-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px 18px 16px;background:linear-gradient(0deg,rgba(5,5,20,0.95) 0%,rgba(5,5,20,0.7) 60%,transparent 100%);text-align:center;}
+    .dh-overlay-brand{font-size:8px;letter-spacing:3px;color:var(--gold);opacity:0.6;margin-bottom:6px;}
+    .dh-overlay-drama{font-size:26px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:8px;}
+    .dh-overlay-drama em{color:var(--gold);font-style:normal;}
+    .dh-overlay-cast{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;}
+    .dh-overlay-cast strong{color:#fff;font-size:15px;}
     /* 유형 설명 (남주/여주) */
     .dh-type-desc{padding:16px 18px 18px;background:linear-gradient(0deg,rgba(0,0,0,0.5) 0%,transparent 100%);}
     .dh-char{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;margin-bottom:8px;}
@@ -246,20 +253,20 @@
   <!-- ★ 드라마 포스터 히어로 (최상단) ★ -->
   <div class="drama-hero fade-in" style="animation-delay:0.2s;padding-top:56px;margin-bottom:20px;">
     <div class="drama-hero-inner">
-      <div class="dh-top">
-        <div class="dh-brand">✦ 42WORLD · COUPLE ✦</div>
-        <div class="dh-drama-title">
-          <span>🎬</span>
-          <span id="dh-drama-title">—</span>
-        </div>
-        <div class="dh-hook" id="dh-hook">—</div>
-      </div>
-      <!-- 포스터 이미지 -->
+      <!-- 포스터 이미지 (최상단) + 드라마 제목 오버레이 -->
       <div class="dh-img-wrap">
         <img id="dh-img" src="" alt="" style="display:none;">
         <div class="dh-img-placeholder" id="dh-img-placeholder">
           <div class="ph-icon">🎬</div>
           <div>이미지 준비 중</div>
+        </div>
+        <!-- 이미지 위 오버레이: 드라마 제목 + 배우 이름 -->
+        <div class="dh-overlay">
+          <div class="dh-overlay-brand">✦ 42WORLD · COUPLE ✦</div>
+          <div class="dh-overlay-drama">우리 커플은<br><em id="dh-drama-title-overlay">—</em></div>
+          <div class="dh-overlay-cast">
+            <strong id="dh-actor-m-overlay">—</strong> × <strong id="dh-actor-f-overlay">—</strong> 같은 커플이야
+          </div>
         </div>
       </div>
       <!-- 남주/여주 유형 설명 -->
@@ -280,6 +287,10 @@
             <div class="dh-char-desc" id="dh-desc-f">—</div>
           </div>
         </div>
+      </div>
+      <!-- 훅 문구 -->
+      <div style="padding:0 18px 16px;text-align:center;">
+        <div class="dh-hook" id="dh-hook">—</div>
       </div>
     </div>
   </div>
@@ -828,7 +839,12 @@ renderPage();
       const mB = TYPE_META[b] || TYPE_META['VISION'];
 
       // 드라마 제목
-      document.getElementById('dh-drama-title').textContent = ko.drama || ko.combination_name || key;
+      const dramaTitle = ko.drama || ko.combination_name || key;
+      document.getElementById('dh-drama-title') && (document.getElementById('dh-drama-title').textContent = dramaTitle);
+      // 오버레이: 드라마 제목 + 배역명
+      document.getElementById('dh-drama-title-overlay').textContent = `"${dramaTitle}"`;
+      document.getElementById('dh-actor-m-overlay').textContent = ko.role_m || ko.char_m || ko.actor_m || a;
+      document.getElementById('dh-actor-f-overlay').textContent = ko.role_f || ko.char_f || ko.actor_f || b;
 
       // 훅 문구
       const rawHookDH = (ko.hook||'').replace(/"/g,'').trim();
