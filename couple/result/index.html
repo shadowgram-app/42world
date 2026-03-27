@@ -238,7 +238,7 @@
 <body>
 <nav class="sg-nav">
   <button class="hw-btn" id="hw-btn" onclick="hwToggle()" aria-label="menu"><span></span><span></span><span></span></button>
-  <a class="sg-logo" href="/couple/kr/"><img src="/logo.png" alt="" style="width:26px;height:26px;border-radius:50%;flex-shrink:0;"><span class="sg-s1">42</span><span class="sg-s2">WORLD</span><span class="sg-dot"> · </span><span class="sg-s3">COUPLE</span></a>
+  <a class="sg-logo" href="/couple/kr/"><span class="sg-s1">42</span><span class="sg-s2">WORLD</span><span class="sg-dot"> · </span><span class="sg-s3">COUPLE</span></a>
 </nav>
 <div id="stars"></div>
 <div class="wrap">
@@ -439,13 +439,9 @@
   <!-- 결과카드 (바이럴 이미지로 저장) -->
   <div class="result-card-wrap fade-in" style="animation-delay:1.6s;" id="result-card-outer">
     <div class="result-card" id="result-card">
-      <div class="rc-top">
-        <!-- 상단: 드라마 제목 + 왜 그런지 -->
+      <div class="rc-top" style="display:none;">
         <div class="rc-brand">42WORLD · COUPLE</div>
-        <div class="rc-drama-title">
-          <span class="rc-drama-icon">🎬</span>
-          <span id="rc-drama-title">—</span>
-        </div>
+        <div class="rc-drama-title"><span class="rc-drama-icon">🎬</span><span id="rc-drama-title">—</span></div>
         <div class="rc-why" id="rc-why">—</div>
       </div>
       <!-- 이미지 (화면에서는 숨김, 카드 저장 시 사용) -->
