@@ -178,17 +178,37 @@
 
 <!-- SCREEN 1: INTRO -->
 <div id="screen-intro" class="screen" style="display:flex;padding-top:52px;">
-  <div class="intro-logo">42world.kr</div>
-  <h1 class="intro-title">우리 커플 유형은<br><span>뭘까요?</span></h1>
-  <p class="intro-sub">연인과 함께 24문항에 답하면<br>64가지 조합 중 우리만의 커플 유형 카드가 나와요.</p>
+  <div class="intro-logo">42world.kr · COUPLE</div>
+
+  <!-- 드라마 후킹 메시지 -->
+  <div style="margin-bottom:10px;">
+    <div style="font-size:12px;letter-spacing:2px;color:rgba(201,168,76,0.7);margin-bottom:14px;">🎬 DRAMA MATCHING</div>
+    <h1 class="intro-title" style="font-size:clamp(26px,7.5vw,44px);margin-bottom:0;">우리 커플은<br><span>어느 드라마 속</span><br>주인공과 닮았을까?</h1>
+  </div>
+
+  <!-- 드라마 포스터 미리보기 스트립 -->
+  <div style="width:100%;overflow:hidden;margin:20px 0;position:relative;">
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:0 8px;">
+      <img src="/couple/images_retry/02_SPARK_VISION.png" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:12px;opacity:0.75;box-shadow:0 4px 16px rgba(0,0,0,0.5);" onerror="this.style.display='none'">
+      <img src="/couple/images_retry/10_VISION_VISION.png" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:12px;opacity:0.75;box-shadow:0 4px 16px rgba(0,0,0,0.5);" onerror="this.style.display='none'">
+      <img src="/couple/images_retry/29_PLAYER_HARMONY.png" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:12px;opacity:0.75;box-shadow:0 4px 16px rgba(0,0,0,0.5);" onerror="this.style.display='none'">
+      <img src="/couple/images_retry/46_SOUL_SOUL.png" alt="" style="width:80px;height:80px;object-fit:cover;border-radius:12px;opacity:0.75;box-shadow:0 4px 16px rgba(0,0,0,0.5);" onerror="this.style.display='none'">
+    </div>
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,#1A2030 0%,transparent 20%,transparent 80%,#1A2030 100%);pointer-events:none;"></div>
+  </div>
+
+  <p class="intro-sub" style="margin-bottom:28px;">연인과 함께 24문항에 답하면<br>64가지 드라마 케미 중 <strong style="color:rgba(201,168,76,0.9);">우리만의 매칭 결과</strong>가 나와요.</p>
+
   <div class="intro-pills">
     <span class="pill">⏱ 약 5분</span>
     <span class="pill">💑 연인 2인 함께</span>
-    <span class="pill">🎴 결과카드 무료</span>
+    <span class="pill">🎬 드라마 매칭 무료</span>
     <span class="pill">🔒 저장 안 함</span>
   </div>
-  <button class="btn-start" onclick="startTest()">지금 시작하기 →</button>
-  <p class="intro-note">* Shadowgram 독자 프레임워크입니다</p>
+  <button class="btn-start" onclick="startTest()" style="font-size:18px;padding:20px 52px;letter-spacing:0.03em;">
+    우리 드라마 찾으러 가기 →
+  </button>
+  <p class="intro-note">* Shadowgram 독자 프레임워크 기반</p>
   <div class="footer" style="opacity:.5;font-size:10px;padding:24px 0 16px;">
     42world.kr · © 2025 Shadowgram
   </div>
