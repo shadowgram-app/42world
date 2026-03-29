@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>42world 파트너 포털</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0A0A14;--card:#13131F;--card2:#0F0F1E;
+  --gold:#C9A84C;--gold2:#E8D090;
+  --white:#F0EEF8;--silver:#8899AA;--border:#1E1E30;
+}
+body{background:var(--bg);color:var(--white);font-family:-apple-system,'Apple SD Gothic Neo',Arial,sans-serif;min-height:100vh;padding:0 0 80px;}
+
+/* 헤더 */
+.header{background:rgba(10,10,20,0.95);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);}
+.logo{font-size:15px;font-weight:900;letter-spacing:1px;}<br>
+.logo span{color:var(--gold);}
+.badge{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:1px;}
+
+/* 히어로 */
+.hero{padding:48px 24px 32px;text-align:center;}
+.hero-label{font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:14px;}
+.hero h1{font-size:28px;font-weight:900;line-height:1.3;margin-bottom:12px;}
+.hero p{font-size:14px;color:var(--silver);line-height:1.8;max-width:360px;margin:0 auto;}
+
+/* 섹션 */
+.section{padding:0 20px;margin-bottom:32px;}
+.section-title{font-size:13px;letter-spacing:2px;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* 카드 */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:12px;}
+.card h3{font-size:16px;font-weight:900;margin-bottom:8px;}
+.card p{font-size:13px;color:var(--silver);line-height:1.8;}
+.card-icon{font-size:28px;margin-bottom:12px;}
+
+/* 링크 박스 */
+.link-box{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:14px 16px;margin-top:12px;display:flex;align-items:center;gap:10px;}
+.link-box .link-label{font-size:11px;color:var(--gold);font-weight:800;margin-bottom:4px;}
+.link-box .link-url{font-size:12px;color:var(--white);font-family:monospace;word-break:break-all;}
+.copy-btn{background:rgba(201,168,76,0.2);border:none;border-radius:8px;padding:6px 12px;color:var(--gold);font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.copy-btn:hover{background:rgba(201,168,76,0.35);}
+
+/* 스텝 */
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0A0A14;font-size:13px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-body h4{font-size:14px;font-weight:800;margin-bottom:4px;}
+.step-body p{font-size:12px;color:var(--silver);line-height:1.7;}
+
+/* 정산 테이블 */
+.table{width:100%;border-collapse:collapse;font-size:13px;}
+.table th{background:rgba(201,168,76,0.1);color:var(--gold);font-weight:800;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);}
+.table td{padding:12px 14px;border-bottom:1px solid rgba(30,30,48,0.8);color:var(--silver);}
+.table td strong{color:var(--white);}
+.table tr:last-child td{border-bottom:none;}
+
+/* CTA 버튼 */
+.btn-primary{display:block;width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0A0A14;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;text-align:center;text-decoration:none;cursor:pointer;font-family:inherit;margin-top:8px;}
+.btn-secondary{display:block;width:100%;background:transparent;border:1px solid rgba(201,168,76,0.4);color:var(--gold);border-radius:14px;padding:14px;font-size:14px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;font-family:inherit;margin-top:8px;}
+
+/* 토스트 */
+#toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(30,30,48,0.97);border:1px solid var(--border);color:var(--white);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* 파트너 선택 배지 */
+.partner-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0;}
+.p-badge{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;}
+.p-badge.active{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo"><span>42</span>WORLD · 파트너 포털</div>
+  <div class="badge">PARTNER</div>
+</div>
+
+<div class="hero">
+  <div class="hero-label">✦ PARTNER GUIDE ✦</div>
+  <h1>42world 파트너<br>시작 가이드</h1>
+  <p>서비스 소개부터 링크 사용법, 정산까지 — 파트너에게 필요한 모든 것을 담았어요.</p>
+</div>
+
+<!-- 서비스 소개 -->
+<div class="section">
+  <div class="section-title">✦ 서비스 소개</div>
+
+  <div class="card">
+    <div class="card-icon">🎬</div>
+    <h3>42world 커플 드라마 매칭</h3>
+    <p>두 사람이 각자 24문항에 답하면 <strong style="color:var(--white);">64가지 커플 유형 중</strong> 우리만의 드라마 매칭 결과가 나와요. MBTI 기반 8가지 유형의 조합으로 갈등 패턴, 소통 코드, 성장 포인트를 심층 분석합니다.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-icon">📄</div>
+    <h3>커플 리포트 (유료)</h3>
+    <p>결과 확인 후 <strong style="color:var(--white);">심층 분석 리포트</strong>를 구매할 수 있어요. 갈등 패턴 분석, 소통 코드, 성장 포인트가 담긴 PDF 리포트로 커플 상담, 코칭에 활용 가능해요.</p>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px;background:rgba(201,168,76,0.06);border-radius:10px;border:1px solid rgba(201,168,76,0.2);">
+      <span style="font-size:13px;color:var(--silver);text-decoration:line-through;">19,800원</span>
+      <span style="font-size:20px;font-weight:900;background:linear-gradient(135deg,var(--gold2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">9,900원</span>
+      <span style="background:var(--gold);color:#0A0A14;font-size:11px;font-weight:900;padding:2px 8px;border-radius:6px;">얼리버드 50% OFF</span>
+    </div>
+  </div>
+</div>
+
+<!-- 내 파트너 링크 -->
+<div class="section">
+  <div class="section-title">✦ 나의 파트너 링크</div>
+
+  <div class="partner-row">
+    <div class="p-badge active" id="badge-01" onclick="selectPartner('01')">파트너 01</div>
+    <div class="p-badge" id="badge-02" onclick="selectPartner('02')">파트너 02</div>
+  </div>
+
+  <div class="card" id="partner-info">
+    <!-- JS로 렌더링 -->
+  </div>
+</div>
+
+<!-- 사용 방법 -->
+<div class="section">
+  <div class="section-title">✦ 링크 사용 방법</div>
+  <div class="card">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>파트너 링크 공유</h4>
+          <p>위의 내 파트너 링크를 고객에게 공유하세요. SNS, 카카오톡, 블로그 등 어디서든 사용 가능해요.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>고객이 검사 진행</h4>
+          <p>링크로 접속한 고객이 24문항 검사를 완료하면 커플 유형 결과 페이지가 나와요.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>결과 공유로 바이럴</h4>
+          <p>고객이 결과를 친구에게 공유해도 파트너 링크가 유지돼요. 퍼질수록 파트너님 수익이 늘어요.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>리포트 구매 시 수익 발생</h4>
+          <p>고객이 리포트를 구매하면 래피드 대시보드에서 바로 확인할 수 있어요. 별도 추적 없이 자동 집계됩니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 정산 안내 -->
+<div class="section">
+  <div class="section-title">✦ 정산 안내</div>
+  <div class="card">
+    <p style="font-size:13px;color:var(--silver);line-height:1.8;margin-bottom:16px;">파트너별 전용 래피드 상품 링크로 판매되므로 대시보드에서 독립적으로 집계돼요.</p>
+    <table class="table">
+      <tr><th>항목</th><th>내용</th></tr>
+      <tr><td>정산 방식</td><td><strong>래피드 대시보드 자동 집계</strong></td></tr>
+      <tr><td>정산 주기</td><td><strong>판매 발생 주 다음 금요일</strong></td></tr>
+      <tr><td>판매 확인</td><td><strong>래피드 파트너 대시보드</strong></td></tr>
+      <tr><td>환불 정책</td><td><strong>구매 후 3일 이내 취소 가능</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- 베타 체험 -->
+<div class="section">
+  <div class="section-title">✦ 베타 체험 (파트너 전용)</div>
+  <div class="card">
+    <div class="card-icon">🔬</div>
+    <h3>64종 결과 직접 체험</h3>
+    <p>파트너 전용 베타 페이지에서 64가지 모든 커플 유형 결과를 무료로 확인하고 리포트도 다운로드할 수 있어요. 고객 상담 시 활용하세요.</p>
+    <a href="/partner/beta/" class="btn-primary" style="margin-top:16px;">🔬 베타 체험 페이지 →</a>
+  </div>
+</div>
+
+<!-- 문의 -->
+<div class="section">
+  <div class="section-title">✦ 문의</div>
+  <div class="card">
+    <p style="font-size:13px;color:var(--silver);line-height:1.8;">궁금한 점이 있으면 언제든 연락해 주세요.<br>빠르게 답변드릴게요.</p>
+    <a href="https://42world.kr" class="btn-secondary" style="margin-top:12px;">42world.kr 홈으로 →</a>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const PARTNERS = {
+  '01': {
+    label: '파트너 01',
+    testUrl: 'https://42world.kr/couple/test/?partner=01',
+    latpeed: 'https://www.latpeed.com/products/abBPX'
+  },
+  '02': {
+    label: '파트너 02',
+    testUrl: 'https://42world.kr/couple/test/?partner=02',
+    latpeed: 'https://www.latpeed.com/products/J14BC'
+  }
+};
+
+function selectPartner(id){
+  document.querySelectorAll('.p-badge').forEach(b=>b.classList.remove('active'));
+  document.getElementById('badge-'+id).classList.add('active');
+  renderPartnerInfo(id);
+}
+
+function renderPartnerInfo(id){
+  const p = PARTNERS[id];
+  document.getElementById('partner-info').innerHTML = `
+    <h3 style="margin-bottom:16px;">${p.label} 전용 링크</h3>
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;color:var(--gold);font-weight:800;margin-bottom:6px;">🔗 검사 시작 링크 (고객에게 공유)</div>
+      <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;font-size:12px;font-family:monospace;word-break:break-all;color:var(--white);">${p.testUrl}</div>
+        <button class="copy-btn" onclick="copyText('${p.testUrl}','🔗 링크 복사됐어요!')">복사</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;color:var(--silver);font-weight:800;margin-bottom:6px;">🛒 래피드 상품 링크</div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;font-size:12px;font-family:monospace;word-break:break-all;color:var(--silver);">${p.latpeed}</div>
+        <button class="copy-btn" onclick="copyText('${p.latpeed}','🛒 래피드 링크 복사됐어요!')">복사</button>
+      </div>
+    </div>
+  `;
+}
+
+function copyText(text, msg){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>showToast(msg));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    showToast(msg);
+  }
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// 초기 렌더링
+renderPartnerInfo('01');
+</script>
+</body>
+</html>
