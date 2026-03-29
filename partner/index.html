@@ -199,12 +199,12 @@ body{background:var(--bg);color:var(--white);font-family:-apple-system,'Apple SD
 const PARTNERS = {
   '01': {
     label: '파트너 01',
-    testUrl: 'https://42world.kr/couple/test/?partner=01',
+    homeUrl: 'https://42world.kr/?partner=01',
     latpeed: 'https://www.latpeed.com/products/abBPX'
   },
   '02': {
     label: '파트너 02',
-    testUrl: 'https://42world.kr/couple/test/?partner=02',
+    homeUrl: 'https://42world.kr/?partner=02',
     latpeed: 'https://www.latpeed.com/products/J14BC'
   }
 };
@@ -218,20 +218,34 @@ function selectPartner(id){
 function renderPartnerInfo(id){
   const p = PARTNERS[id];
   document.getElementById('partner-info').innerHTML = `
-    <h3 style="margin-bottom:16px;">${p.label} 전용 링크</h3>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:11px;color:var(--gold);font-weight:800;margin-bottom:6px;">🔗 검사 시작 링크 (고객에게 공유)</div>
-      <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:12px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;font-size:12px;font-family:monospace;word-break:break-all;color:var(--white);">${p.testUrl}</div>
-        <button class="copy-btn" onclick="copyText('${p.testUrl}','🔗 링크 복사됐어요!')">복사</button>
+    <h3 style="margin-bottom:4px;">${p.label} 전용 링크</h3>
+    <p style="font-size:12px;color:var(--silver);margin-bottom:16px;">공유 방식 2가지 중 편한 걸 선택하세요.</p>
+
+    <!-- 옵션 1: 첫 화면으로 공유 -->
+    <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:14px;margin-bottom:10px;">
+      <div style="font-size:11px;color:var(--gold);font-weight:800;margin-bottom:4px;">📌 옵션 1 — 첫 화면으로 공유 (추천)</div>
+      <div style="font-size:12px;color:var(--silver);margin-bottom:10px;line-height:1.6;">서비스를 처음 소개할 때 사용해요.<br>고객이 홈부터 자연스럽게 검사까지 진행해요.</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;font-size:11px;font-family:monospace;word-break:break-all;color:var(--white);background:rgba(0,0,0,0.2);padding:8px 10px;border-radius:8px;">${p.homeUrl}</div>
+        <button class="copy-btn" onclick="copyText('${p.homeUrl}','🔗 링크 복사됐어요!')">복사</button>
       </div>
+      <a href="${p.homeUrl}" target="_blank" style="display:block;text-align:center;margin-top:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0A0A14;border-radius:10px;padding:10px;font-size:13px;font-weight:900;text-decoration:none;">직접 체험해보기 →</a>
     </div>
-    <div>
-      <div style="font-size:11px;color:var(--silver);font-weight:800;margin-bottom:6px;">🛒 래피드 상품 링크</div>
-      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;align-items:center;gap:8px;">
-        <div style="flex:1;font-size:12px;font-family:monospace;word-break:break-all;color:var(--silver);">${p.latpeed}</div>
-        <button class="copy-btn" onclick="copyText('${p.latpeed}','🛒 래피드 링크 복사됐어요!')">복사</button>
+
+    <!-- 옵션 2: 내 결과 페이지로 공유 -->
+    <div style="background:rgba(138,112,192,0.06);border:1px solid rgba(138,112,192,0.25);border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:11px;color:#A78BFA;font-weight:800;margin-bottom:4px;">✨ 옵션 2 — 내 결과 페이지로 공유</div>
+      <div style="font-size:12px;color:var(--silver);margin-bottom:10px;line-height:1.6;">파트너 본인이 검사 후 나온 결과 페이지를<br>그대로 공유하면 돼요. 가장 자연스러운 방식이에요.<br><br>
+      <strong style="color:var(--white);">방법:</strong> 아래 링크로 검사 진행 → 결과 페이지에서 공유하기</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="flex:1;font-size:11px;font-family:monospace;word-break:break-all;color:var(--white);background:rgba(0,0,0,0.2);padding:8px 10px;border-radius:8px;">${p.homeUrl}</div>
+        <button class="copy-btn" style="background:rgba(138,112,192,0.2);color:#A78BFA;" onclick="copyText('${p.homeUrl}','🔗 링크 복사됐어요!')">복사</button>
       </div>
+      <a href="${p.homeUrl}" target="_blank" style="display:block;text-align:center;margin-top:10px;background:rgba(138,112,192,0.2);border:1px solid rgba(138,112,192,0.4);color:#A78BFA;border-radius:10px;padding:10px;font-size:13px;font-weight:900;text-decoration:none;">검사하고 내 결과 공유하기 →</a>
+    </div>
+
+    <div style="font-size:11px;color:var(--silver);padding:10px 0;border-top:1px solid var(--border);">
+      <span style="color:var(--gold);">🛒 래피드 상품:</span> ${p.latpeed}
     </div>
   `;
 }
