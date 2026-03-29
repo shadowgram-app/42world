@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>베타 체험 — 42world 파트너</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0A0A14;--card:#13131F;--gold:#C9A84C;--gold2:#E8D090;
+  --white:#F0EEF8;--silver:#8899AA;--border:#1E1E30;
+}
+body{background:var(--bg);color:var(--white);font-family:-apple-system,'Apple SD Gothic Neo',Arial,sans-serif;min-height:100vh;padding:0 0 80px;}
+
+.header{background:rgba(10,10,20,0.95);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px);}
+.logo{font-size:15px;font-weight:900;letter-spacing:1px;}
+.logo span{color:var(--gold);}
+.back-btn{font-size:12px;color:var(--silver);text-decoration:none;display:flex;align-items:center;gap:4px;}
+
+.hero{padding:36px 24px 24px;text-align:center;}
+.hero-label{font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;}
+.hero h1{font-size:24px;font-weight:900;line-height:1.3;margin-bottom:10px;}
+.hero p{font-size:13px;color:var(--silver);line-height:1.7;}
+
+.section{padding:0 20px;margin-bottom:28px;}
+.section-title{font-size:12px;letter-spacing:2px;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* 유형 선택 */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.type-btn{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.type-btn:hover{border-color:rgba(201,168,76,0.4);}
+.type-btn.selected-a{background:rgba(201,168,76,0.12);border-color:var(--gold);box-shadow:0 0 0 1px var(--gold);}
+.type-btn.selected-b{background:rgba(138,112,192,0.12);border-color:#8A70C0;box-shadow:0 0 0 1px #8A70C0;}
+.type-icon{font-size:24px;margin-bottom:4px;}
+.type-name{font-size:13px;font-weight:900;margin-bottom:2px;}
+.type-mbti{font-size:10px;color:var(--silver);}
+
+/* 선택 현황 */
+.selected-bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.sel-item{text-align:center;flex:1;}
+.sel-label{font-size:10px;color:var(--silver);margin-bottom:4px;}
+.sel-type{font-size:14px;font-weight:900;min-height:20px;}
+.sel-type.a{color:var(--gold);}
+.sel-type.b{color:#8A70C0;}
+.sel-vs{font-size:20px;color:var(--border);font-weight:900;}
+
+/* 버튼 */
+.btn-go{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0A0A14;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;opacity:0.4;pointer-events:none;transition:all 0.2s;}
+.btn-go.active{opacity:1;pointer-events:auto;}
+.btn-dl{width:100%;background:transparent;border:1px solid rgba(201,168,76,0.4);color:var(--gold);border-radius:14px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;}
+
+#toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(30,30,48,0.97);border:1px solid var(--border);color:var(--white);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="/partner/" class="back-btn">← 파트너 포털</a>
+  <div class="logo"><span>42</span>WORLD · 베타</div>
+  <div style="width:80px;"></div>
+</div>
+
+<div class="hero">
+  <div class="hero-label">✦ BETA · PARTNER ONLY ✦</div>
+  <h1>64종 결과<br>직접 체험하기</h1>
+  <p>나의 유형과 파트너 유형을 선택하면<br>해당 결과 페이지와 리포트를 바로 확인할 수 있어요.</p>
+</div>
+
+<!-- 선택 현황 바 -->
+<div class="section">
+  <div class="selected-bar">
+    <div class="sel-item">
+      <div class="sel-label">나의 유형</div>
+      <div class="sel-type a" id="sel-a-display">—</div>
+    </div>
+    <div class="sel-vs">×</div>
+    <div class="sel-item">
+      <div class="sel-label">파트너 유형</div>
+      <div class="sel-type b" id="sel-b-display">—</div>
+    </div>
+  </div>
+
+  <button class="btn-go" id="btn-go" onclick="goResult()">🎬 결과 페이지 보기 →</button>
+  <button class="btn-dl" id="btn-dl" onclick="downloadPdf()">📥 리포트 PDF 다운로드</button>
+</div>
+
+<!-- 나의 유형 선택 -->
+<div class="section">
+  <div class="section-title">나의 유형 선택</div>
+  <div class="type-grid" id="grid-a"></div>
+</div>
+
+<!-- 파트너 유형 선택 -->
+<div class="section">
+  <div class="section-title">파트너 유형 선택</div>
+  <div class="type-grid" id="grid-b"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const TYPES = [
+  {id:'SPARK', icon:'⚡', name:'SPARK', kr:'탐험가', mbti:'ENFP·ENTP'},
+  {id:'VISION', icon:'🔮', name:'VISION', kr:'예언자', mbti:'INFJ·INTJ'},
+  {id:'STEADY', icon:'⚓', name:'STEADY', kr:'수호자', mbti:'ISFJ·ISTJ'},
+  {id:'PLAYER', icon:'🎯', name:'PLAYER', kr:'플레이어', mbti:'ESTP·ESFP'},
+  {id:'HARMONY', icon:'🌸', name:'HARMONY', kr:'조화자', mbti:'ENFJ·ESFJ'},
+  {id:'SOUL', icon:'💎', name:'SOUL', kr:'영혼가', mbti:'INFP·ISFP'},
+  {id:'LOGIC', icon:'🔬', name:'LOGIC', kr:'논리가', mbti:'INTP·ISTP'},
+  {id:'LEADER', icon:'⚙️', name:'LEADER', kr:'리더', mbti:'ENTJ·ESTJ'},
+];
+
+const PDF_MAP={
+  'SPARK_SPARK':'01_SPARK_SPARK_KR.pdf','SPARK_VISION':'02_SPARK_VISION_KR.pdf',
+  'SPARK_HARMONY':'03_SPARK_HARMONY_KR.pdf','SPARK_SOUL':'04_SPARK_SOUL_KR.pdf',
+  'SPARK_LOGIC':'05_SPARK_LOGIC_KR.pdf','SPARK_LEADER':'06_SPARK_LEADER_KR.pdf',
+  'SPARK_STEADY':'07_SPARK_STEADY_KR.pdf','SPARK_PLAYER':'08_SPARK_PLAYER_KR.pdf',
+  'VISION_SPARK':'09_VISION_SPARK_KR.pdf','VISION_VISION':'10_VISION_VISION_KR.pdf',
+  'VISION_HARMONY':'11_VISION_HARMONY_KR.pdf','VISION_SOUL':'12_VISION_SOUL_KR.pdf',
+  'VISION_LOGIC':'13_VISION_LOGIC_KR.pdf','VISION_LEADER':'14_VISION_LEADER_KR.pdf',
+  'VISION_STEADY':'15_VISION_STEADY_KR.pdf','VISION_PLAYER':'16_VISION_PLAYER_KR.pdf',
+  'HARMONY_SPARK':'17_HARMONY_SPARK_KR.pdf','HARMONY_VISION':'18_HARMONY_VISION_KR.pdf',
+  'HARMONY_HARMONY':'19_HARMONY_HARMONY_KR.pdf','HARMONY_SOUL':'20_HARMONY_SOUL_KR.pdf',
+  'HARMONY_LOGIC':'21_HARMONY_LOGIC_KR.pdf','HARMONY_LEADER':'22_HARMONY_LEADER_KR.pdf',
+  'HARMONY_STEADY':'23_HARMONY_STEADY_KR.pdf','HARMONY_PLAYER':'24_HARMONY_PLAYER_KR.pdf',
+  'SOUL_SPARK':'25_SOUL_SPARK_KR.pdf','SOUL_VISION':'26_SOUL_VISION_KR.pdf',
+  'SOUL_HARMONY':'27_SOUL_HARMONY_KR.pdf','SOUL_SOUL':'28_SOUL_SOUL_KR.pdf',
+  'SOUL_LOGIC':'29_SOUL_LOGIC_KR.pdf','SOUL_LEADER':'30_SOUL_LEADER_KR.pdf',
+  'SOUL_STEADY':'31_SOUL_STEADY_KR.pdf','SOUL_PLAYER':'32_SOUL_PLAYER_KR.pdf',
+  'LOGIC_SPARK':'33_LOGIC_SPARK_KR.pdf','LOGIC_VISION':'34_LOGIC_VISION_KR.pdf',
+  'LOGIC_HARMONY':'35_LOGIC_HARMONY_KR.pdf','LOGIC_SOUL':'36_LOGIC_SOUL_KR.pdf',
+  'LOGIC_LOGIC':'37_LOGIC_LOGIC_KR.pdf','LOGIC_LEADER':'38_LOGIC_LEADER_KR.pdf',
+  'LOGIC_STEADY':'39_LOGIC_STEADY_KR.pdf','LOGIC_PLAYER':'40_LOGIC_PLAYER_KR.pdf',
+  'LEADER_SPARK':'41_LEADER_SPARK_KR.pdf','LEADER_VISION':'42_LEADER_VISION_KR.pdf',
+  'LEADER_HARMONY':'43_LEADER_HARMONY_KR.pdf','LEADER_SOUL':'44_LEADER_SOUL_KR.pdf',
+  'LEADER_LOGIC':'45_LEADER_LOGIC_KR.pdf','LEADER_LEADER':'46_LEADER_LEADER_KR.pdf',
+  'LEADER_STEADY':'47_LEADER_STEADY_KR.pdf','LEADER_PLAYER':'48_LEADER_PLAYER_KR.pdf',
+  'STEADY_SPARK':'49_STEADY_SPARK_KR.pdf','STEADY_VISION':'50_STEADY_VISION_KR.pdf',
+  'STEADY_HARMONY':'51_STEADY_HARMONY_KR.pdf','STEADY_SOUL':'52_STEADY_SOUL_KR.pdf',
+  'STEADY_LOGIC':'53_STEADY_LOGIC_KR.pdf','STEADY_LEADER':'54_STEADY_LEADER_KR.pdf',
+  'STEADY_STEADY':'55_STEADY_STEADY_KR.pdf','STEADY_PLAYER':'56_STEADY_PLAYER_KR.pdf',
+  'PLAYER_SPARK':'57_PLAYER_SPARK_KR.pdf','PLAYER_VISION':'58_PLAYER_VISION_KR.pdf',
+  'PLAYER_HARMONY':'59_PLAYER_HARMONY_KR.pdf','PLAYER_SOUL':'60_PLAYER_SOUL_KR.pdf',
+  'PLAYER_LOGIC':'61_PLAYER_LOGIC_KR.pdf','PLAYER_LEADER':'62_PLAYER_LEADER_KR.pdf',
+  'PLAYER_STEADY':'63_PLAYER_STEADY_KR.pdf','PLAYER_PLAYER':'64_PLAYER_PLAYER_KR.pdf',
+};
+
+let selA = '', selB = '';
+
+function renderGrid(gridId, side){
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = TYPES.map(t => `
+    <div class="type-btn" id="btn-${side}-${t.id}" onclick="select('${side}','${t.id}')">
+      <div class="type-icon">${t.icon}</div>
+      <div class="type-name">${t.name}</div>
+      <div class="type-mbti">${t.kr} · ${t.mbti}</div>
+    </div>
+  `).join('');
+}
+
+function select(side, id){
+  if(side==='a'){
+    document.querySelectorAll('[id^="btn-a-"]').forEach(b=>b.classList.remove('selected-a'));
+    document.getElementById('btn-a-'+id).classList.add('selected-a');
+    selA = id;
+    document.getElementById('sel-a-display').textContent = TYPES.find(t=>t.id===id).icon+' '+id;
+  } else {
+    document.querySelectorAll('[id^="btn-b-"]').forEach(b=>b.classList.remove('selected-b'));
+    document.getElementById('btn-b-'+id).classList.add('selected-b');
+    selB = id;
+    document.getElementById('sel-b-display').textContent = TYPES.find(t=>t.id===id).icon+' '+id;
+  }
+  updateButtons();
+}
+
+function updateButtons(){
+  const btn = document.getElementById('btn-go');
+  if(selA && selB){ btn.classList.add('active'); }
+  else { btn.classList.remove('active'); }
+}
+
+function goResult(){
+  if(!selA||!selB) return;
+  window.location.href=`/couple/result/?a=${selA}&b=${selB}&beta=true`;
+}
+
+function downloadPdf(){
+  if(!selA||!selB){ showToast('먼저 두 유형을 선택해주세요 😊'); return; }
+  const key=`${selA}_${selB}`;
+  const file=PDF_MAP[key];
+  if(!file){ showToast('해당 리포트를 찾을 수 없어요 😢'); return; }
+  const link=document.createElement('a');
+  link.href=`/couple/pdfs/${file}`;
+  link.download=`42world_${key}_KR.pdf`;
+  link.click();
+  showToast('📥 리포트 다운로드 시작!');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+renderGrid('grid-a','a');
+renderGrid('grid-b','b');
+</script>
+</body>
+</html>
