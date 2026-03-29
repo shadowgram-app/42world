@@ -13,7 +13,13 @@ body{font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif
 .wrap{max-width:680px;margin:0 auto;padding:40px 20px 80px;}
 .hero-label{font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:12px;}
 h1{font-size:24px;font-weight:900;color:#fff;margin-bottom:8px;}
-.hero-sub{font-size:13px;color:var(--silver);line-height:1.7;margin-bottom:36px;}
+.hero-sub{font-size:13px;color:var(--silver);line-height:1.7;margin-bottom:28px;}
+
+/* 다운로드 배너 */
+.download-banner{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:16px;padding:20px;margin-bottom:32px;text-align:center;}
+.download-banner h3{font-size:15px;font-weight:900;margin-bottom:6px;}
+.download-banner p{font-size:12px;color:var(--silver);line-height:1.7;margin-bottom:14px;}
+.btn-download{display:inline-block;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border-radius:12px;padding:12px 28px;font-size:14px;font-weight:900;text-decoration:none;}
 
 /* 카테고리 탭 */
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
@@ -55,12 +61,18 @@ footer{border-top:1px solid var(--border);padding:24px 20px;text-align:center;}
   <h1>자주 묻는 질문</h1>
   <p class="hero-sub">궁금한 점을 먼저 확인해보세요.<br>해결이 안 되면 이메일로 문의주시면 답변드려요.</p>
 
+  <!-- 리포트 다운로드 배너 -->
+  <div class="download-banner">
+    <h3>📥 리포트 다운로드가 필요하신가요?</h3>
+    <p>결제 완료 후 다운로드 페이지에서<br>유형을 직접 선택해 바로 받을 수 있어요.</p>
+    <a href="/couple/kr/download/" class="btn-download">리포트 다운로드 페이지 →</a>
+  </div>
+
   <div class="tabs">
-    <div class="tab active" onclick="filterTab('all')">전체</div>
-    <div class="tab" onclick="filterTab('test')">검사</div>
-    <div class="tab" onclick="filterTab('report')">리포트 구매</div>
-    <div class="tab" onclick="filterTab('download')">다운로드</div>
-    <div class="tab" onclick="filterTab('refund')">환불</div>
+    <div class="tab active" onclick="filterTab('all', event)">전체</div>
+    <div class="tab" onclick="filterTab('test', event)">검사</div>
+    <div class="tab" onclick="filterTab('report', event)">리포트 구매</div>
+    <div class="tab" onclick="filterTab('refund', event)">환불</div>
   </div>
 
   <!-- 검사 관련 -->
@@ -99,23 +111,8 @@ footer{border-top:1px solid var(--border);padding:24px 20px;text-align:center;}
     </div>
     <div class="faq-item" onclick="toggle(this)">
       <div class="faq-q"><span class="faq-q-text">결제했는데 다운로드 페이지로 안 넘어가요.</span><span class="faq-arrow">▼</span></div>
-      <div class="faq-a">결제 완료 후 자동으로 <a href="/couple/kr/download/">42world.kr/couple/kr/download/</a> 페이지로 이동해요. 자동 이동이 안 됐다면 이 링크를 직접 눌러 접속해 주세요. 검사했던 기기와 같은 브라우저에서 접속하면 자동으로 리포트가 연결돼요.</div>
-    </div>
-  </div>
-
-  <!-- 다운로드 -->
-  <div class="faq-group" data-cat="download">
-    <div class="faq-item" onclick="toggle(this)">
-      <div class="faq-q"><span class="faq-q-text">리포트를 다시 다운로드할 수 있나요?</span><span class="faq-arrow">▼</span></div>
-      <div class="faq-a"><a href="/couple/kr/download/">42world.kr/couple/kr/download/</a> 페이지에서 언제든 재다운로드 가능해요. 검사했던 브라우저로 접속하면 자동으로 연결되고, 다른 기기라면 유형을 직접 선택해서 다운로드할 수 있어요.</div>
-    </div>
-    <div class="faq-item" onclick="toggle(this)">
-      <div class="faq-q"><span class="faq-q-text">다른 기기에서 다운로드하고 싶어요.</span><span class="faq-arrow">▼</span></div>
-      <div class="faq-a"><a href="/couple/kr/download/">다운로드 페이지</a>에서 나의 유형과 파트너 유형을 직접 선택하면 해당 리포트를 받을 수 있어요. 검사 결과 유형(예: SPARK × STEADY)을 기억해두세요.</div>
-    </div>
-    <div class="faq-item" onclick="toggle(this)">
-      <div class="faq-q"><span class="faq-q-text">PDF가 열리지 않아요.</span><span class="faq-arrow">▼</span></div>
-      <div class="faq-a">PDF 뷰어 앱(Adobe Acrobat, 기본 파일 앱 등)이 설치되어 있는지 확인해주세요. 아이폰은 Safari에서 다운로드 시 파일 앱에 저장돼요. 그래도 안 열리면 아래 이메일로 문의해 주세요.</div>
+      <div class="faq-a">결제 완료 후 자동으로 다운로드 페이지로 이동해요. 자동 이동이 안 됐다면 아래 버튼을 직접 눌러 접속해 주세요.<br><br>
+      <a href="/couple/kr/download/" style="display:inline-block;margin-top:4px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:8px 16px;border-radius:8px;font-weight:700;font-size:12px;">📥 다운로드 페이지로 이동 →</a></div>
     </div>
   </div>
 
@@ -167,10 +164,9 @@ footer{border-top:1px solid var(--border);padding:24px 20px;text-align:center;}
 function toggle(item){
   item.classList.toggle('open');
 }
-
-function filterTab(cat){
+function filterTab(cat, e){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  event.target.classList.add('active');
+  e.target.classList.add('active');
   document.querySelectorAll('.faq-group').forEach(g=>{
     if(cat==='all' || g.dataset.cat===cat) g.classList.remove('hidden');
     else g.classList.add('hidden');
