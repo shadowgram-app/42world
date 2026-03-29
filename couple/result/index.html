@@ -240,6 +240,39 @@
   .sg-s2{color:#C9A84C;font-weight:800;}
   .sg-dot{color:rgba(184,134,11,0.45);font-weight:300;font-size:13px;}
   .sg-s3{color:#8899AA;font-weight:400;font-size:10px;letter-spacing:2px;}
+
+  /* ── Block A: 42world × Shadowgram 설명 박스 ── */
+  .about-tool-wrap{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:28px 20px;margin:0 20px 28px;}
+  .about-tool-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+  .about-tool-icon{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#1A2A3A,#0A1A2A);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .about-tool-title{font-size:16px;font-weight:900;line-height:1.3;}
+  .about-tool-title span{display:block;font-size:11px;font-weight:400;color:var(--silver);letter-spacing:0.5px;margin-top:2px;}
+  .about-tool-desc{font-size:13px;color:var(--silver);line-height:1.8;margin-bottom:20px;}
+  .about-tool-desc strong{color:var(--white);}
+  .type-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
+  .type-mini-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:background 0.2s,border-color 0.2s;}
+  .type-mini-card:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.4);}
+  .type-mini-card.active{background:rgba(201,168,76,0.12);border-color:var(--gold);}
+  .type-mini-icon{font-size:20px;margin-bottom:4px;}
+  .type-mini-name{font-size:10px;font-weight:700;letter-spacing:0.5px;}
+  .type-mini-mbti{font-size:9px;color:var(--silver);margin-top:2px;}
+  .type-detail-box{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.3);border-radius:14px;padding:16px;margin-bottom:16px;display:none;}
+  .type-detail-box.visible{display:block;}
+  .type-detail-name{font-size:15px;font-weight:900;color:var(--gold);margin-bottom:6px;}
+  .type-detail-mbti{font-size:11px;color:var(--silver);margin-bottom:10px;}
+  .type-detail-desc{font-size:13px;line-height:1.7;color:var(--white);}
+  .type-detail-keyword{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .kw{font-size:11px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:3px 10px;border-radius:20px;}
+  .type-grid-hint{font-size:11px;color:var(--silver);text-align:center;margin-top:-10px;margin-bottom:16px;}
+  .shadowgram-tagline{font-size:12px;color:var(--silver);line-height:1.7;padding-top:16px;border-top:1px solid var(--border);}
+
+  /* ── 공유하기 박스 (독립형) ── */
+  .share-box-wrap{margin:0 20px 28px;background:linear-gradient(135deg,#0A1A2A,#0A0A18);border:1px solid rgba(201,168,76,0.25);border-radius:24px;padding:28px 20px;text-align:center;}
+  .share-box-label{font-size:10px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;}
+  .share-box-title{font-size:18px;font-weight:900;margin-bottom:8px;line-height:1.4;}
+  .share-box-desc{font-size:13px;color:var(--silver);line-height:1.7;margin-bottom:20px;}
+  .share-box-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,0.35);transition:opacity 0.2s;}
+  .share-box-btn:active{opacity:0.85;}
 </style>
 </head>
 <body>
@@ -300,6 +333,78 @@
     <button id="save-btn-hero" onclick="saveCard()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,0.35);">
       📸 결과카드 저장하기 (이미지 다운로드)
     </button>
+  </div>
+
+  <!-- 42world × Shadowgram 설명 박스 -->
+  <div class="about-tool-wrap fade-in" style="animation-delay:0.4s;">
+    <div class="about-tool-header">
+      <div class="about-tool-icon">🪐</div>
+      <div class="about-tool-title">
+        42world × Shadowgram
+        <span>이 검사, 어디서 만든 거예요?</span>
+      </div>
+    </div>
+    <div class="about-tool-desc">
+      <strong>42world</strong>는 Shadowgram의 커플 심리 콘텐츠를 서비스하는 플랫폼이에요.<br>
+      검사와 결과 뒤에 있는 심리 프레임워크는 <strong>Shadowgram</strong>이 만들었어요.<br><br>
+      Shadowgram은 사람의 <strong>핵심 에너지(주기능)</strong>를 기준으로 성격을 <strong>8가지 빛 유형</strong>으로 나눠요.
+      나의 강점(빛)과 성장 포인트(그림자)를 함께 보여주는 심리 프레임워크예요.<br>
+      아래에서 8가지 유형을 눌러보세요 👇
+    </div>
+    <div class="type-mini-grid">
+      <div class="type-mini-card" onclick="showType('SPARK')" id="card-SPARK">
+        <div class="type-mini-icon">⚡</div>
+        <div class="type-mini-name" style="color:#F0C060;">SPARK</div>
+        <div class="type-mini-mbti">ENFP·ENTP</div>
+      </div>
+      <div class="type-mini-card" onclick="showType('VISION')" id="card-VISION">
+        <div class="type-mini-icon">🔮</div>
+        <div class="type-mini-name" style="color:#C0A0EE;">VISION</div>
+        <div class="type-mini-mbti">INFJ·INTJ</div>
+      </div>
+      <div class="type-mini-card" onclick="showType('STEADY')" id="card-STEADY">
+        <div class="type-mini-icon">⚓</div>
+        <div class="type-mini-name" style="color:#A0D0A0;">STEADY</div>
+        <div class="type-mini-mbti">ISFJ·ISTJ</div>
+      </div>
+      <div class="type-mini-card" onclick="showType('PLAYER')" id="card-PLAYER">
+        <div class="type-mini-icon">🎯</div>
+        <div class="type-mini-name" style="color:#F09080;">PLAYER</div>
+        <div class="type-mini-mbti">ESFP·ESTP</div>
+      </div>
+      <div class="type-mini-card" onclick="showType('HARMONY')" id="card-HARMONY">
+        <div class="type-mini-icon">🌸</div>
+        <div class="type-mini-name" style="color:#F0A0C0;">HARMONY</div>
+        <div class="type-mini-mbti">ESFJ·ENFJ</div>
+      </div>
+      <div class="type-mini-card" onclick="showType('SOUL')" id="card-SOUL">
+        <div class="type-mini-icon">💎</div>
+        <div class="type-mini-name" style="color:#A0D0B0;">SOUL</div>
+        <div class="type-mini-mbti">INFP·ISFP</div>
+      </div>
+      <div class="type-mini-card" onclick="showType('LOGIC')" id="card-LOGIC">
+        <div class="type-mini-icon">🔬</div>
+        <div class="type-mini-name" style="color:#90C8F0;">LOGIC</div>
+        <div class="type-mini-mbti">ISTP·INTP</div>
+      </div>
+      <div class="type-mini-card" onclick="showType('LEADER')" id="card-LEADER">
+        <div class="type-mini-icon">⚙️</div>
+        <div class="type-mini-name" style="color:#F0C070;">LEADER</div>
+        <div class="type-mini-mbti">ESTJ·ENTJ</div>
+      </div>
+    </div>
+    <div class="type-grid-hint">유형을 눌러서 설명을 확인해보세요</div>
+    <div class="type-detail-box" id="type-detail-box">
+      <div class="type-detail-name" id="td-name">—</div>
+      <div class="type-detail-mbti" id="td-mbti">—</div>
+      <div class="type-detail-desc" id="td-desc">—</div>
+      <div class="type-detail-keyword" id="td-kw"></div>
+    </div>
+    <div class="shadowgram-tagline">
+      Shadowgram은 MBTI®의 근거인 <strong>칼 융의 유형론</strong>을 바탕으로 독자적으로 개발한 심리 프레임워크예요.
+      각 유형의 <strong>핵심 에너지(주기능)</strong>를 기준으로 8가지로 구분하고, 강점(빛)과 성장 포인트(그림자)를 함께 탐색해요.<br>
+      <span style="color:var(--gold);font-weight:700;">42world</span>는 Shadowgram의 커플 콘텐츠(Shadowgram Duo)를 서비스하는 플랫폼입니다.
+    </div>
   </div>
 
   <!-- ★ 빛과 그림자 ★ -->
@@ -506,6 +611,17 @@
   <!-- 공유 / 수신자 CTA (JS로 전환) -->
   <!-- 내가 보낸 경우: 공유 버튼 (카드 저장으로 대체, 숨김) -->
   <div id="section-share" class="share-section fade-in" style="animation-delay:1.7s;display:none;"></div>
+
+  <!-- 공유하기 박스 (독립형 — section-share와 별개) -->
+  <div id="share-box" class="share-box-wrap fade-in" style="animation-delay:1.8s;display:none;">
+    <div class="share-box-label">✦ SHARE ✦</div>
+    <div class="share-box-title">우리 커플 자랑하기 🔥</div>
+    <div class="share-box-desc">우리 조합, 친구들한테도 보여줘요.<br>링크 한 번으로 드라마 결과가 쫙 펼쳐져요.</div>
+    <button class="share-box-btn" onclick="shareInsta()">
+      📤 우리 커플 자랑하기
+    </button>
+  </div>
+
   <!-- 받은 사람인 경우: 나도 테스트하기 -->
   <div id="section-received" class="share-section fade-in" style="animation-delay:1.7s;display:none;">
     <div class="share-card" style="background:linear-gradient(135deg,#0A2A1A,#0A1830);border-color:#2A5040;">
@@ -1033,6 +1149,7 @@ function saveCard(){
     }
   } else {
     document.getElementById('section-share').style.display='block';
+    document.getElementById('share-box').style.display='block';
   }
 })();
 
@@ -1222,6 +1339,37 @@ function hwClose(){
   document.getElementById('hw-overlay').classList.remove('open');
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')hwClose();});
+
+// ── 8유형 데이터 + showType()
+const TYPE_DATA = {
+  SPARK:{color:'#F0C060',mbti:'ENFP · ENTP',desc:'새로운 가능성을 가장 먼저 보는 사람이에요. 아이디어가 끊임없이 솟구치고, 주변 사람의 에너지를 자연스럽게 끌어올려요. 다만 시작을 잘하는 만큼 마무리가 약한 면도 있어요.',keywords:['가능성 탐색','전염되는 에너지','빠른 적응','즉흥적']},
+  VISION:{color:'#C0A0EE',mbti:'INFJ · INTJ',desc:'아직 일어나지 않은 일을 직관적으로 느끼는 사람이에요. 한 가지에 깊이 몰두하면 세계적 수준의 통찰에 도달해요. 완벽주의 성향으로 시작 전 너무 많이 생각하는 경향이 있어요.',keywords:['깊은 통찰','미래 감지','몰입','완벽주의']},
+  STEADY:{color:'#A0D0A0',mbti:'ISFJ · ISTJ',desc:'한 번 약속하면 끝까지 지키는 사람이에요. 함께 있으면 무엇도 무너지지 않을 것 같은 안정감을 줘요. 변화보다 익숙한 것을 선호하고, 속마음을 잘 표현하지 않아요.',keywords:['신뢰','꼼꼼함','안정감','루틴 마스터']},
+  PLAYER:{color:'#F09080',mbti:'ESFP · ESTP',desc:'지금 이 순간을 가장 풍성하게 사는 사람이에요. 돌발 상황에서 가장 빛나고, 마음에 없는 말은 절대 안 해요. 장기 계획보다 즉흥에 끌리고, 지루해지면 자리를 뜨는 경향이 있어요.',keywords:['현재 집중','순발력','솔직함','즉흥성']},
+  HARMONY:{color:'#F0A0C0',mbti:'ESFJ · ENFJ',desc:'상대가 말 안 해도 감정을 먼저 알아채는 사람이에요. 어색한 자리도 따뜻하게 만들고, 사랑하는 사람을 위해 전부를 줄 수 있어요. 다만 자기 감정보다 상대를 먼저 챙기다 지칠 수 있어요.',keywords:['공감 능력','분위기 메이커','헌신','갈등 회피']},
+  SOUL:{color:'#A0D0B0',mbti:'INFP · ISFP',desc:'표면이 아닌 진심으로 연결되는 사람이에요. 감동적인 방식으로 감정을 표현하고, 자신이 믿는 가치를 끝까지 지켜요. 감정이 격해지면 말문이 막히고, 이상과 현실 사이에서 자주 방황해요.',keywords:['진정성','풍부한 내면','가치 중심','감성적 표현']},
+  LOGIC:{color:'#90C8F0',mbti:'ISTP · INTP',desc:'감정에 흔들리지 않고 본질을 보는 사람이에요. 위기 상황에서 가장 믿음직하고, 혼자서도 완전해요. 감정 표현이 서툴러 차갑게 보일 수 있고, 공감보다 해결책을 먼저 내놓아요.',keywords:['냉철한 분석','문제 해결','독립성','논리적 사고']},
+  LEADER:{color:'#F0C070',mbti:'ESTJ · ENTJ',desc:'계획을 현실로 만드는 추진력이 있는 사람이에요. 무엇이 중요한지 흔들리지 않고, 자연스럽게 방향을 잡아줘요. 내 방식이 옳다는 확신이 강하고, 감정보다 결과를 우선시해요.',keywords:['실행력','명확한 기준','리더십','목표 지향']}
+};
+let _activeType = null;
+function showType(type){
+  if(_activeType) document.getElementById('card-'+_activeType).classList.remove('active');
+  if(_activeType === type){
+    document.getElementById('type-detail-box').classList.remove('visible');
+    _activeType = null;
+    return;
+  }
+  _activeType = type;
+  document.getElementById('card-'+type).classList.add('active');
+  const d = TYPE_DATA[type];
+  const nameEl = document.getElementById('td-name');
+  nameEl.textContent = type;
+  nameEl.style.color = d.color;
+  document.getElementById('td-mbti').textContent = 'MBTI® 대응: ' + d.mbti;
+  document.getElementById('td-desc').textContent = d.desc;
+  document.getElementById('td-kw').innerHTML = d.keywords.map(k=>`<span class="kw">${k}</span>`).join('');
+  document.getElementById('type-detail-box').classList.add('visible');
+}
 </script>
 </body>
 </html>
