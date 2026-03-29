@@ -439,7 +439,8 @@ function showScreen(id){
 }
 
 function startTest(){
-  window.location.href='/couple/test/';
+  const partner=new URLSearchParams(window.location.search).get('partner')||'';
+  window.location.href='/couple/test/'+(partner?'?partner='+encodeURIComponent(partner):'');
 }
 
 function restart(){
