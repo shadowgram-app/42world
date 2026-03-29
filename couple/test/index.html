@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>42WORLD Couple — 커플 소통 스타일 분석</title>
 <meta property="og:title" content="우리 커플 소통 스타일, 얼마나 잘 맞을까요? 👀"/>
@@ -538,26 +539,56 @@ function renderScale4(area, qi){
 
 // ── 선택
 function selectAB(qi, who, val){
+  const prevA=answersA[qi], prevB=answersB[qi];
   if(who==='A') answersA[qi]=val;
   else answersB[qi]=val;
-  render();
-  // 두 명 모두 선택 완료 시 일치 여부 효과
   if(answersA[qi]!==null && answersB[qi]!==null){
-    if(answersA[qi]===answersB[qi]){ launchConfetti(); }
-    else{ launchShake(); if(navigator.vibrate) navigator.vibrate([60,30,60]); }
+    const bothJustDone=(prevA===null||prevB===null);
+    if(bothJustDone) triggerReaction(answersA[qi]===answersB[qi]?'exact':'diff');
   }
+  render();
 }
 
 function selectScale4(qi, who, val){
+  const prevA=answersA[qi], prevB=answersB[qi];
   if(who==='A') answersA[qi]=val;
   else answersB[qi]=val;
-  render();
-  // 두 명 모두 선택 완료 시 일치 여부 효과 (같은 방향: 0,1 vs 2,3)
   if(answersA[qi]!==null && answersB[qi]!==null){
-    const sameDir = (answersA[qi]<=1 && answersB[qi]<=1) || (answersA[qi]>=2 && answersB[qi]>=2);
-    if(sameDir){ launchConfetti(); }
-    else{ launchShake(); if(navigator.vibrate) navigator.vibrate([60,30,60]); }
+    const bothJustDone=(prevA===null||prevB===null);
+    if(bothJustDone){
+      const vA=answersA[qi], vB=answersB[qi];
+      const exact=vA===vB;
+      const sameDir=(vA<=1&&vB<=1)||(vA>=2&&vB>=2);
+      if(exact) triggerReaction('exact');
+      else if(sameDir) triggerReaction('sameDir');
+      else triggerReaction('diff');
+    }
   }
+  render();
+}
+
+function triggerReaction(mode){
+  if(mode==='exact'){
+    confetti({particleCount:80,spread:70,origin:{y:0.6},colors:['#C9A84C','#E8D090','#8A70C0','#fff']});
+    setTimeout(()=>confetti({particleCount:40,spread:50,origin:{y:0.5,x:0.3},colors:['#C9A84C','#FFD700']}),150);
+    setTimeout(()=>confetti({particleCount:40,spread:50,origin:{y:0.5,x:0.7},colors:['#8A70C0','#fff']}),300);
+    showToast('찰떡! 둘 다 같은 선택 🎉');
+  } else if(mode==='sameDir'){
+    confetti({particleCount:30,spread:45,origin:{y:0.65},scalar:0.7,colors:['#C9A84C','#E8D090','#8A70C0']});
+    showToast('비슷한 편이에요~ ✨');
+  } else {
+    if(navigator.vibrate) navigator.vibrate([80,40,80]);
+    shakeScreen();
+    showToast('달라요~ 서로 다른 매력 💫');
+  }
+}
+
+function shakeScreen(){
+  const wrap=document.getElementById('quiz-screen');
+  wrap.style.transition='transform 0.05s';
+  const seq=[6,-6,5,-5,3,-3,0];
+  seq.forEach((x,i)=>setTimeout(()=>{wrap.style.transform=`translateX(${x}px)`;},i*55));
+  setTimeout(()=>{wrap.style.transition='';wrap.style.transform='';},seq.length*55+50);
 }
 
 function updateWaitMsg(){
