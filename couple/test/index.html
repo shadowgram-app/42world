@@ -49,6 +49,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* 질문 텍스트 공통 */
 .q-shared{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 18px 14px;margin-bottom:14px;opacity:0;animation:fadeUp 0.35s forwards;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+@keyframes shakeEffect{0%,100%{transform:translateX(0)}15%{transform:translateX(-8px)}30%{transform:translateX(8px)}45%{transform:translateX(-6px)}60%{transform:translateX(6px)}75%{transform:translateX(-3px)}90%{transform:translateX(3px)}}
 .q-num{font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:8px;}
 .q-text{font-size:16px;font-weight:700;line-height:1.5;}
 
@@ -645,6 +646,27 @@ function makeTypeCard(type, personName, colorVar){
   `;
 }
 
+function launchConfetti(){
+  const colors=['#C9A84C','#E8D090','#FF6B9D','#A78BFA','#60A5FA','#34D399'];
+  for(let i=0;i<80;i++){
+    const el=document.createElement('div');
+    const size=Math.random()*8+4;
+    el.style.cssText=`position:fixed;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>0.5?'50%':'2px'};left:${Math.random()*100}vw;top:-10px;z-index:9999;pointer-events:none;opacity:1;`;
+    document.body.appendChild(el);
+    const tx=(Math.random()-0.5)*300;
+    const ty=window.innerHeight+20;
+    const rot=Math.random()*720;
+    el.animate([
+      {transform:`translate(0,0) rotate(0deg)`,opacity:1},
+      {transform:`translate(${tx}px,${ty}px) rotate(${rot}deg)`,opacity:0}
+    ],{duration:1800+Math.random()*800,easing:'cubic-bezier(0.25,0.46,0.45,0.94)',delay:Math.random()*400}).onfinish=()=>el.remove();
+  }
+}
+function launchShake(){
+  const done=document.getElementById('done-screen');
+  done.style.animation='shakeEffect 0.5s ease';
+  setTimeout(()=>done.style.animation='',500);
+}
 function showDone(typeA, typeB){
   document.getElementById('quiz-screen').style.display='none';
   const done=document.getElementById('done-screen');
@@ -665,6 +687,12 @@ function showDone(typeA, typeB){
   done.dataset.typeB=typeB;
 
   window.scrollTo({top:0,behavior:'smooth'});
+
+  // 같은 유형이면 폭죽, 다르면 흔들림+진동
+  setTimeout(()=>{
+    if(typeA===typeB){ launchConfetti(); }
+    else{ launchShake(); if(navigator.vibrate) navigator.vibrate([80,40,80]); }
+  }, 300);
 }
 
 function goResult(){
