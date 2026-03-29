@@ -64,8 +64,8 @@
       📥 리포트 다운로드
     </a>
     <p class="notice">
-      ⚠️ 이 링크는 본인만 사용 가능합니다.<br>
-      다운로드 후 재접속 시 동일 파일이 제공됩니다.<br><br>
+      ⚠️ 다운로드 후 재접속 시 동일 파일이 제공됩니다.<br>
+      유형이 기억나지 않으면 아래에서 직접 선택하세요.<br><br>
       문의: 42world.kr
     </p>
   </div>
@@ -102,31 +102,102 @@
     </div>
     <button class="btn-download" onclick="downloadBySelect()">📥 리포트 다운로드</button>
     <p class="notice">유형이 기억나지 않으면<br>
-      <a href="/couple/kr/result/" style="color:var(--gold);">42world.kr에서 다시 검사하기 →</a><br><br>
+      <a href="/couple/test/" style="color:var(--gold);">42world.kr에서 다시 검사하기 →</a><br><br>
       문의: 42world.kr
     </p>
   </div>
 </div>
 
 <script>
-// 쿠키 읽기
+// 실제 PDF 파일명 매핑 (couple/pdfs/ 기준)
+const PDF_MAP={
+  'SPARK_SPARK':'01_SPARK_SPARK_KR.pdf',
+  'SPARK_VISION':'02_SPARK_VISION_KR.pdf',
+  'SPARK_HARMONY':'03_SPARK_HARMONY_KR.pdf',
+  'SPARK_SOUL':'04_SPARK_SOUL_KR.pdf',
+  'SPARK_LOGIC':'05_SPARK_LOGIC_KR.pdf',
+  'SPARK_LEADER':'06_SPARK_LEADER_KR.pdf',
+  'SPARK_STEADY':'07_SPARK_STEADY_KR.pdf',
+  'SPARK_PLAYER':'08_SPARK_PLAYER_KR.pdf',
+  'VISION_SPARK':'09_VISION_SPARK_KR.pdf',
+  'VISION_VISION':'10_VISION_VISION_KR.pdf',
+  'VISION_HARMONY':'11_VISION_HARMONY_KR.pdf',
+  'VISION_SOUL':'12_VISION_SOUL_KR.pdf',
+  'VISION_LOGIC':'13_VISION_LOGIC_KR.pdf',
+  'VISION_LEADER':'14_VISION_LEADER_KR.pdf',
+  'VISION_STEADY':'15_VISION_STEADY_KR.pdf',
+  'VISION_PLAYER':'16_VISION_PLAYER_KR.pdf',
+  'HARMONY_SPARK':'17_HARMONY_SPARK_KR.pdf',
+  'HARMONY_VISION':'18_HARMONY_VISION_KR.pdf',
+  'HARMONY_HARMONY':'19_HARMONY_HARMONY_KR.pdf',
+  'HARMONY_SOUL':'20_HARMONY_SOUL_KR.pdf',
+  'HARMONY_LOGIC':'21_HARMONY_LOGIC_KR.pdf',
+  'HARMONY_LEADER':'22_HARMONY_LEADER_KR.pdf',
+  'HARMONY_STEADY':'23_HARMONY_STEADY_KR.pdf',
+  'HARMONY_PLAYER':'24_HARMONY_PLAYER_KR.pdf',
+  'SOUL_SPARK':'25_SOUL_SPARK_KR.pdf',
+  'SOUL_VISION':'26_SOUL_VISION_KR.pdf',
+  'SOUL_HARMONY':'27_SOUL_HARMONY_KR.pdf',
+  'SOUL_SOUL':'28_SOUL_SOUL_KR.pdf',
+  'SOUL_LOGIC':'29_SOUL_LOGIC_KR.pdf',
+  'SOUL_LEADER':'30_SOUL_LEADER_KR.pdf',
+  'SOUL_STEADY':'31_SOUL_STEADY_KR.pdf',
+  'SOUL_PLAYER':'32_SOUL_PLAYER_KR.pdf',
+  'LOGIC_SPARK':'33_LOGIC_SPARK_KR.pdf',
+  'LOGIC_VISION':'34_LOGIC_VISION_KR.pdf',
+  'LOGIC_HARMONY':'35_LOGIC_HARMONY_KR.pdf',
+  'LOGIC_SOUL':'36_LOGIC_SOUL_KR.pdf',
+  'LOGIC_LOGIC':'37_LOGIC_LOGIC_KR.pdf',
+  'LOGIC_LEADER':'38_LOGIC_LEADER_KR.pdf',
+  'LOGIC_STEADY':'39_LOGIC_STEADY_KR.pdf',
+  'LOGIC_PLAYER':'40_LOGIC_PLAYER_KR.pdf',
+  'LEADER_SPARK':'41_LEADER_SPARK_KR.pdf',
+  'LEADER_VISION':'42_LEADER_VISION_KR.pdf',
+  'LEADER_HARMONY':'43_LEADER_HARMONY_KR.pdf',
+  'LEADER_SOUL':'44_LEADER_SOUL_KR.pdf',
+  'LEADER_LOGIC':'45_LEADER_LOGIC_KR.pdf',
+  'LEADER_LEADER':'46_LEADER_LEADER_KR.pdf',
+  'LEADER_STEADY':'47_LEADER_STEADY_KR.pdf',
+  'LEADER_PLAYER':'48_LEADER_PLAYER_KR.pdf',
+  'STEADY_SPARK':'49_STEADY_SPARK_KR.pdf',
+  'STEADY_VISION':'50_STEADY_VISION_KR.pdf',
+  'STEADY_HARMONY':'51_STEADY_HARMONY_KR.pdf',
+  'STEADY_SOUL':'52_STEADY_SOUL_KR.pdf',
+  'STEADY_LOGIC':'53_STEADY_LOGIC_KR.pdf',
+  'STEADY_LEADER':'54_STEADY_LEADER_KR.pdf',
+  'STEADY_STEADY':'55_STEADY_STEADY_KR.pdf',
+  'STEADY_PLAYER':'56_STEADY_PLAYER_KR.pdf',
+  'PLAYER_SPARK':'57_PLAYER_SPARK_KR.pdf',
+  'PLAYER_VISION':'58_PLAYER_VISION_KR.pdf',
+  'PLAYER_HARMONY':'59_PLAYER_HARMONY_KR.pdf',
+  'PLAYER_SOUL':'60_PLAYER_SOUL_KR.pdf',
+  'PLAYER_LOGIC':'61_PLAYER_LOGIC_KR.pdf',
+  'PLAYER_LEADER':'62_PLAYER_LEADER_KR.pdf',
+  'PLAYER_STEADY':'63_PLAYER_STEADY_KR.pdf',
+  'PLAYER_PLAYER':'64_PLAYER_PLAYER_KR.pdf'
+};
+
+const TYPE_KR={
+  SPARK:'탐험가',VISION:'예언자',STEADY:'수호자',PLAYER:'플레이어',
+  HARMONY:'조화자',SOUL:'영혼가',LOGIC:'논리가',LEADER:'리더'
+};
+
 function getCookie(name){
   const v=document.cookie.split(';').find(c=>c.trim().startsWith(name+'='));
   return v?decodeURIComponent(v.trim().split('=')[1]):null;
 }
 
-// 유형명 한글 매핑
-const TYPE_KR={
-  SPARK:'탐험가',VISION:'예언자',STEADY:'수호자',PLAYER:'플레이어',
-  HARMONY:'조화자',SOUL:'영혼가',LOGIC:'논리가',LEADER:'리더'
-};
+function getPdfUrl(combo){
+  const file=PDF_MAP[combo];
+  if(!file) return null;
+  return `/couple/pdfs/${file}`;
+}
 
 function init(){
   const loading=document.getElementById('state-loading');
   const ready=document.getElementById('state-ready');
   const error=document.getElementById('state-error');
 
-  // URL 파라미터 또는 쿠키에서 combo 읽기
   const params=new URLSearchParams(window.location.search);
   let combo=params.get('combo')||getCookie('sg_combo');
 
@@ -145,36 +216,42 @@ function init(){
       return;
     }
 
+    const key=`${parts[0]}_${parts[1]}`;
+    const pdfUrl=getPdfUrl(key);
+    if(!pdfUrl){
+      error.style.display='block';
+      return;
+    }
+
     const a=parts[0], b=parts[1];
     const aKr=TYPE_KR[a]||a, bKr=TYPE_KR[b]||b;
 
-    // 배지 표시
     document.getElementById('combo-display').textContent=`${a} × ${b}`;
 
-    // 다운로드 링크 설정
-    const pdfUrl=`/couple/kr/reports/combo/${combo}_KR.pdf`;
     const btn=document.getElementById('btn-download');
     btn.href=pdfUrl;
-    btn.download=`Shadowgram_Couple_${combo}_KR.pdf`;
+    btn.download=`42world_Couple_${key}_KR.pdf`;
     btn.textContent=`📥 ${aKr} × ${bKr} 리포트 다운로드`;
 
     ready.style.display='block';
 
     // 쿠키 갱신 (30일)
-    document.cookie=`sg_combo=${combo};path=/;max-age=2592000;SameSite=Lax`;
-  }, 1000);
+    document.cookie=`sg_combo=${key};path=/;max-age=2592000;SameSite=Lax`;
+  }, 800);
 }
 
 function downloadBySelect(){
   const a=document.getElementById('sel-a').value;
   const b=document.getElementById('sel-b').value;
   if(!a||!b){alert('두 유형을 모두 선택해주세요 😊');return;}
-  const combo=`${a}_${b}`;
+  const key=`${a}_${b}`;
+  const pdfUrl=getPdfUrl(key);
+  if(!pdfUrl){alert('해당 조합의 리포트를 찾을 수 없어요 😢');return;}
   const aKr=TYPE_KR[a]||a, bKr=TYPE_KR[b]||b;
-  document.cookie=`sg_combo=${combo};path=/;max-age=2592000;SameSite=Lax`;
+  document.cookie=`sg_combo=${key};path=/;max-age=2592000;SameSite=Lax`;
   const link=document.createElement('a');
-  link.href=`/couple/kr/reports/combo/${combo}_KR.pdf`;
-  link.download=`Shadowgram_Couple_${combo}_KR.pdf`;
+  link.href=pdfUrl;
+  link.download=`42world_Couple_${key}_KR.pdf`;
   link.click();
 }
 
