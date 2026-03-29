@@ -1314,6 +1314,7 @@ const PDF_MAP={
   'PLAYER_STEADY':'63_PLAYER_STEADY_KR.pdf','PLAYER_PLAYER':'64_PLAYER_PLAYER_KR.pdf',
 };
 const LATPEED_URL = 'https://www.latpeed.com/products/9yuqU';
+const LATPEED_PARTNER_URL = 'https://www.latpeed.com/products/abBPX';
 function getReport(){
   const params=new URLSearchParams(window.location.search);
   const a=(params.get('a')||'SPARK').toUpperCase();
@@ -1331,7 +1332,10 @@ function getReport(){
   }
   document.cookie=`sg_combo=${combo};path=/;max-age=2592000;SameSite=Lax`;
   if(ref) document.cookie=`sg_ref=${ref};path=/;max-age=2592000;SameSite=Lax`;
-  const latpeedUrl=ref?`${LATPEED_URL}?ref=${encodeURIComponent(ref)}&combo=${combo}`:`${LATPEED_URL}?combo=${combo}`;
+  // partner= 파라미터 있으면 파트너 전용 래피드 상품으로
+  const partner=params.get('partner')||'';
+  const baseUrl=partner?LATPEED_PARTNER_URL:LATPEED_URL;
+  const latpeedUrl=`${baseUrl}?combo=${combo}`+(ref?`&ref=${encodeURIComponent(ref)}`:'')+(partner?`&partner=${encodeURIComponent(partner)}`:'');
   window.location.href=latpeedUrl;
 }
 
