@@ -541,12 +541,23 @@ function selectAB(qi, who, val){
   if(who==='A') answersA[qi]=val;
   else answersB[qi]=val;
   render();
+  // 두 명 모두 선택 완료 시 일치 여부 효과
+  if(answersA[qi]!==null && answersB[qi]!==null){
+    if(answersA[qi]===answersB[qi]){ launchConfetti(); }
+    else{ launchShake(); if(navigator.vibrate) navigator.vibrate([60,30,60]); }
+  }
 }
 
 function selectScale4(qi, who, val){
   if(who==='A') answersA[qi]=val;
   else answersB[qi]=val;
   render();
+  // 두 명 모두 선택 완료 시 일치 여부 효과 (같은 방향: 0,1 vs 2,3)
+  if(answersA[qi]!==null && answersB[qi]!==null){
+    const sameDir = (answersA[qi]<=1 && answersB[qi]<=1) || (answersA[qi]>=2 && answersB[qi]>=2);
+    if(sameDir){ launchConfetti(); }
+    else{ launchShake(); if(navigator.vibrate) navigator.vibrate([60,30,60]); }
+  }
 }
 
 function updateWaitMsg(){
