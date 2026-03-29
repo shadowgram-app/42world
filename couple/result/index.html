@@ -187,6 +187,51 @@
     .footer{padding:20px;text-align:center;font-size:11px;color:var(--dim);}
     @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
     .fade-in{opacity:0;animation:fadeUp 0.6s forwards;}
+
+    /* ── Block A : 42world×Shadowgram 소개 + 8유형 ── */
+    .about-tool-wrap{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:28px 20px;margin:0 20px 28px;}
+    .about-tool-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+    .about-tool-icon{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#1A2A3A,#0A1A2A);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+    .about-tool-title{font-size:16px;font-weight:900;line-height:1.3;}
+    .about-tool-title span{display:block;font-size:11px;font-weight:400;color:var(--silver);letter-spacing:0.5px;margin-top:2px;}
+    .about-tool-desc{font-size:13px;color:var(--silver);line-height:1.8;margin-bottom:18px;}
+    .about-tool-desc strong{color:var(--white);}
+    .type-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+    .type-mini-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:background 0.2s,border-color 0.2s;}
+    .type-mini-card:hover,.type-mini-card.active{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.4);}
+    .type-mini-icon{font-size:20px;margin-bottom:4px;}
+    .type-mini-name{font-size:10px;font-weight:700;letter-spacing:0.5px;}
+    .type-mini-mbti{font-size:9px;color:var(--silver);margin-top:2px;}
+    .type-grid-hint{font-size:11px;color:var(--silver);text-align:center;margin-bottom:14px;}
+    .type-detail-box{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.3);border-radius:14px;padding:16px;margin-bottom:14px;display:none;}
+    .type-detail-box.visible{display:block;}
+    .type-detail-name{font-size:15px;font-weight:900;color:var(--gold);margin-bottom:4px;}
+    .type-detail-mbti{font-size:11px;color:var(--silver);margin-bottom:10px;}
+    .type-detail-desc{font-size:13px;line-height:1.7;color:var(--white);}
+    .type-detail-kw{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+    .type-detail-kw .kw{font-size:11px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:3px 10px;border-radius:20px;}
+    .about-tool-footer{font-size:12px;color:var(--silver);line-height:1.7;padding-top:14px;border-top:1px solid var(--border);}
+    .about-tool-footer strong{color:var(--white);}
+
+    /* ── Block B : 24문항 신뢰·검증 ── */
+    .trust-wrap{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:28px 20px;margin:0 20px 28px;}
+    .trust-headline{font-size:17px;font-weight:900;line-height:1.5;margin-bottom:8px;}
+    .trust-headline em{font-style:normal;background:linear-gradient(135deg,#E8D090,#C9A84C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .trust-sub{font-size:13px;color:var(--silver);line-height:1.8;margin-bottom:20px;}
+    .trust-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
+    .trust-card{display:flex;align-items:flex-start;gap:14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:16px;padding:16px;}
+    .trust-card-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+    .trust-card-icon.t-green{background:rgba(80,200,120,0.12);border:1px solid rgba(80,200,120,0.25);}
+    .trust-card-icon.t-blue{background:rgba(96,144,200,0.12);border:1px solid rgba(96,144,200,0.25);}
+    .trust-card-icon.t-gold{background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);}
+    .trust-card-title{font-size:13px;font-weight:700;margin-bottom:4px;}
+    .trust-card-desc{font-size:12px;color:var(--silver);line-height:1.6;}
+    .trust-card-desc strong{color:var(--white);}
+    .big5-badge{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(80,200,120,0.08),rgba(96,144,200,0.08));border:1px solid rgba(80,200,120,0.3);border-radius:14px;padding:14px 16px;}
+    .big5-badge-icon{font-size:24px;}
+    .big5-badge-text{font-size:12px;line-height:1.6;}
+    .big5-badge-text strong{display:block;font-size:13px;color:#50C878;margin-bottom:2px;}
+    .big5-badge-text span{color:var(--silver);}
   /* ── Mini GNav ── */
   .gnav{position:fixed;top:0;left:0;right:0;z-index:999;
     background:rgba(15,18,30,0.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
@@ -240,39 +285,6 @@
   .sg-s2{color:#C9A84C;font-weight:800;}
   .sg-dot{color:rgba(184,134,11,0.45);font-weight:300;font-size:13px;}
   .sg-s3{color:#8899AA;font-weight:400;font-size:10px;letter-spacing:2px;}
-
-  /* ── Block A: 42world × Shadowgram 설명 박스 ── */
-  .about-tool-wrap{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:28px 20px;margin:0 20px 28px;}
-  .about-tool-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
-  .about-tool-icon{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#1A2A3A,#0A1A2A);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-  .about-tool-title{font-size:16px;font-weight:900;line-height:1.3;}
-  .about-tool-title span{display:block;font-size:11px;font-weight:400;color:var(--silver);letter-spacing:0.5px;margin-top:2px;}
-  .about-tool-desc{font-size:13px;color:var(--silver);line-height:1.8;margin-bottom:20px;}
-  .about-tool-desc strong{color:var(--white);}
-  .type-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
-  .type-mini-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:background 0.2s,border-color 0.2s;}
-  .type-mini-card:hover{background:rgba(201,168,76,0.1);border-color:rgba(201,168,76,0.4);}
-  .type-mini-card.active{background:rgba(201,168,76,0.12);border-color:var(--gold);}
-  .type-mini-icon{font-size:20px;margin-bottom:4px;}
-  .type-mini-name{font-size:10px;font-weight:700;letter-spacing:0.5px;}
-  .type-mini-mbti{font-size:9px;color:var(--silver);margin-top:2px;}
-  .type-detail-box{background:rgba(255,255,255,0.04);border:1px solid rgba(201,168,76,0.3);border-radius:14px;padding:16px;margin-bottom:16px;display:none;}
-  .type-detail-box.visible{display:block;}
-  .type-detail-name{font-size:15px;font-weight:900;color:var(--gold);margin-bottom:6px;}
-  .type-detail-mbti{font-size:11px;color:var(--silver);margin-bottom:10px;}
-  .type-detail-desc{font-size:13px;line-height:1.7;color:var(--white);}
-  .type-detail-keyword{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
-  .kw{font-size:11px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:3px 10px;border-radius:20px;}
-  .type-grid-hint{font-size:11px;color:var(--silver);text-align:center;margin-top:-10px;margin-bottom:16px;}
-  .shadowgram-tagline{font-size:12px;color:var(--silver);line-height:1.7;padding-top:16px;border-top:1px solid var(--border);}
-
-  /* ── 공유하기 박스 (독립형) ── */
-  .share-box-wrap{margin:0 20px 28px;background:linear-gradient(135deg,#0A1A2A,#0A0A18);border:1px solid rgba(201,168,76,0.25);border-radius:24px;padding:28px 20px;text-align:center;}
-  .share-box-label{font-size:10px;letter-spacing:2.5px;color:var(--gold);text-transform:uppercase;margin-bottom:14px;}
-  .share-box-title{font-size:18px;font-weight:900;margin-bottom:8px;line-height:1.4;}
-  .share-box-desc{font-size:13px;color:var(--silver);line-height:1.7;margin-bottom:20px;}
-  .share-box-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:16px;padding:16px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 20px rgba(201,168,76,0.35);transition:opacity 0.2s;}
-  .share-box-btn:active{opacity:0.85;}
 </style>
 </head>
 <body>
@@ -308,6 +320,7 @@
           <div class="dh-char-icon" id="dh-icon-m">⚡</div>
           <div class="dh-char-body">
             <div class="dh-char-who">남주 <strong id="dh-actor-m">—</strong> (<span id="dh-role-m">—</span>) 처럼</div>
+            <div id="dh-name-m" style="font-size:11px;font-weight:900;color:#C9A84C;letter-spacing:1px;margin:3px 0 2px;opacity:0.9;"></div>
             <div class="dh-char-type" id="dh-type-badge-m">SPARK</div>
             <div class="dh-char-desc" id="dh-desc-m">—</div>
           </div>
@@ -316,6 +329,7 @@
           <div class="dh-char-icon" id="dh-icon-f">🔮</div>
           <div class="dh-char-body">
             <div class="dh-char-who">여주 <strong id="dh-actor-f">—</strong> (<span id="dh-role-f">—</span>) 처럼</div>
+            <div id="dh-name-f" style="font-size:11px;font-weight:900;color:#8A70C0;letter-spacing:1px;margin:3px 0 2px;opacity:0.9;"></div>
             <div class="dh-char-type" id="dh-type-badge-f">VISION</div>
             <div class="dh-char-desc" id="dh-desc-f">—</div>
           </div>
@@ -335,8 +349,8 @@
     </button>
   </div>
 
-  <!-- 42world × Shadowgram 설명 박스 -->
-  <div class="about-tool-wrap fade-in" style="animation-delay:0.4s;">
+  <!-- ★ Block A : 42world×Shadowgram 소개 + 8유형 ★ -->
+  <div class="about-tool-wrap fade-in" style="animation-delay:0.45s;">
     <div class="about-tool-header">
       <div class="about-tool-icon">🪐</div>
       <div class="about-tool-title">
@@ -349,60 +363,29 @@
       검사와 결과 뒤에 있는 심리 프레임워크는 <strong>Shadowgram</strong>이 만들었어요.<br><br>
       Shadowgram은 사람의 <strong>핵심 에너지(주기능)</strong>를 기준으로 성격을 <strong>8가지 빛 유형</strong>으로 나눠요.
       나의 강점(빛)과 성장 포인트(그림자)를 함께 보여주는 심리 프레임워크예요.<br>
-      아래에서 8가지 유형을 눌러보세요 👇
+      아래에서 8가지 유형을 눌러 확인해보세요 👇
     </div>
     <div class="type-mini-grid">
-      <div class="type-mini-card" onclick="showType('SPARK')" id="card-SPARK">
-        <div class="type-mini-icon">⚡</div>
-        <div class="type-mini-name" style="color:#F0C060;">SPARK</div>
-        <div class="type-mini-mbti">ENFP·ENTP</div>
-      </div>
-      <div class="type-mini-card" onclick="showType('VISION')" id="card-VISION">
-        <div class="type-mini-icon">🔮</div>
-        <div class="type-mini-name" style="color:#C0A0EE;">VISION</div>
-        <div class="type-mini-mbti">INFJ·INTJ</div>
-      </div>
-      <div class="type-mini-card" onclick="showType('STEADY')" id="card-STEADY">
-        <div class="type-mini-icon">⚓</div>
-        <div class="type-mini-name" style="color:#A0D0A0;">STEADY</div>
-        <div class="type-mini-mbti">ISFJ·ISTJ</div>
-      </div>
-      <div class="type-mini-card" onclick="showType('PLAYER')" id="card-PLAYER">
-        <div class="type-mini-icon">🎯</div>
-        <div class="type-mini-name" style="color:#F09080;">PLAYER</div>
-        <div class="type-mini-mbti">ESFP·ESTP</div>
-      </div>
-      <div class="type-mini-card" onclick="showType('HARMONY')" id="card-HARMONY">
-        <div class="type-mini-icon">🌸</div>
-        <div class="type-mini-name" style="color:#F0A0C0;">HARMONY</div>
-        <div class="type-mini-mbti">ESFJ·ENFJ</div>
-      </div>
-      <div class="type-mini-card" onclick="showType('SOUL')" id="card-SOUL">
-        <div class="type-mini-icon">💎</div>
-        <div class="type-mini-name" style="color:#A0D0B0;">SOUL</div>
-        <div class="type-mini-mbti">INFP·ISFP</div>
-      </div>
-      <div class="type-mini-card" onclick="showType('LOGIC')" id="card-LOGIC">
-        <div class="type-mini-icon">🔬</div>
-        <div class="type-mini-name" style="color:#90C8F0;">LOGIC</div>
-        <div class="type-mini-mbti">ISTP·INTP</div>
-      </div>
-      <div class="type-mini-card" onclick="showType('LEADER')" id="card-LEADER">
-        <div class="type-mini-icon">⚙️</div>
-        <div class="type-mini-name" style="color:#F0C070;">LEADER</div>
-        <div class="type-mini-mbti">ESTJ·ENTJ</div>
-      </div>
+      <div class="type-mini-card" onclick="showType('SPARK')" id="sg-card-SPARK"><div class="type-mini-icon">⚡</div><div class="type-mini-name" style="color:#F0C060;">SPARK</div><div class="type-mini-mbti">ENFP·ENTP</div></div>
+      <div class="type-mini-card" onclick="showType('VISION')" id="sg-card-VISION"><div class="type-mini-icon">🔮</div><div class="type-mini-name" style="color:#C0A0EE;">VISION</div><div class="type-mini-mbti">INFJ·INTJ</div></div>
+      <div class="type-mini-card" onclick="showType('STEADY')" id="sg-card-STEADY"><div class="type-mini-icon">⚓</div><div class="type-mini-name" style="color:#A0D0A0;">STEADY</div><div class="type-mini-mbti">ISFJ·ISTJ</div></div>
+      <div class="type-mini-card" onclick="showType('PLAYER')" id="sg-card-PLAYER"><div class="type-mini-icon">🎯</div><div class="type-mini-name" style="color:#F09080;">PLAYER</div><div class="type-mini-mbti">ESFP·ESTP</div></div>
+      <div class="type-mini-card" onclick="showType('HARMONY')" id="sg-card-HARMONY"><div class="type-mini-icon">🌸</div><div class="type-mini-name" style="color:#F0A0C0;">HARMONY</div><div class="type-mini-mbti">ESFJ·ENFJ</div></div>
+      <div class="type-mini-card" onclick="showType('SOUL')" id="sg-card-SOUL"><div class="type-mini-icon">💎</div><div class="type-mini-name" style="color:#A0D0B0;">SOUL</div><div class="type-mini-mbti">INFP·ISFP</div></div>
+      <div class="type-mini-card" onclick="showType('LOGIC')" id="sg-card-LOGIC"><div class="type-mini-icon">🔬</div><div class="type-mini-name" style="color:#90C8F0;">LOGIC</div><div class="type-mini-mbti">ISTP·INTP</div></div>
+      <div class="type-mini-card" onclick="showType('LEADER')" id="sg-card-LEADER"><div class="type-mini-icon">⚙️</div><div class="type-mini-name" style="color:#F0C070;">LEADER</div><div class="type-mini-mbti">ESTJ·ENTJ</div></div>
     </div>
     <div class="type-grid-hint">유형을 눌러서 설명을 확인해보세요</div>
-    <div class="type-detail-box" id="type-detail-box">
-      <div class="type-detail-name" id="td-name">—</div>
-      <div class="type-detail-mbti" id="td-mbti">—</div>
-      <div class="type-detail-desc" id="td-desc">—</div>
-      <div class="type-detail-keyword" id="td-kw"></div>
+    <div class="type-detail-box" id="sg-type-detail">
+      <div class="type-detail-name" id="sg-td-name">—</div>
+      <div class="type-detail-mbti" id="sg-td-mbti">—</div>
+      <div class="type-detail-desc" id="sg-td-desc">—</div>
+      <div class="type-detail-kw" id="sg-td-kw"></div>
     </div>
-    <div class="shadowgram-tagline">
+    <div class="about-tool-footer">
       Shadowgram은 MBTI®의 근거인 <strong>칼 융의 유형론</strong>을 바탕으로 독자적으로 개발한 심리 프레임워크예요.
-      각 유형의 <strong>핵심 에너지(주기능)</strong>를 기준으로 8가지로 구분하고, 강점(빛)과 성장 포인트(그림자)를 함께 탐색해요.<br>
+      각 유형의 <strong>핵심 에너지(주기능)</strong>를 기준으로 8가지로 구분하고,
+      강점(빛)과 성장 포인트(그림자)를 함께 탐색해요.<br>
       <span style="color:var(--gold);font-weight:700;">42world</span>는 Shadowgram의 커플 콘텐츠(Shadowgram Duo)를 서비스하는 플랫폼입니다.
     </div>
   </div>
@@ -578,18 +561,6 @@
       <!-- 하단: 주연배우(배역) + 사용자 이름 -->
       <div class="rc-bottom">
         <div class="rc-combo-badge" id="rc-combo-badge">—</div>
-        <!-- 주연배우(배역) 줄 -->
-        <div class="rc-actors">
-          <div class="rc-actor-person">
-            <span class="rc-actor-name" id="rc-actor-name-a">—</span>
-            <span class="rc-actor-role" id="rc-actor-role-a">—</span>
-          </div>
-          <span class="rc-actor-vs">×</span>
-          <div class="rc-actor-person">
-            <span class="rc-actor-name" id="rc-actor-name-b">—</span>
-            <span class="rc-actor-role" id="rc-actor-role-b">—</span>
-          </div>
-        </div>
         <!-- 사용자 이름 줄 (입력한 경우만 표시) -->
         <div class="rc-cast" id="rc-user-row" style="display:none;">
           <div class="rc-cast-person">
@@ -609,32 +580,69 @@
   </div>
 
   <!-- 공유 / 수신자 CTA (JS로 전환) -->
-  <!-- 내가 보낸 경우: 공유 버튼 (카드 저장으로 대체, 숨김) -->
-  <div id="section-share" class="share-section fade-in" style="animation-delay:1.7s;display:none;"></div>
-
-  <!-- 공유하기 박스 (독립형 — section-share와 별개) -->
-  <div id="share-box" class="share-box-wrap fade-in" style="animation-delay:1.8s;display:none;">
-    <div class="share-box-label">✦ SHARE ✦</div>
-    <div class="share-box-title">우리 커플 자랑하기 🔥</div>
-    <div class="share-box-desc">우리 조합, 친구들한테도 보여줘요.<br>링크 한 번으로 드라마 결과가 쫙 펼쳐져요.</div>
-    <button class="share-box-btn" onclick="shareInsta()">
-      📤 우리 커플 자랑하기
-    </button>
+  <!-- 내가 보낸 경우: 공유 버튼 -->
+  <div id="section-share" class="share-section fade-in" style="animation-delay:1.7s;display:none;">
+    <div class="share-card">
+      <h3 style="background:linear-gradient(135deg,#E8D090,#C9A84C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">우리 결과 공유하기 💌</h3>
+      <p>링크 하나로 — 상대방도 내 결과를 보고 바로 테스트할 수 있어요</p>
+      <button onclick="shareNative()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;">
+        📤 공유하기
+      </button>
+      <a href="/couple/test/" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:transparent;border:1px solid rgba(201,168,76,0.4);color:rgba(201,168,76,0.85);border-radius:14px;padding:13px;font-size:14px;font-weight:700;font-family:inherit;text-decoration:none;margin-top:10px;">
+        🔁 처음부터 다시 검사하기
+      </a>
+    </div>
   </div>
-
-  <!-- 받은 사람인 경우: 나도 테스트하기 -->
+  <!-- 받은 사람인 경우: 드라마 매칭 CTA -->
   <div id="section-received" class="share-section fade-in" style="animation-delay:1.7s;display:none;">
-    <div class="share-card" style="background:linear-gradient(135deg,#0A2A1A,#0A1830);border-color:#2A5040;">
-      <div id="received-sender" style="font-size:12px;letter-spacing:1px;color:var(--gold);margin-bottom:10px;"></div>
-      <h3 style="font-size:18px;margin-bottom:8px;">나는 어떤 유형일까? 🤔</h3>
-      <p>우리 커플 유형은 뭔지 — 직접 체크해봐요<br>연인과 함께 24문항, 5분이면 돼요</p>
-      <div class="share-btns" style="margin-top:20px;">
-        <a href="/couple/kr/" class="btn-insta" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#B8860B,#D4A017);color:#0A0A14;border-radius:14px;padding:14px;font-size:15px;font-weight:900;">✏️ 지금 테스트하기 →</a>
-      </div>
+    <div class="share-card" style="background:linear-gradient(135deg,#0D0A20,#0A1030);border-color:rgba(201,168,76,0.3);text-align:center;">
+      <div id="received-sender" style="font-size:11px;letter-spacing:1px;color:var(--gold);margin-bottom:12px;opacity:0.8;"></div>
+      <div style="font-size:28px;margin-bottom:10px;">🎬</div>
+      <h3 style="font-size:20px;font-weight:900;margin-bottom:8px;line-height:1.35;">우리 커플은<br>어느 드라마 속 주인공일까?</h3>
+      <p style="font-size:13px;color:var(--silver);line-height:1.7;margin-bottom:20px;">연인과 함께 24문항 — 5분이면 드라마 매칭 결과가 나와요</p>
+      <a href="/couple/test/" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border-radius:14px;padding:16px;font-size:16px;font-weight:900;">
+        🎬 지금 바로 드라마 매칭하기 →
+      </a>
     </div>
   </div>
 
   <!-- 리포트 CTA -->
+  <!-- ★ Block B : 24문항 신뢰·검증 ★ -->
+  <div class="trust-wrap fade-in" style="animation-delay:1.85s;">
+    <div class="trust-headline">24문항으로<br><em>진짜 유형이 나올 수 있을까요?</em></div>
+    <div class="trust-sub">짧아서 오히려 더 정확해요.<br>핵심 질문만 남기고, 애매한 문항은 전부 걷어냈어요.</div>
+    <div class="trust-cards">
+      <div class="trust-card">
+        <div class="trust-card-icon t-green">🧬</div>
+        <div>
+          <div class="trust-card-title">Big Five 공인 문항 기반 설계</div>
+          <div class="trust-card-desc">세계적으로 검증된 <strong>Big Five(OCEAN) 성격 모델</strong>의 핵심 측정 항목을 Shadowgram 8유형 구조에 맞게 재설계했어요. 학술 연구에서 수십 년간 사용해온 측정 방식이에요.</div>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card-icon t-blue">✂️</div>
+        <div>
+          <div class="trust-card-title">불필요한 문항 제거 = 피로 없는 정확도</div>
+          <div class="trust-card-desc">긴 검사는 후반부로 갈수록 집중력이 떨어져 오답이 늘어요. <strong>24문항은 응답 품질을 최고로 유지</strong>할 수 있는 최적 길이예요.</div>
+        </div>
+      </div>
+      <div class="trust-card">
+        <div class="trust-card-icon t-gold">🎯</div>
+        <div>
+          <div class="trust-card-title">행동 기반 질문 — "나는 이런 사람" X</div>
+          <div class="trust-card-desc">"나는 외향적이다"처럼 자기 평가식 질문 대신, <strong>실제 상황과 행동 패턴</strong>을 묻는 방식으로 자기 이상화 오류를 최소화했어요.</div>
+        </div>
+      </div>
+    </div>
+    <div class="big5-badge">
+      <div class="big5-badge-icon">✅</div>
+      <div class="big5-badge-text">
+        <strong>과학적으로 검증된 Big Five 측정 방식 적용</strong>
+        <span>Shadowgram은 심리학 연구에서 가장 신뢰받는 성격 모델을 기반으로 개발되었습니다</span>
+      </div>
+    </div>
+  </div>
+
   <div class="report-cta fade-in" style="animation-delay:1.9s">
     <div class="rt">✦ FULL REPORT ✦</div>
 
@@ -684,17 +692,17 @@
       <div class="toc-row">🚀 <span>우리 조합의 숨겨진 슈퍼파워</span><em>CH 6</em></div>
       <div class="toc-row">🌱 <span>관계 성장 퀘스트 — 3단계 미션</span><em>CH 7</em></div>
     </div>
-    <div class="price-box" style="background:rgba(80,200,120,0.08);border-color:rgba(80,200,120,0.4);">
-      <div style="font-size:13px;color:#80E0A0;font-weight:800;margin-bottom:8px;">🎁 베타 테스트 기간 — 무료 다운로드</div>
-      <div style="font-size:12px;color:var(--silver);margin-bottom:12px;line-height:1.6;">정식 출시 전 무료로 받아보실 수 있어요.<br>두 분의 커플 리포트를 바로 받아드려요.</div>
+    <div class="price-box" style="background:rgba(201,168,76,0.06);border-color:rgba(201,168,76,0.4);">
+      <div style="font-size:13px;color:#C9A84C;font-weight:800;margin-bottom:8px;">⚡ 얼리버드 한정 특가</div>
+      <div style="font-size:12px;color:var(--silver);margin-bottom:12px;line-height:1.6;">지금 구매하시면 정가 대비 50% 할인된 가격으로 받으실 수 있어요.</div>
       <div style="font-size:11px;color:var(--silver);text-decoration:line-through;margin-bottom:4px;">정가 19,800원</div>
       <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;">
         <span style="background:#C9A84C;color:#0A0A14;font-size:11px;font-weight:800;padding:2px 8px;border-radius:6px;">얼리버드 50% OFF</span>
         <span style="font-size:22px;font-weight:900;background:linear-gradient(135deg,#E8D090,#C9A84C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">9,900원</span>
       </div>
-      <div style="font-size:11px;color:#FF8080;font-weight:700;">⏰ 정식 출시 시 가격 변경 예정</div>
+      <div style="font-size:11px;color:#FF8080;font-weight:700;">⏰ 조기 마감 예정</div>
     </div>
-    <button class="btn-report" onclick="getReport()">📄 무료로 리포트 받기 →</button>
+    <button class="btn-report" onclick="getReport()">📄 리포트 구매하기 →</button>
   </div>
 
   <div class="footer">
@@ -708,7 +716,7 @@
   <div class="sticky-inner">
     <div class="sticky-text">
       <strong id="sticky-title">리포트</strong>
-      <span style="font-size:10px;"><s style="color:var(--silver)">19,800원</s> <span style="color:#C9A84C;font-weight:800;">얼리버드 9,900원</span> <span style="color:#80E0A0;font-size:9px;">(베타 무료)</span></span>
+      <span style="font-size:10px;"><s style="color:var(--silver)">19,800원</s> <span style="color:#C9A84C;font-weight:800;">얼리버드 9,900원</span> </span>
     </div>
     <button class="sticky-btn" onclick="getReport()">리포트 받기 →</button>
   </div>
@@ -760,6 +768,32 @@ const TYPE_INFO = {
   SOUL:  {color:'#9070B0',pill:'#2A1A3A',pillBorder:'#5A3A7A',pillText:'#C0A0E0',radar:[65,75,50,80,40,85,30,95]},
 };
 const RADAR_LABELS = ['성실','자발','활력','통찰','논리','공감','추진','감성'];
+
+// ── Block A : 8유형 인터랙션 ──
+const SG_TYPE_DATA = {
+  SPARK:{color:'#F0C060',mbti:'ENFP · ENTP',desc:'새로운 가능성을 가장 먼저 보는 사람이에요. 아이디어가 끊임없이 솟구치고, 주변 에너지를 자연스럽게 끌어올려요. 시작을 잘하는 만큼 마무리가 약한 면도 있어요.',kw:['가능성 탐색','전염되는 에너지','빠른 적응','즉흥적']},
+  VISION:{color:'#C0A0EE',mbti:'INFJ · INTJ',desc:'아직 일어나지 않은 일을 직관으로 느끼는 사람이에요. 한 가지에 깊이 몰두하면 세계적 수준의 통찰에 도달해요. 완벽주의로 시작 전 너무 많이 생각하는 경향이 있어요.',kw:['깊은 통찰','미래 감지','몰입','완벽주의']},
+  STEADY:{color:'#A0D0A0',mbti:'ISFJ · ISTJ',desc:'한 번 약속하면 끝까지 지키는 사람이에요. 함께 있으면 무엇도 무너지지 않을 것 같은 안정감을 줘요. 변화보다 익숙한 것을 선호하고, 속마음을 잘 표현하지 않아요.',kw:['신뢰','꼼꼼함','안정감','루틴 마스터']},
+  PLAYER:{color:'#F09080',mbti:'ESFP · ESTP',desc:'지금 이 순간을 가장 풍성하게 사는 사람이에요. 돌발 상황에서 가장 빛나고, 마음에 없는 말은 절대 안 해요. 장기 계획보다 즉흥에 끌리는 경향이 있어요.',kw:['현재 집중','순발력','솔직함','즉흥성']},
+  HARMONY:{color:'#F0A0C0',mbti:'ESFJ · ENFJ',desc:'상대가 말 안 해도 감정을 먼저 알아채는 사람이에요. 어색한 자리도 따뜻하게 만들고, 사랑하는 사람을 위해 전부를 줄 수 있어요. 자기 감정보다 상대를 먼저 챙기다 지칠 수 있어요.',kw:['공감 능력','분위기 메이커','헌신','갈등 회피']},
+  SOUL:{color:'#A0D0B0',mbti:'INFP · ISFP',desc:'표면이 아닌 진심으로 연결되는 사람이에요. 감동적인 방식으로 감정을 표현하고, 자신이 믿는 가치를 끝까지 지켜요. 감정이 격해지면 말문이 막히는 경향이 있어요.',kw:['진정성','풍부한 내면','가치 중심','감성적 표현']},
+  LOGIC:{color:'#90C8F0',mbti:'ISTP · INTP',desc:'감정에 흔들리지 않고 본질을 보는 사람이에요. 위기 상황에서 가장 믿음직하고, 혼자서도 완전해요. 감정 표현이 서툴러 차갑게 보일 수 있어요.',kw:['냉철한 분석','문제 해결','독립성','논리적 사고']},
+  LEADER:{color:'#F0C070',mbti:'ESTJ · ENTJ',desc:'계획을 현실로 만드는 추진력이 있는 사람이에요. 무엇이 중요한지 흔들리지 않고 자연스럽게 방향을 잡아줘요. 내 방식이 옳다는 확신이 강하고 감정보다 결과를 우선시해요.',kw:['실행력','명확한 기준','리더십','목표 지향']}
+};
+let sgActiveType = null;
+function showType(type){
+  if(sgActiveType) document.getElementById('sg-card-'+sgActiveType).classList.remove('active');
+  if(sgActiveType===type){document.getElementById('sg-type-detail').classList.remove('visible');sgActiveType=null;return;}
+  sgActiveType=type;
+  document.getElementById('sg-card-'+type).classList.add('active');
+  const d=SG_TYPE_DATA[type];
+  document.getElementById('sg-td-name').textContent=type;
+  document.getElementById('sg-td-name').style.color=d.color;
+  document.getElementById('sg-td-mbti').textContent='MBTI® 대응: '+d.mbti;
+  document.getElementById('sg-td-desc').textContent=d.desc;
+  document.getElementById('sg-td-kw').innerHTML=d.kw.map(k=>`<span class="kw">${k}</span>`).join('');
+  document.getElementById('sg-type-detail').classList.add('visible');
+}
 
 // ── 별 생성
 (function(){
@@ -979,6 +1013,9 @@ renderPage();
       document.getElementById('dh-icon-m').textContent = mA.icon;
       document.getElementById('dh-actor-m').textContent = ko.actor_m || a;
       document.getElementById('dh-role-m').textContent = ko.role_m || ko.char_m || '';
+      // 검사자 이름 (na 파라미터)
+      const nameElM = document.getElementById('dh-name-m');
+      if(nameElM && na) { nameElM.textContent = `✦ ${na}`; } else if(nameElM) { nameElM.style.display='none'; }
       const badgeM = document.getElementById('dh-type-badge-m');
       badgeM.textContent = a;
       badgeM.style.cssText = `background:${mA.color}22;color:${mA.color};border:1px solid ${mA.color}55;display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;margin-bottom:5px;letter-spacing:1px;`;
@@ -988,6 +1025,9 @@ renderPage();
       document.getElementById('dh-icon-f').textContent = mB.icon;
       document.getElementById('dh-actor-f').textContent = ko.actor_f || b;
       document.getElementById('dh-role-f').textContent = ko.role_f || ko.char_f || '';
+      // 검사자 이름 (nb 파라미터)
+      const nameElF = document.getElementById('dh-name-f');
+      if(nameElF && nb) { nameElF.textContent = `✦ ${nb}`; } else if(nameElF) { nameElF.style.display='none'; }
       const badgeF = document.getElementById('dh-type-badge-f');
       badgeF.textContent = b;
       badgeF.style.cssText = `background:${mB.color}22;color:${mB.color};border:1px solid ${mB.color}55;display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px;margin-bottom:5px;letter-spacing:1px;`;
@@ -1124,14 +1164,15 @@ function saveCard(){
 // ref=share 없으면 → 내 결과 → "공유하기" 버튼
 (function(){
   const params=new URLSearchParams(window.location.search);
-  const isReceived = params.get('ref')==='share';
+  const isReceived = (params.get('ref')||'').startsWith('share');
   if(isReceived){
     const na=params.get('na')||'', nb=params.get('nb')||'';
     const names=[na,nb].filter(Boolean).join(' · ');
     const el=document.getElementById('received-sender');
     if(el) el.textContent = names ? `✦ ${names}의 커플 유형 결과예요` : '✦ 커플 유형 결과예요';
-    // section-received 카드 불필요 — 결과카드 버튼으로 대체
-    // document.getElementById('section-received').style.display='block';
+    // 이미지 저장 버튼 숨기기 (남의 결과카드니까)
+    const heroSaveBtn=document.getElementById('save-btn-hero');
+    if(heroSaveBtn) heroSaveBtn.closest('div').style.display='none';
     // 리포트 CTA + footer + 스티키 바 숨기기
     const reportCta=document.querySelector('.report-cta');
     if(reportCta) reportCta.style.display='none';
@@ -1139,17 +1180,10 @@ function saveCard(){
     if(footer) footer.style.display='none';
     const stickyBar=document.querySelector('.sticky-bottom');
     if(stickyBar) stickyBar.style.display='none';
-    // 결과카드 저장 버튼 → 테스트하기 버튼으로 교체
-    const saveBtn=document.getElementById('rc-save-btn');
-    if(saveBtn){
-      saveBtn.onclick=null;
-      saveBtn.style.background='linear-gradient(135deg,#B8860B,#D4A017)';
-      saveBtn.innerHTML='✏️ 나도 테스트하기 →';
-      saveBtn.onclick=()=>{window.location.href='/couple/kr/';};
-    }
+    // 드라마 매칭 CTA 섹션 표시
+    document.getElementById('section-received').style.display='block';
   } else {
     document.getElementById('section-share').style.display='block';
-    document.getElementById('share-box').style.display='block';
   }
 })();
 
@@ -1180,6 +1214,23 @@ function getShareUrl(){
   if(na) sp.set('na',na);
   if(nb) sp.set('nb',nb);
   return 'https://42world.kr/couple/result/?'+sp.toString();
+}
+function copyShareLink(){
+  const url=getShareUrl();
+  copyToClipboard(url,'🔗 링크 복사됐어요! 어디든 붙여넣기 해보세요 💛');
+}
+function shareNative(){
+  const url=getShareUrl();
+  const params=new URLSearchParams(window.location.search);
+  const na=params.get('na')||'', nb=params.get('nb')||'';
+  const names=[na,nb].filter(Boolean).join(' · ');
+  const title=names?`${names}의 커플 유형이 나왔어요 💫`:'우리 커플 드라마 매칭 결과 💫';
+  const text='64가지 조합 중 우리만의 드라마 커플 유형이 나와요 — 같이 해봐요!';
+  if(navigator.share){
+    navigator.share({title,text,url}).catch(()=>{});
+  }else{
+    copyToClipboard(url,'🔗 링크 복사됐어요! 카톡에 붙여넣기 해보세요 💛');
+  }
 }
 function shareKakao(){
   const url=getShareUrl();
@@ -1262,22 +1313,26 @@ const PDF_MAP={
   'PLAYER_LOGIC':'61_PLAYER_LOGIC_KR.pdf','PLAYER_LEADER':'62_PLAYER_LEADER_KR.pdf',
   'PLAYER_STEADY':'63_PLAYER_STEADY_KR.pdf','PLAYER_PLAYER':'64_PLAYER_PLAYER_KR.pdf',
 };
+const LATPEED_URL = 'https://www.latpeed.com/products/9yuqU';
 function getReport(){
   const params=new URLSearchParams(window.location.search);
   const a=(params.get('a')||'SPARK').toUpperCase();
   const b=(params.get('b')||'VISION').toUpperCase();
   const combo=`${a}_${b}`;
-  const pdfFile=PDF_MAP[combo];
-  if(!pdfFile){showToast('해당 조합의 리포트를 찾을 수 없어요 😢');return;}
-  const url=`/couple/pdfs/${pdfFile}`;
-  const filename=`42WORLD_Couple_${combo}_KR.pdf`;
-  showToast(`📥 리포트를 다운로드합니다!`);
-  setTimeout(()=>{
-    const l=document.createElement('a');
-    l.href=url;
-    l.download=filename;
-    l.click();
-  },400);
+  const ref=params.get('ref')||'';
+  // beta=true: 후기/인플루언서 비밀 링크 — 무료 직접 다운로드
+  if(params.get('beta')==='true'){
+    const pdfFile=PDF_MAP[combo];
+    if(!pdfFile){showToast('해당 조합의 리포트를 찾을 수 없어요 😢');return;}
+    const url=`/couple/pdfs/${pdfFile}`;
+    showToast(`📥 리포트를 다운로드합니다!`);
+    setTimeout(()=>{const l=document.createElement('a');l.href=url;l.download=`42WORLD_Couple_${combo}_KR.pdf`;l.click();},400);
+    return;
+  }
+  document.cookie=`sg_combo=${combo};path=/;max-age=2592000;SameSite=Lax`;
+  if(ref) document.cookie=`sg_ref=${ref};path=/;max-age=2592000;SameSite=Lax`;
+  const latpeedUrl=ref?`${LATPEED_URL}?ref=${encodeURIComponent(ref)}&combo=${combo}`:`${LATPEED_URL}?combo=${combo}`;
+  window.location.href=latpeedUrl;
 }
 
 function hwToggle(){
@@ -1310,11 +1365,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')hwClose();});
     <button class="hw-close-btn" onclick="hwClose()" aria-label="close">&#x2715;</button>
   </div>
   <div class="hw-section">
-    <a class="hw-item" href="/couple/kr/"><span class="hw-item-icon">&#x1F3E0;</span> 홈</a>
+    <a class="hw-item" href="/"><span class="hw-item-icon">&#x1F3E0;</span> 홈</a>
   </div>
   <div class="hw-section">
     <div class="hw-section-label">Couple</div>
-    <a class="hw-item" href="/couple/kr/"><span class="hw-item-icon">&#x270F;</span> 테스트 하기</a>
+    <a class="hw-item" href="/couple/test/"><span class="hw-item-icon">&#x270F;</span> 테스트 하기</a>
     <a class="hw-item" href="/couple/shop/"><span class="hw-item-icon">&#x1F6CD;</span> Shop</a>
   </div>
   <div class="hw-section">
@@ -1339,37 +1394,7 @@ function hwClose(){
   document.getElementById('hw-overlay').classList.remove('open');
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')hwClose();});
-
-// ── 8유형 데이터 + showType()
-const TYPE_DATA = {
-  SPARK:{color:'#F0C060',mbti:'ENFP · ENTP',desc:'새로운 가능성을 가장 먼저 보는 사람이에요. 아이디어가 끊임없이 솟구치고, 주변 사람의 에너지를 자연스럽게 끌어올려요. 다만 시작을 잘하는 만큼 마무리가 약한 면도 있어요.',keywords:['가능성 탐색','전염되는 에너지','빠른 적응','즉흥적']},
-  VISION:{color:'#C0A0EE',mbti:'INFJ · INTJ',desc:'아직 일어나지 않은 일을 직관적으로 느끼는 사람이에요. 한 가지에 깊이 몰두하면 세계적 수준의 통찰에 도달해요. 완벽주의 성향으로 시작 전 너무 많이 생각하는 경향이 있어요.',keywords:['깊은 통찰','미래 감지','몰입','완벽주의']},
-  STEADY:{color:'#A0D0A0',mbti:'ISFJ · ISTJ',desc:'한 번 약속하면 끝까지 지키는 사람이에요. 함께 있으면 무엇도 무너지지 않을 것 같은 안정감을 줘요. 변화보다 익숙한 것을 선호하고, 속마음을 잘 표현하지 않아요.',keywords:['신뢰','꼼꼼함','안정감','루틴 마스터']},
-  PLAYER:{color:'#F09080',mbti:'ESFP · ESTP',desc:'지금 이 순간을 가장 풍성하게 사는 사람이에요. 돌발 상황에서 가장 빛나고, 마음에 없는 말은 절대 안 해요. 장기 계획보다 즉흥에 끌리고, 지루해지면 자리를 뜨는 경향이 있어요.',keywords:['현재 집중','순발력','솔직함','즉흥성']},
-  HARMONY:{color:'#F0A0C0',mbti:'ESFJ · ENFJ',desc:'상대가 말 안 해도 감정을 먼저 알아채는 사람이에요. 어색한 자리도 따뜻하게 만들고, 사랑하는 사람을 위해 전부를 줄 수 있어요. 다만 자기 감정보다 상대를 먼저 챙기다 지칠 수 있어요.',keywords:['공감 능력','분위기 메이커','헌신','갈등 회피']},
-  SOUL:{color:'#A0D0B0',mbti:'INFP · ISFP',desc:'표면이 아닌 진심으로 연결되는 사람이에요. 감동적인 방식으로 감정을 표현하고, 자신이 믿는 가치를 끝까지 지켜요. 감정이 격해지면 말문이 막히고, 이상과 현실 사이에서 자주 방황해요.',keywords:['진정성','풍부한 내면','가치 중심','감성적 표현']},
-  LOGIC:{color:'#90C8F0',mbti:'ISTP · INTP',desc:'감정에 흔들리지 않고 본질을 보는 사람이에요. 위기 상황에서 가장 믿음직하고, 혼자서도 완전해요. 감정 표현이 서툴러 차갑게 보일 수 있고, 공감보다 해결책을 먼저 내놓아요.',keywords:['냉철한 분석','문제 해결','독립성','논리적 사고']},
-  LEADER:{color:'#F0C070',mbti:'ESTJ · ENTJ',desc:'계획을 현실로 만드는 추진력이 있는 사람이에요. 무엇이 중요한지 흔들리지 않고, 자연스럽게 방향을 잡아줘요. 내 방식이 옳다는 확신이 강하고, 감정보다 결과를 우선시해요.',keywords:['실행력','명확한 기준','리더십','목표 지향']}
-};
-let _activeType = null;
-function showType(type){
-  if(_activeType) document.getElementById('card-'+_activeType).classList.remove('active');
-  if(_activeType === type){
-    document.getElementById('type-detail-box').classList.remove('visible');
-    _activeType = null;
-    return;
-  }
-  _activeType = type;
-  document.getElementById('card-'+type).classList.add('active');
-  const d = TYPE_DATA[type];
-  const nameEl = document.getElementById('td-name');
-  nameEl.textContent = type;
-  nameEl.style.color = d.color;
-  document.getElementById('td-mbti').textContent = 'MBTI® 대응: ' + d.mbti;
-  document.getElementById('td-desc').textContent = d.desc;
-  document.getElementById('td-kw').innerHTML = d.keywords.map(k=>`<span class="kw">${k}</span>`).join('');
-  document.getElementById('type-detail-box').classList.add('visible');
-}
 </script>
 </body>
 </html>
+
