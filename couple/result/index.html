@@ -1213,6 +1213,9 @@ function getShareUrl(){
   const sp=new URLSearchParams({a,b,ref:'share'});
   if(na) sp.set('na',na);
   if(nb) sp.set('nb',nb);
+  // partner 파라미터 유지 → 공유가 퍼져도 파트너 래피드로 계속 연결
+  const partner=params.get('partner')||'';
+  if(partner) sp.set('partner',partner);
   return 'https://42world.kr/couple/result/?'+sp.toString();
 }
 function copyShareLink(){
