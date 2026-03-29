@@ -673,7 +673,9 @@ function goResult(){
   const typeB=done.dataset.typeB;
   const na=encodeURIComponent(nameA);
   const nb=encodeURIComponent(nameB);
-  window.location.href=`/couple/result/?a=${typeA}&b=${typeB}&na=${na}&nb=${nb}`;
+  const partner=new URLSearchParams(window.location.search).get('partner')||'';
+  const partnerStr=partner?`&partner=${encodeURIComponent(partner)}`:'';
+  window.location.href=`/couple/result/?a=${typeA}&b=${typeB}&na=${na}&nb=${nb}${partnerStr}`;
 }
 
 function showToast(msg){
