@@ -1324,7 +1324,7 @@ const LATPEED_PARTNER_MAP = {
 function goTestWithPartner(e){
   e.preventDefault();
   var p = new URLSearchParams(location.search).get('partner');
-  window.location.href = p ? '/couple/test/?partner=' + encodeURIComponent(p) : '/couple/test/';
+  window.location.href = p ? '/?partner=' + encodeURIComponent(p) : '/';
 }
 function getReport(){
   const params=new URLSearchParams(window.location.search);
