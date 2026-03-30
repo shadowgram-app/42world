@@ -441,14 +441,11 @@ new IntersectionObserver(([e]) => {
 }, {threshold: 0.1}).observe(hero);
 
 // 파트너 파라미터 전파: /?partner=XX → /couple/test/?partner=XX
-(function(){
-  const p = new URLSearchParams(location.search).get('partner');
-  if(!p) return;
-  const testUrl = '/couple/test/?partner=' + encodeURIComponent(p);
-  document.querySelectorAll('a[href="/couple/test/"]').forEach(function(a){
-    a.href = testUrl;
-  });
-})();
+function goTest(e){
+  e.preventDefault();
+  var p = new URLSearchParams(location.search).get('partner');
+  window.location.href = p ? '/couple/test/?partner=' + encodeURIComponent(p) : '/couple/test/';
+}
 </script>
 </body>
 </html>
