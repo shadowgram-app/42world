@@ -588,7 +588,7 @@
       <button onclick="shareNative()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;">
         📤 공유하기
       </button>
-      <a href="/couple/test/" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:transparent;border:1px solid rgba(201,168,76,0.4);color:rgba(201,168,76,0.85);border-radius:14px;padding:13px;font-size:14px;font-weight:700;font-family:inherit;text-decoration:none;margin-top:10px;">
+      <a href="/couple/test/" onclick="goTestWithPartner(event)" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:transparent;border:1px solid rgba(201,168,76,0.4);color:rgba(201,168,76,0.85);border-radius:14px;padding:13px;font-size:14px;font-weight:700;font-family:inherit;text-decoration:none;margin-top:10px;">
         🔁 처음부터 다시 검사하기
       </a>
     </div>
@@ -600,7 +600,7 @@
       <div style="font-size:28px;margin-bottom:10px;">🎬</div>
       <h3 style="font-size:20px;font-weight:900;margin-bottom:8px;line-height:1.35;">우리 커플은<br>어느 드라마 속 주인공일까?</h3>
       <p style="font-size:13px;color:var(--silver);line-height:1.7;margin-bottom:20px;">연인과 함께 24문항 — 5분이면 드라마 매칭 결과가 나와요</p>
-      <a href="/couple/test/" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border-radius:14px;padding:16px;font-size:16px;font-weight:900;">
+      <a href="/couple/test/" onclick="goTestWithPartner(event)" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border-radius:14px;padding:16px;font-size:16px;font-weight:900;">
         🎬 지금 바로 드라마 매칭하기 →
       </a>
     </div>
@@ -1321,6 +1321,11 @@ const LATPEED_PARTNER_MAP = {
   '01': 'https://www.latpeed.com/products/abBPX',
   '02': 'https://www.latpeed.com/products/J14BC',
 };
+function goTestWithPartner(e){
+  e.preventDefault();
+  var p = new URLSearchParams(location.search).get('partner');
+  window.location.href = p ? '/couple/test/?partner=' + encodeURIComponent(p) : '/couple/test/';
+}
 function getReport(){
   const params=new URLSearchParams(window.location.search);
   const a=(params.get('a')||'SPARK').toUpperCase();
