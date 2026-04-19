@@ -33,12 +33,24 @@
   }
 
   // ---------- 동기 모드 ----------
-  async function createSyncSession({ email }) {
-    const { data, error } = await sb()
+  async function createSyncSession({ email, marketingOptIn }) {
+    const payload = { mode: 'sync', status: 'pending', payment_status: 'unpaid', payer_email: email };
+    // marketing_opt_in 컬럼이 DB에 있으면 같이 저장 (없어도 insert가 실패하지 않도록 try 분리)
+    if (typeof marketingOptIn === 'boolean') payload.marketing_opt_in = marketingOptIn;
+    let { data, error } = await sb()
       .from('couple_sessions')
-      .insert({ mode: 'sync', status: 'pending', payment_status: 'unpaid', payer_email: email })
+      .insert(payload)
       .select()
       .single();
+    // marketing_opt_in 컬럼이 아직 없는 환경이면 해당 키 제거 후 재시도
+    if (error && /marketing_opt_in/.test(error.message || '')) {
+      delete payload.marketing_opt_in;
+      ({ data, error } = await sb()
+        .from('couple_sessions')
+        .insert(payload)
+        .select()
+        .single());
+    }
     if (error) throw error;
     return { session: data };
   }
@@ -62,23 +74,33 @@
   }
 
   // ---------- 비동기 모드 ----------
-  async function createAsyncSession({ email, scores, typeCode }) {
+  async function createAsyncSession({ email, scores, typeCode, marketingOptIn }) {
     // 1) 초대 토큰 생성 (SQL 함수 호출)
     const { data: tokenData, error: tErr } = await sb().rpc('generate_invite_token');
     if (tErr) throw tErr;
     const invite_token = tokenData;
 
     // 2) 세션 생성
-    const { data: session, error: sErr } = await sb()
+    const payload = {
+      mode: 'async',
+      status: 'awaiting_partner',
+      payment_status: 'unpaid',
+      invite_token,
+    };
+    if (typeof marketingOptIn === 'boolean') payload.marketing_opt_in = marketingOptIn;
+    let { data: session, error: sErr } = await sb()
       .from('couple_sessions')
-      .insert({
-        mode: 'async',
-        status: 'awaiting_partner',
-        payment_status: 'unpaid',
-        invite_token,
-      })
+      .insert(payload)
       .select()
       .single();
+    if (sErr && /marketing_opt_in/.test(sErr.message || '')) {
+      delete payload.marketing_opt_in;
+      ({ data: session, error: sErr } = await sb()
+        .from('couple_sessions')
+        .insert(payload)
+        .select()
+        .single());
+    }
     if (sErr) throw sErr;
 
     // 3) A 참여자 저장

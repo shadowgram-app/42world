@@ -185,6 +185,23 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       </div>
     </div>
 
+    <!-- 결과 재접속용 이메일 -->
+    <div class="name-card">
+      <div class="name-row" style="flex-direction:column;align-items:stretch;gap:6px;">
+        <input class="name-input" id="sync-email" type="email" placeholder="이메일 주소 (결과 재접속용)" autocomplete="email" style="width:100%;" oninput="checkNames()"/>
+        <input class="name-input" id="sync-email2" type="email" placeholder="이메일 한 번 더 입력" style="width:100%;" oninput="checkNames()"/>
+        <div style="font-size:11px;color:var(--silver);opacity:0.75;line-height:1.5;">* 결과를 다시 보거나 리포트를 받을 때 사용돼요.<br>&nbsp;&nbsp; 오타 없이 정확히 입력해주세요.</div>
+      </div>
+    </div>
+
+    <!-- 마케팅 수신 동의 (선택) -->
+    <label class="name-card" style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:14px 16px;margin-bottom:16px;" for="sync-marketing">
+      <input type="checkbox" id="sync-marketing" style="margin-top:3px;accent-color:var(--gold);flex-shrink:0;width:18px;height:18px;"/>
+      <div style="font-size:12px;line-height:1.6;color:var(--silver);">
+        <b style="color:var(--gold);">[선택]</b> 새 상품·이벤트·콘텐츠 소식을<br>이메일로 받아볼게요 (월 1-2회, 언제든 거부 가능)
+      </div>
+    </label>
+
     <div class="start-desc">
       <b>📋 진행 방법</b><br>
       · 두 사람이 같은 화면을 보며 각자 답해요<br>
@@ -353,23 +370,25 @@ const IS_ASYNC = (ASYNC_MODE === 'async' || ASYNC_MODE === 'async_join');
 let SOLO_MODE = false;
 let SOLO_ROLE = null; // 'A' | 'B'
 
-// 비동기 모드일 때만 Supabase SDK 로드 (동기 모드 성능 영향 없음)
-if (IS_ASYNC) {
-  (function loadSG(){
-    const s1 = document.createElement('script');
-    s1.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-    s1.onload = () => {
-      const s2 = document.createElement('script');
-      s2.src = '/couple/js/supabase-client.js';
-      s2.onload = () => {
-        const s3 = document.createElement('script');
-        s3.src = '/couple/js/session.js';
-        document.head.appendChild(s3);
-      };
-      document.head.appendChild(s2);
+// Supabase SDK 로드 (sync/async 모두 결과 저장을 위해 필요)
+(function loadSG(){
+  const s1 = document.createElement('script');
+  s1.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  s1.onload = () => {
+    const s2 = document.createElement('script');
+    s2.src = '/couple/js/supabase-client.js';
+    s2.onload = () => {
+      const s3 = document.createElement('script');
+      s3.src = '/couple/js/session.js';
+      document.head.appendChild(s3);
     };
-    document.head.appendChild(s1);
-  })();
+    document.head.appendChild(s2);
+  };
+  document.head.appendChild(s1);
+})();
+
+// (구 분기 유지용 빈 블록 — 컴파일 안전)
+if (IS_ASYNC) {
 }
 function waitForSG(timeout = 5000) {
   return new Promise((resolve, reject) => {
@@ -517,16 +536,35 @@ let axisScoresA = [50,50,50,50,50,50,50,50];
 let axisScoresB = [50,50,50,50,50,50,50,50];
 
 // ── 시작
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function checkNames(){
   nameA = document.getElementById('name-a').value.trim();
   nameB = document.getElementById('name-b').value.trim();
-  document.getElementById('btn-start').disabled = !(nameA && nameB);
+  const e1 = (document.getElementById('sync-email')?.value || '').trim().toLowerCase();
+  const e2 = (document.getElementById('sync-email2')?.value || '').trim().toLowerCase();
+  const emailOk = e1 && e2 && e1 === e2 && EMAIL_RE.test(e1);
+  document.getElementById('btn-start').disabled = !(nameA && nameB && emailOk);
 }
 
-function startQuiz(){
+async function startQuiz(){
   nameA = document.getElementById('name-a').value.trim();
   nameB = document.getElementById('name-b').value.trim();
+  const email  = document.getElementById('sync-email').value.trim().toLowerCase();
+  const email2 = document.getElementById('sync-email2').value.trim().toLowerCase();
+  const marketing = !!document.getElementById('sync-marketing')?.checked;
+
   if(!nameA || !nameB) return;
+  if(!EMAIL_RE.test(email)){ alert('이메일 형식을 확인해주세요.'); return; }
+  if(email !== email2){ alert('두 이메일이 달라요. 다시 확인해주세요.'); return; }
+
+  // sessionStorage에 저장 (결과 페이지에서 사용)
+  sessionStorage.setItem('sg_sync_name_a', nameA);
+  sessionStorage.setItem('sg_sync_name_b', nameB);
+  sessionStorage.setItem('sg_sync_email', email);
+  sessionStorage.setItem('sg_sync_marketing', marketing ? '1' : '0');
+  // 결과 재접속용으로 localStorage에도 이메일 저장 (my/에서 프리필)
+  try { localStorage.setItem('sg_last_email', email); } catch(_){}
+
   document.getElementById('start-screen').style.display='none';
   document.getElementById('quiz-screen').style.display='block';
   render();
@@ -1003,13 +1041,54 @@ function showDone(typeA, typeB){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function goResult(){
+async function goResult(){
   const done=document.getElementById('done-screen');
   const typeA=done.dataset.typeA;
   const typeB=done.dataset.typeB;
   const na=encodeURIComponent(nameA);
   const nb=encodeURIComponent(nameB);
-  window.location.href=`/couple/result/?a=${typeA}&b=${typeB}&na=${na}&nb=${nb}`;
+
+  // sync 모드: DB에 세션 저장 (이메일·마케팅 동의 포함) — 실패해도 결과 페이지로 진행
+  let sessionIdParam = '';
+  const syncEmail = sessionStorage.getItem('sg_sync_email');
+  const syncMarketing = sessionStorage.getItem('sg_sync_marketing') === '1';
+  if (!IS_ASYNC && syncEmail && typeA && typeB) {
+    try {
+      // Supabase 클라이언트 대기 (최대 5초)
+      const t0 = Date.now();
+      while (!(window.SG && window.SG.session) && Date.now() - t0 < 5000) {
+        await new Promise(r => setTimeout(r, 50));
+      }
+      if (window.SG && window.SG.session) {
+        const { session } = await SG.session.createSyncSession({ email: syncEmail, marketingOptIn: syncMarketing });
+        // 점수 데이터 없이 타입만 저장 (sync는 로컬 계산이므로)
+        const typeScoresA = (done.dataset.scoresA && JSON.parse(done.dataset.scoresA)) || {};
+        const typeScoresB = (done.dataset.scoresB && JSON.parse(done.dataset.scoresB)) || {};
+        await SG.session.saveSyncResults(session.id, {
+          emailA: syncEmail, scoresA: typeScoresA, typeA,
+          emailB: syncEmail, scoresB: typeScoresB, typeB,
+        });
+        sessionIdParam = session.id;
+        try {
+          localStorage.setItem('sg_last_session', session.id);
+          localStorage.setItem('sg_last_combo', `${typeA}_${typeB}`);
+          localStorage.setItem('sg_last_email', syncEmail);
+        } catch(_){}
+      }
+    } catch(e) {
+      console.warn('[sync] DB 저장 실패 (무시하고 진행):', e);
+    }
+  }
+
+  const partner = URL_PARAMS.get('partner') || '';
+  const qs = new URLSearchParams({ a: typeA, b: typeB, na, nb });
+  if (sessionIdParam) qs.set('session', sessionIdParam);
+  if (partner) qs.set('partner', partner);
+  // URLSearchParams는 이미 encode해버려서 na/nb가 더블 인코딩됨 — 수동 조립
+  const parts = [`a=${typeA}`, `b=${typeB}`, `na=${na}`, `nb=${nb}`];
+  if (sessionIdParam) parts.push(`session=${sessionIdParam}`);
+  if (partner) parts.push(`partner=${encodeURIComponent(partner)}`);
+  window.location.href = `/couple/result/?${parts.join('&')}`;
 }
 
 function showToast(msg){
