@@ -586,23 +586,41 @@
       <h3 style="background:linear-gradient(135deg,#E8D090,#C9A84C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">우리 결과 공유하기 💌</h3>
       <p>링크 하나로 — 상대방도 내 결과를 보고 바로 테스트할 수 있어요</p>
       <button onclick="shareNative()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;">
-        📤 공유하기
+        📤 친구한테 보여주기
       </button>
-      <a href="/couple/test/" onclick="goTestWithPartner(event)" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:transparent;border:1px solid rgba(201,168,76,0.4);color:rgba(201,168,76,0.85);border-radius:14px;padding:13px;font-size:14px;font-weight:700;font-family:inherit;text-decoration:none;margin-top:10px;">
+      <button onclick="bookmarkMyResult()" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:transparent;border:1.5px solid rgba(201,168,76,0.5);color:#E8D090;border-radius:14px;padding:14px;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:10px;">
+        🔖 내 결과 저장 (다시 보기 링크)
+      </button>
+      <a href="/couple/test/" onclick="goTestWithPartner(event)" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:transparent;border:1px solid rgba(122,136,153,0.3);color:rgba(122,136,153,0.9);border-radius:14px;padding:12px;font-size:13px;font-weight:700;font-family:inherit;text-decoration:none;margin-top:10px;">
         🔁 처음부터 다시 검사하기
       </a>
     </div>
   </div>
-  <!-- 받은 사람인 경우: 드라마 매칭 CTA -->
+  <!-- 받은 사람인 경우: 역방향 호기심 + 드라마 매칭 CTA -->
   <div id="section-received" class="share-section fade-in" style="animation-delay:1.7s;display:none;">
     <div class="share-card" style="background:linear-gradient(135deg,#0D0A20,#0A1030);border-color:rgba(201,168,76,0.3);text-align:center;">
       <div id="received-sender" style="font-size:11px;letter-spacing:1px;color:var(--gold);margin-bottom:12px;opacity:0.8;"></div>
-      <div style="font-size:28px;margin-bottom:10px;">🎬</div>
-      <h3 style="font-size:20px;font-weight:900;margin-bottom:8px;line-height:1.35;">우리 커플은<br>어느 드라마 속 주인공일까?</h3>
-      <p style="font-size:13px;color:var(--silver);line-height:1.7;margin-bottom:20px;">연인과 함께 24문항 — 5분이면 드라마 매칭 결과가 나와요</p>
+      <div style="font-size:28px;margin-bottom:10px;">💭</div>
+      <h3 style="font-size:20px;font-weight:900;margin-bottom:8px;line-height:1.35;">그럼 <em style="font-style:normal;color:#E8D090;">당신은</em><br>이 사람과 어떤 조합일까?</h3>
+      <p style="font-size:13px;color:var(--silver);line-height:1.7;margin-bottom:20px;">24문항 · 5분이면 — <strong style="color:#E8D090;">64가지 조합</strong> 중 당신만의 매칭이 나와요</p>
       <a href="/couple/test/" onclick="goTestWithPartner(event)" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border-radius:14px;padding:16px;font-size:16px;font-weight:900;">
-        🎬 지금 바로 드라마 매칭하기 →
+        💫 내 조합 확인하러 가기 →
       </a>
+      <div style="margin-top:14px;font-size:11px;color:var(--dim);line-height:1.6;">완료하면 이 페이지 전체 해설이 공개돼요 🔓</div>
+    </div>
+  </div>
+
+  <!-- 공유받은 사람용 블러 오버레이 (상세 결과 봉인) -->
+  <div id="received-lock-overlay" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:50;pointer-events:none;">
+    <div style="max-width:420px;margin:0 auto;padding:0 20px 20px;pointer-events:auto;">
+      <div style="background:linear-gradient(180deg,rgba(10,10,20,0) 0%,rgba(10,10,20,0.92) 30%,rgba(10,10,20,0.98) 100%);border-radius:20px;padding:28px 20px 24px;text-align:center;backdrop-filter:blur(4px);border:1px solid rgba(201,168,76,0.3);">
+        <div style="font-size:22px;margin-bottom:8px;">🔒</div>
+        <div style="font-size:15px;font-weight:800;color:#E8D090;margin-bottom:6px;">전체 해설은 본인 검사 후 공개돼요</div>
+        <div style="font-size:12px;color:var(--silver);margin-bottom:16px;line-height:1.6;">당신이 어떤 유형인지 알아야<br>이 사람과의 진짜 조합이 나와요</div>
+        <a href="/couple/test/" onclick="goTestWithPartner(event)" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#C9A84C,#E8D090);color:#0A0A14;border-radius:12px;padding:12px 28px;font-size:14px;font-weight:900;">
+          지금 검사하기 →
+        </a>
+      </div>
     </div>
   </div>
 
@@ -1180,11 +1198,67 @@ function saveCard(){
     if(footer) footer.style.display='none';
     const stickyBar=document.querySelector('.sticky-bottom');
     if(stickyBar) stickyBar.style.display='none';
-    // 드라마 매칭 CTA 섹션 표시
+    // 역방향 호기심 CTA 섹션 표시
     document.getElementById('section-received').style.display='block';
+    // 하단 잠금 오버레이 표시 (스크롤 바닥에서 CTA 강조)
+    const lock=document.getElementById('received-lock-overlay');
+    if(lock){
+      // 첫 스크롤 이후 2초 뒤 노출 (초반엔 결과 탐색 허용)
+      let shown=false;
+      const reveal=()=>{
+        if(shown) return; shown=true;
+        setTimeout(()=>{ lock.style.display='block'; }, 1500);
+      };
+      window.addEventListener('scroll', reveal, {once:true, passive:true});
+    }
   } else {
     document.getElementById('section-share').style.display='block';
   }
+})();
+
+// ── 내 결과 저장 (북마크)
+function bookmarkMyResult(){
+  const url = window.location.href;
+  try {
+    localStorage.setItem('sg_my_result_url', url);
+    const saved = JSON.parse(localStorage.getItem('sg_my_results')||'[]');
+    if(!saved.includes(url)){ saved.push(url); }
+    localStorage.setItem('sg_my_results', JSON.stringify(saved.slice(-10)));
+  } catch(_){}
+  copyToClipboard(url, '🔖 링크 복사됐어요! 메모장·카톡 나에게에 붙여넣어 두세요 💛');
+}
+
+// ── OG 태그 동적 업데이트 (조합별)
+(function(){
+  try {
+    const params=new URLSearchParams(window.location.search);
+    const a=(params.get('a')||'').toUpperCase();
+    const b=(params.get('b')||'').toUpperCase();
+    if(!a||!b) return;
+    const isReceived = (params.get('ref')||'').startsWith('share');
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if(ogTitle){
+      ogTitle.setAttribute('content',
+        isReceived
+          ? `${a} × ${b} — 이 사람이 당신을 찍었어요 👀`
+          : `우리 커플은 ${a} × ${b} 💫`
+      );
+    }
+    if(ogDesc){
+      ogDesc.setAttribute('content',
+        isReceived
+          ? '당신은 이 사람과 어떤 조합일까? 24문항 · 5분'
+          : '64가지 조합 중 우리만의 드라마 커플 유형이 나왔어요'
+      );
+    }
+    // 조합별 OG 이미지 (파일 없으면 기본 og-couple.png fallback — 서버 404 시 자동으로 기본 이미지)
+    const ogImg = document.querySelector('meta[property="og:image"]');
+    if(ogImg){
+      const combo = `${a}_${b}`.toLowerCase();
+      ogImg.setAttribute('content', `https://42world.kr/couple/og/${combo}.png`);
+    }
+  } catch(_){}
 })();
 
 // ── 토스트

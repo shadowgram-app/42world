@@ -44,6 +44,13 @@ input:focus{border-color:var(--gold)}
 </head>
 <body>
 <div class="wrap">
+  <!-- 이 기기에 저장된 내 결과 (북마크) -->
+  <div class="card" id="card-bookmark" style="display:none">
+    <div class="brand">✦ 저장된 내 결과 ✦</div>
+    <p class="sub" style="margin-bottom:14px">이 기기에 저장해둔 결과예요.<br>다시 보고 싶을 때 여기서 바로 열 수 있어요.</p>
+    <div id="bookmark-list"></div>
+  </div>
+
   <div class="card" id="card-input">
     <div class="brand">✦ 42WORLD × SHADOWGRAM ✦</div>
     <h1>내 세션 찾기</h1>
@@ -72,6 +79,34 @@ input:focus{border-color:var(--gold)}
   try {
     const last = localStorage.getItem('sg_last_email');
     if (last) document.getElementById('email').value = last;
+  } catch(_){}
+})();
+
+// 저장된 북마크 결과 렌더링
+(function(){
+  try {
+    const saved = JSON.parse(localStorage.getItem('sg_my_results')||'[]');
+    if (!saved || saved.length === 0) return;
+    const card = document.getElementById('card-bookmark');
+    const list = document.getElementById('bookmark-list');
+    saved.slice().reverse().forEach(url => {
+      try {
+        const u = new URL(url);
+        const a = (u.searchParams.get('a')||'').toUpperCase();
+        const b = (u.searchParams.get('b')||'').toUpperCase();
+        if (!a || !b) return;
+        const item = document.createElement('div');
+        item.className = 'session-item';
+        item.innerHTML = `
+          <div class="session-row">
+            <div class="combo">${a} × ${b}</div>
+          </div>
+          <a class="btn small" href="${url}" style="margin-top:8px">💫 결과 다시 보기</a>
+        `;
+        list.appendChild(item);
+      } catch(_){}
+    });
+    if (list.children.length > 0) card.style.display = 'block';
   } catch(_){}
 })();
 
