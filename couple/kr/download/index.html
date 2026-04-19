@@ -1,261 +1,245 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>리포트 다운로드 — 42world</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    :root{
-      --bg:#0A0A14;--card:#13131F;--gold:#C9A84C;--gold-glow:rgba(201,168,76,0.15);
-      --white:#F0EEF8;--silver:#8899AA;--border:#1E1E30;
-    }
-    body{background:var(--bg);color:var(--white);font-family:-apple-system,Arial,sans-serif;
-      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:24px;
-      padding:40px 28px;max-width:420px;width:100%;text-align:center;}
-    .logo{font-size:13px;letter-spacing:2px;color:var(--gold);margin-bottom:24px;}
-    .icon{font-size:56px;margin-bottom:16px;}
-    h1{font-size:22px;font-weight:900;margin-bottom:8px;line-height:1.4;}
-    .combo-badge{display:inline-block;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.4);
-      color:var(--gold);font-size:14px;font-weight:900;padding:6px 18px;border-radius:20px;margin:12px 0 20px;}
-    .desc{font-size:13px;color:var(--silver);line-height:1.8;margin-bottom:28px;}
-    .btn-download{display:block;width:100%;background:linear-gradient(135deg,#C9A84C,#E8D090);
-      color:#0A0A14;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:900;
-      cursor:pointer;margin-bottom:12px;text-decoration:none;}
-    .btn-download:hover{opacity:0.9;}
-    .notice{font-size:11px;color:var(--silver);line-height:1.7;margin-top:20px;
-      border-top:1px solid var(--border);padding-top:16px;}
-    .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--gold);
-      border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px;}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .loading{display:block;}
-    .ready{display:none;}
-    .select-wrap{display:flex;gap:10px;margin-bottom:16px;}
-    .select-wrap select{flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);
-      border-radius:12px;padding:12px 10px;color:var(--white);font-size:14px;font-weight:700;
-      font-family:inherit;cursor:pointer;appearance:none;text-align:center;}
-    .select-wrap select:focus{outline:none;border-color:var(--gold);}
-    .select-label{font-size:12px;color:var(--silver);margin-bottom:10px;}
-    .hint{font-size:12px;color:var(--silver);margin-bottom:16px;line-height:1.7;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>리포트 다운로드 — 42world</title>
+<style>
+:root{
+  --dark:#1A2030; --gold:#B8860B; --gold-l:#D4A017; --silver:#8899AA;
+  --bg:#F7F5F0; --card:#FFFFFF; --text:#2A2F3A; --muted:#6B7280;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:24px}
+.wrap{max-width:520px;width:100%}
+.card{background:var(--card);border-radius:16px;padding:32px 24px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.04)}
+.brand{text-align:center;font-size:13px;letter-spacing:2px;color:var(--gold);
+  font-weight:600;margin-bottom:16px}
+h1{text-align:center;font-size:22px;margin:0 0 8px;color:var(--dark)}
+.sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.6}
+.combo-display{text-align:center;font-size:28px;font-weight:700;color:var(--gold);
+  margin:20px 0;letter-spacing:1px}
+label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;margin-top:14px}
+input{width:100%;padding:12px 14px;border:1.5px solid #D0D4DC;border-radius:8px;
+  font-size:15px;outline:none}
+input:focus{border-color:var(--gold)}
+.btn{display:block;width:100%;padding:14px;margin-top:14px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;
+  border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;
+  box-shadow:0 2px 8px rgba(184,134,11,0.3);text-decoration:none;text-align:center}
+.btn:disabled{opacity:0.5;cursor:not-allowed}
+.btn.secondary{background:#fff;color:var(--dark);border:1.5px solid #D0D4DC;box-shadow:none}
+.hint{font-size:12px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.6}
+.err{display:none;background:#FEF2F2;color:#991B1B;padding:12px;border-radius:8px;
+  font-size:13px;margin-top:12px}
+.loading{text-align:center;color:var(--muted);padding:40px 0}
+.state-banner{padding:12px;border-radius:8px;text-align:center;font-size:13px;
+  font-weight:600;margin-bottom:14px}
+.state-banner.ready{background:#D4EDDA;color:#155724}
+.state-banner.pay{background:#FFF3CD;color:#856404}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+</style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">✦ 42WORLD × SHADOWGRAM ✦</div>
+<div class="wrap">
+  <div class="card">
+    <div class="brand">✦ 42WORLD × SHADOWGRAM ✦</div>
 
-  <!-- 로딩 상태 -->
-  <div id="state-loading" class="loading">
-    <div class="spinner"></div>
-    <p style="color:var(--silver);font-size:14px;">결제 확인 중...</p>
-  </div>
+    <div id="state-loading" class="loading">세션 확인 중...</div>
 
-  <!-- 준비 완료 상태 -->
-  <div id="state-ready" class="ready">
-    <div class="icon">📄</div>
-    <h1>결제 완료!</h1>
-    <div class="combo-badge" id="combo-display">— × —</div>
-    <p class="desc">
-      커플 리포트가 준비됐어요.<br>
-      아래 버튼을 눌러 지금 바로 다운로드하세요.<br>
-      <strong style="color:var(--white);">심층 분석 리포트</strong>
-    </p>
-    <a id="btn-download" class="btn-download" href="#">
-      📥 리포트 다운로드
-    </a>
-    <p class="notice">
-      ⚠️ 다운로드 후 재접속 시 동일 파일이 제공됩니다.<br>
-      유형이 기억나지 않으면 아래에서 직접 선택하세요.<br><br>
-      문의: 42world.kr
-    </p>
-  </div>
+    <!-- 결제 완료: 다운로드 가능 -->
+    <div id="state-paid" style="display:none">
+      <div class="state-banner ready">✓ 결제 완료</div>
+      <h1>커플 리포트가 준비됐어요 📄</h1>
+      <div class="combo-display" id="combo-display">—</div>
+      <p class="sub">아래 버튼을 누르면 24페이지 심층 분석 리포트를 받을 수 있어요.<br>
+        같은 이메일로 언제든 재다운로드 가능해요.</p>
 
-  <!-- 유형 직접 선택 (fallback) -->
-  <div id="state-error" class="ready">
-    <div class="icon">📄</div>
-    <h1>검사 결과 유형을 선택해주세요</h1>
-    <p class="hint" style="margin-top:10px;">42world.kr에서 나온 결과 유형을 선택하시면<br>해당 리포트를 바로 다운로드할 수 있어요.</p>
-    <p class="select-label">나의 유형 × 파트너 유형</p>
-    <div class="select-wrap">
-      <select id="sel-a">
-        <option value="">나의 유형</option>
-        <option value="SPARK">⚡ SPARK</option>
-        <option value="VISION">🔮 VISION</option>
-        <option value="STEADY">⚓ STEADY</option>
-        <option value="PLAYER">🎯 PLAYER</option>
-        <option value="HARMONY">🌸 HARMONY</option>
-        <option value="SOUL">💎 SOUL</option>
-        <option value="LOGIC">🔬 LOGIC</option>
-        <option value="LEADER">⚙️ LEADER</option>
-      </select>
-      <select id="sel-b">
-        <option value="">파트너 유형</option>
-        <option value="SPARK">⚡ SPARK</option>
-        <option value="VISION">🔮 VISION</option>
-        <option value="STEADY">⚓ STEADY</option>
-        <option value="PLAYER">🎯 PLAYER</option>
-        <option value="HARMONY">🌸 HARMONY</option>
-        <option value="SOUL">💎 SOUL</option>
-        <option value="LOGIC">🔬 LOGIC</option>
-        <option value="LEADER">⚙️ LEADER</option>
-      </select>
+      <label for="email-verify">이메일 확인</label>
+      <input type="email" id="email-verify" placeholder="검사 시 입력한 이메일">
+      <button class="btn" id="btn-download">📥 리포트 다운로드</button>
+      <div class="err" id="err-download"></div>
+
+      <a class="btn secondary" href="/couple/kr/my/">내 다른 세션 보기</a>
     </div>
-    <button class="btn-download" onclick="downloadBySelect()">📥 리포트 다운로드</button>
-    <p class="notice">유형이 기억나지 않으면<br>
-      <a href="/couple/test/" style="color:var(--gold);">42world.kr에서 다시 검사하기 →</a><br><br>
-      문의: 42world.kr
-    </p>
+
+    <!-- 양쪽 완료, 미결제: 결제 유도 -->
+    <div id="state-unpaid" style="display:none">
+      <div class="state-banner pay">양쪽 검사 완료! 🎉</div>
+      <h1>리포트 잠금 해제</h1>
+      <div class="combo-display" id="combo-display-2">—</div>
+      <p class="sub">990원에 24페이지 심층 분석 리포트를 받으세요.<br>
+        한 번 결제하면 둘 다 언제든 다운로드 가능해요.</p>
+
+      <a class="btn" id="btn-pay">💳 990원 결제하기</a>
+      <div class="hint">결제 완료 후 이 페이지로 돌아와 이메일을 다시 입력하면 리포트를 받을 수 있어요.</div>
+    </div>
+
+    <!-- 결제 직후 리턴: 이메일 입력 → 결제 확인 처리 -->
+    <div id="state-return" style="display:none">
+      <div class="state-banner pay">결제를 확인하고 있어요</div>
+      <h1>이메일을 확인해주세요</h1>
+      <p class="sub">결제 시 입력한 이메일(=검사 시 입력한 이메일)을 넣어주시면<br>
+        즉시 리포트 다운로드가 가능해요.</p>
+
+      <label for="email-return">이메일</label>
+      <input type="email" id="email-return" placeholder="검사 시 입력한 이메일">
+      <button class="btn" id="btn-confirm-paid">✓ 결제 확인 & 리포트 받기</button>
+      <div class="err" id="err-return"></div>
+
+      <a class="btn secondary" href="/couple/kr/my/">이메일로 세션 찾기</a>
+    </div>
+
+    <!-- 에러 -->
+    <div id="state-error" style="display:none">
+      <h1>세션을 찾을 수 없어요 😢</h1>
+      <p class="sub">링크가 만료되었거나 잘못된 주소일 수 있어요.</p>
+      <a class="btn" href="/couple/kr/my/">이메일로 내 세션 찾기</a>
+      <a class="btn secondary" href="/couple/test/">새로 검사 시작</a>
+    </div>
+
+    <!-- 파트너 대기 -->
+    <div id="state-awaiting" style="display:none">
+      <h1>파트너 검사를 기다리고 있어요 ⏳</h1>
+      <p class="sub">상대방이 아직 검사를 완료하지 않았어요.</p>
+      <a class="btn" id="btn-goto-pending">대기 페이지로 →</a>
+    </div>
   </div>
+  <div class="footer">문의: 42world.kr</div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/couple/js/supabase-client.js"></script>
+<script src="/couple/js/session.js"></script>
 <script>
-// 실제 PDF 파일명 매핑 (couple/pdfs/ 기준)
-const PDF_MAP={
-  'SPARK_SPARK':'01_SPARK_SPARK_KR.pdf',
-  'SPARK_VISION':'02_SPARK_VISION_KR.pdf',
-  'SPARK_HARMONY':'03_SPARK_HARMONY_KR.pdf',
-  'SPARK_SOUL':'04_SPARK_SOUL_KR.pdf',
-  'SPARK_LOGIC':'05_SPARK_LOGIC_KR.pdf',
-  'SPARK_LEADER':'06_SPARK_LEADER_KR.pdf',
-  'SPARK_STEADY':'07_SPARK_STEADY_KR.pdf',
-  'SPARK_PLAYER':'08_SPARK_PLAYER_KR.pdf',
-  'VISION_SPARK':'09_VISION_SPARK_KR.pdf',
-  'VISION_VISION':'10_VISION_VISION_KR.pdf',
-  'VISION_HARMONY':'11_VISION_HARMONY_KR.pdf',
-  'VISION_SOUL':'12_VISION_SOUL_KR.pdf',
-  'VISION_LOGIC':'13_VISION_LOGIC_KR.pdf',
-  'VISION_LEADER':'14_VISION_LEADER_KR.pdf',
-  'VISION_STEADY':'15_VISION_STEADY_KR.pdf',
-  'VISION_PLAYER':'16_VISION_PLAYER_KR.pdf',
-  'HARMONY_SPARK':'17_HARMONY_SPARK_KR.pdf',
-  'HARMONY_VISION':'18_HARMONY_VISION_KR.pdf',
-  'HARMONY_HARMONY':'19_HARMONY_HARMONY_KR.pdf',
-  'HARMONY_SOUL':'20_HARMONY_SOUL_KR.pdf',
-  'HARMONY_LOGIC':'21_HARMONY_LOGIC_KR.pdf',
-  'HARMONY_LEADER':'22_HARMONY_LEADER_KR.pdf',
-  'HARMONY_STEADY':'23_HARMONY_STEADY_KR.pdf',
-  'HARMONY_PLAYER':'24_HARMONY_PLAYER_KR.pdf',
-  'SOUL_SPARK':'25_SOUL_SPARK_KR.pdf',
-  'SOUL_VISION':'26_SOUL_VISION_KR.pdf',
-  'SOUL_HARMONY':'27_SOUL_HARMONY_KR.pdf',
-  'SOUL_SOUL':'28_SOUL_SOUL_KR.pdf',
-  'SOUL_LOGIC':'29_SOUL_LOGIC_KR.pdf',
-  'SOUL_LEADER':'30_SOUL_LEADER_KR.pdf',
-  'SOUL_STEADY':'31_SOUL_STEADY_KR.pdf',
-  'SOUL_PLAYER':'32_SOUL_PLAYER_KR.pdf',
-  'LOGIC_SPARK':'33_LOGIC_SPARK_KR.pdf',
-  'LOGIC_VISION':'34_LOGIC_VISION_KR.pdf',
-  'LOGIC_HARMONY':'35_LOGIC_HARMONY_KR.pdf',
-  'LOGIC_SOUL':'36_LOGIC_SOUL_KR.pdf',
-  'LOGIC_LOGIC':'37_LOGIC_LOGIC_KR.pdf',
-  'LOGIC_LEADER':'38_LOGIC_LEADER_KR.pdf',
-  'LOGIC_STEADY':'39_LOGIC_STEADY_KR.pdf',
-  'LOGIC_PLAYER':'40_LOGIC_PLAYER_KR.pdf',
-  'LEADER_SPARK':'41_LEADER_SPARK_KR.pdf',
-  'LEADER_VISION':'42_LEADER_VISION_KR.pdf',
-  'LEADER_HARMONY':'43_LEADER_HARMONY_KR.pdf',
-  'LEADER_SOUL':'44_LEADER_SOUL_KR.pdf',
-  'LEADER_LOGIC':'45_LEADER_LOGIC_KR.pdf',
-  'LEADER_LEADER':'46_LEADER_LEADER_KR.pdf',
-  'LEADER_STEADY':'47_LEADER_STEADY_KR.pdf',
-  'LEADER_PLAYER':'48_LEADER_PLAYER_KR.pdf',
-  'STEADY_SPARK':'49_STEADY_SPARK_KR.pdf',
-  'STEADY_VISION':'50_STEADY_VISION_KR.pdf',
-  'STEADY_HARMONY':'51_STEADY_HARMONY_KR.pdf',
-  'STEADY_SOUL':'52_STEADY_SOUL_KR.pdf',
-  'STEADY_LOGIC':'53_STEADY_LOGIC_KR.pdf',
-  'STEADY_LEADER':'54_STEADY_LEADER_KR.pdf',
-  'STEADY_STEADY':'55_STEADY_STEADY_KR.pdf',
-  'STEADY_PLAYER':'56_STEADY_PLAYER_KR.pdf',
-  'PLAYER_SPARK':'57_PLAYER_SPARK_KR.pdf',
-  'PLAYER_VISION':'58_PLAYER_VISION_KR.pdf',
-  'PLAYER_HARMONY':'59_PLAYER_HARMONY_KR.pdf',
-  'PLAYER_SOUL':'60_PLAYER_SOUL_KR.pdf',
-  'PLAYER_LOGIC':'61_PLAYER_LOGIC_KR.pdf',
-  'PLAYER_LEADER':'62_PLAYER_LEADER_KR.pdf',
-  'PLAYER_STEADY':'63_PLAYER_STEADY_KR.pdf',
-  'PLAYER_PLAYER':'64_PLAYER_PLAYER_KR.pdf'
-};
+(async function(){
+  const params = new URLSearchParams(location.search);
+  const sessionId = params.get('session');
+  const emailParam = params.get('email');
 
-const TYPE_KR={
-  SPARK:'탐험가',VISION:'예언자',STEADY:'수호자',PLAYER:'플레이어',
-  HARMONY:'조화자',SOUL:'영혼가',LOGIC:'논리가',LEADER:'리더'
-};
+  const $states = ['loading','paid','unpaid','return','error','awaiting'].reduce((a,k)=>{a[k]=document.getElementById('state-'+k);return a},{});
+  function show(k){ Object.values($states).forEach(el=>el.style.display='none'); $states[k].style.display='block'; }
 
-function getCookie(name){
-  const v=document.cookie.split(';').find(c=>c.trim().startsWith(name+'='));
-  return v?decodeURIComponent(v.trim().split('=')[1]):null;
-}
+  // 래피드가 동적 파라미터 미지원 → 결제 리턴 시 URL에 session 없음
+  // localStorage에서 직전 세션 복구 시도
+  let effectiveSessionId = sessionId;
+  if (!effectiveSessionId) {
+    const recovered = SG.session.recoverLastSession();
+    if (recovered.sessionId) {
+      effectiveSessionId = recovered.sessionId;
+      // 결제 직후 돌아온 경우일 가능성 높음 → return 화면으로
+      show('return');
+      const emailInput = document.getElementById('email-return');
+      if (recovered.email) emailInput.value = recovered.email;
 
-function getPdfUrl(combo){
-  const file=PDF_MAP[combo];
-  if(!file) return null;
-  return `/couple/pdfs/${file}`;
-}
+      document.getElementById('btn-confirm-paid').addEventListener('click', async () => {
+        const email = emailInput.value.trim().toLowerCase();
+        const $err = document.getElementById('err-return');
+        $err.style.display='none';
+        if (!email) { $err.textContent='⚠️ 이메일을 입력해주세요.'; $err.style.display='block'; return; }
+        try {
+          await SG.session.markPaidByEmail(effectiveSessionId, email);
+          // 결제 처리 완료 → localStorage 정리 + 같은 URL에 session 붙여 정상 흐름 재진입
+          try {
+            localStorage.removeItem('sg_last_session');
+            localStorage.removeItem('sg_last_email');
+          } catch(_){}
+          location.href = `/couple/kr/download/?session=${effectiveSessionId}&email=${encodeURIComponent(email)}`;
+        } catch (e) {
+          $err.textContent = '⚠️ ' + e.message;
+          $err.style.display = 'block';
+        }
+      });
+      return;
+    }
+  }
 
-function init(){
-  const loading=document.getElementById('state-loading');
-  const ready=document.getElementById('state-ready');
-  const error=document.getElementById('state-error');
+  // 세션 ID 없고 localStorage도 비어있음 → 레거시 fallback (쿠키 기반 기존 구조)
+  if (!effectiveSessionId) {
+    const combo = params.get('combo') || getCookie('sg_combo');
+    if (combo) {
+      show('paid');
+      document.getElementById('combo-display').textContent = combo.replace('_',' × ');
+      document.getElementById('btn-download').onclick = () => {
+        legacyDownload(combo);
+      };
+      return;
+    }
+    show('error'); return;
+  }
 
-  const params=new URLSearchParams(window.location.search);
-  let combo=params.get('combo')||getCookie('sg_combo');
+  try {
+    const { session, participants } = await SG.session.getSessionById(effectiveSessionId);
+    if (!session) { show('error'); return; }
 
-  setTimeout(()=>{
-    loading.style.display='none';
+    const comboText = (session.combo || '—').replace('_',' × ');
 
-    if(!combo){
-      error.style.display='block';
+    if (session.payment_status === 'paid') {
+      show('paid');
+      document.getElementById('combo-display').textContent = comboText;
+      if (emailParam) document.getElementById('email-verify').value = emailParam;
+
+      document.getElementById('btn-download').addEventListener('click', async () => {
+        const email = document.getElementById('email-verify').value.trim().toLowerCase();
+        if (!email) { alert('이메일을 입력해주세요.'); return; }
+        const $err = document.getElementById('err-download');
+        $err.style.display='none';
+        try {
+          const resp = await SG.session.requestDownloadUrl(effectiveSessionId, email);
+          const a = document.createElement('a');
+          a.href = resp.url;
+          a.download = resp.filename;
+          a.click();
+        } catch (e) {
+          $err.textContent = '⚠️ ' + e.message;
+          $err.style.display = 'block';
+        }
+      });
       return;
     }
 
-    combo=combo.toUpperCase();
-    const parts=combo.split('_');
-    if(parts.length<2){
-      error.style.display='block';
+    if (session.status === 'both_done') {
+      show('unpaid');
+      document.getElementById('combo-display-2').textContent = comboText;
+      // 결제 버튼 → 래피드 (session_id는 localStorage에 저장, URL은 고정)
+      const participant = (participants||[]).find(p => p.email) || {};
+      document.getElementById('btn-pay').href =
+        SG.session.buildLatpeedUrl(effectiveSessionId, participant.email);
       return;
     }
 
-    const key=`${parts[0]}_${parts[1]}`;
-    const pdfUrl=getPdfUrl(key);
-    if(!pdfUrl){
-      error.style.display='block';
+    if (session.status === 'awaiting_partner') {
+      show('awaiting');
+      document.getElementById('btn-goto-pending').href = `/couple/kr/pending/?session=${effectiveSessionId}`;
       return;
     }
 
-    const a=parts[0], b=parts[1];
-    const aKr=TYPE_KR[a]||a, bKr=TYPE_KR[b]||b;
+    show('error');
+  } catch (e) {
+    console.error(e);
+    show('error');
+  }
 
-    document.getElementById('combo-display').textContent=`${a} × ${b}`;
-
-    const btn=document.getElementById('btn-download');
-    btn.href=pdfUrl;
-    btn.download=`42world_Couple_${key}_KR.pdf`;
-    btn.textContent=`📥 ${aKr} × ${bKr} 리포트 다운로드`;
-
-    ready.style.display='block';
-
-    // 쿠키 갱신 (30일)
-    document.cookie=`sg_combo=${key};path=/;max-age=2592000;SameSite=Lax`;
-  }, 800);
-}
-
-function downloadBySelect(){
-  const a=document.getElementById('sel-a').value;
-  const b=document.getElementById('sel-b').value;
-  if(!a||!b){alert('두 유형을 모두 선택해주세요 😊');return;}
-  const key=`${a}_${b}`;
-  const pdfUrl=getPdfUrl(key);
-  if(!pdfUrl){alert('해당 조합의 리포트를 찾을 수 없어요 😢');return;}
-  const aKr=TYPE_KR[a]||a, bKr=TYPE_KR[b]||b;
-  document.cookie=`sg_combo=${key};path=/;max-age=2592000;SameSite=Lax`;
-  const link=document.createElement('a');
-  link.href=pdfUrl;
-  link.download=`42world_Couple_${key}_KR.pdf`;
-  link.click();
-}
-
-init();
+  // ---- 레거시 fallback ----
+  function getCookie(name){
+    const v = document.cookie.split(';').find(c=>c.trim().startsWith(name+'='));
+    return v ? decodeURIComponent(v.trim().split('=')[1]) : null;
+  }
+  function legacyDownload(combo){
+    const TYPES = ['SPARK','VISION','HARMONY','SOUL','LOGIC','LEADER','STEADY','PLAYER'];
+    const [a,b] = combo.toUpperCase().split('_');
+    if (!TYPES.includes(a)||!TYPES.includes(b)) return;
+    const num = String(TYPES.indexOf(a)*8 + TYPES.indexOf(b) + 1).padStart(2,'0');
+    const filename = `${num}_${a}_${b}_KR.pdf`;
+    const link = document.createElement('a');
+    link.href = `/couple/pdfs/${filename}`;
+    link.download = `42world_Couple_${a}_${b}_KR.pdf`;
+    link.click();
+  }
+})();
 </script>
 </body>
 </html>

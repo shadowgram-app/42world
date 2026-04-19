@@ -2,9 +2,9 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>42WORLD Couple — 커플 소통 스타일 분석</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <meta property="og:title" content="우리 커플 소통 스타일, 얼마나 잘 맞을까요? 👀"/>
 <meta property="og:description" content="24문항으로 알아보는 우리 둘의 케미 — 42WORLD Couple"/>
 <meta property="og:image" content="https://42world.kr/og-couple.png"/>
@@ -38,6 +38,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .btn-start{width:100%;padding:16px;background:linear-gradient(135deg,var(--gold),#E8D090);border:none;border-radius:16px;color:#1A1A00;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;}
 .btn-start:disabled{opacity:0.3;cursor:not-allowed;}
 
+/* ── Block C : 신뢰 인트로 배너 ── */
+.intro-trust-banner{background:linear-gradient(135deg,rgba(13,21,37,0.95),rgba(10,26,16,0.95));border:1px solid rgba(80,200,120,0.3);border-radius:16px;padding:16px 18px;margin-bottom:16px;text-align:left;}
+.itb-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.itb-badge{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#50C878;background:rgba(80,200,120,0.12);border:1px solid rgba(80,200,120,0.3);padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.itb-title{font-size:14px;font-weight:900;line-height:1.4;color:#fff;}
+.itb-points{display:flex;flex-direction:column;gap:8px;}
+.itb-point{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6;}
+.itb-point-dot{width:18px;height:18px;border-radius:50%;background:rgba(80,200,120,0.15);border:1px solid rgba(80,200,120,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:700;color:#50C878;margin-top:1px;}
+.itb-point strong{color:#fff;}
+
 /* 진행 화면 */
 #quiz-screen{display:none;}
 .prog-wrap{margin-bottom:20px;}
@@ -50,7 +60,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 /* 질문 텍스트 공통 */
 .q-shared{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 18px 14px;margin-bottom:14px;opacity:0;animation:fadeUp 0.35s forwards;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
-@keyframes shakeEffect{0%,100%{transform:translateX(0)}15%{transform:translateX(-8px)}30%{transform:translateX(8px)}45%{transform:translateX(-6px)}60%{transform:translateX(6px)}75%{transform:translateX(-3px)}90%{transform:translateX(3px)}}
 .q-num{font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:8px;}
 .q-text{font-size:16px;font-weight:700;line-height:1.5;}
 
@@ -187,10 +196,90 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       ⚠️ <b style="color:var(--gold);">A = 남자 / B = 여자</b>로 입력해야 드라마 포스터 매칭이 정확해요.<br>순서가 바뀌면 남주·여주 유형이 반대로 표시될 수 있어요!
     </div>
 
+    <!-- ★ Block C : 신뢰 인트로 배너 ★ -->
+    <div class="intro-trust-banner">
+      <div class="itb-row">
+        <div class="itb-badge">✓ 과학적 검증</div>
+        <div class="itb-title">짧지만 정확해요 — 이유가 있어요</div>
+      </div>
+      <div class="itb-points">
+        <div class="itb-point">
+          <div class="itb-point-dot">1</div>
+          <div><strong>Big Five 공인 측정 방식 기반</strong> — 심리학 연구에서 수십 년간 검증된 성격 측정 모델을 적용했어요</div>
+        </div>
+        <div class="itb-point">
+          <div class="itb-point-dot">2</div>
+          <div><strong>24문항 = 최적 길이</strong> — 길수록 좋은 게 아니에요. 후반 집중력 저하를 막아 오히려 정확도가 높아요</div>
+        </div>
+        <div class="itb-point">
+          <div class="itb-point-dot">3</div>
+          <div><strong>행동 기반 질문</strong> — "나는 이런 사람"이 아니라 실제 상황에서 어떻게 행동하는지를 물어봐요</div>
+        </div>
+      </div>
+    </div>
+
     <button class="btn-start" id="btn-start" disabled onclick="startQuiz()">
       검사 시작하기 →
     </button>
 
+    <div class="disclaimer" style="margin-top:16px;">
+      이 분석은 오락·참고 목적의 커플 소통 스타일 분석이며,<br>전문적인 상담을 대체하지 않습니다.
+    </div>
+  </div>
+
+  <!-- ── 비동기 A 모드 시작 화면 (내가 먼저 보낼게) ── -->
+  <div id="start-async" style="display:none;text-align:center;">
+    <div class="start-hd">
+      <div class="start-badge">✦ 42WORLD COUPLE ✦</div>
+      <div class="start-title">💌 내가 먼저 보낼게</div>
+      <div class="start-sub">내 검사부터 완료한 후 파트너에게 초대 링크를 보내주세요.<br>파트너가 답을 마치면 우리 둘의 결과를 함께 볼 수 있어요.</div>
+    </div>
+    <div class="name-card">
+      <div class="name-row">
+        <div class="name-badge a">나</div>
+        <input class="name-input" id="async-name" type="text" placeholder="내 이름 (닉네임)" maxlength="10"/>
+      </div>
+    </div>
+    <div class="name-card">
+      <div class="name-row" style="flex-direction:column;align-items:stretch;gap:6px;">
+        <input class="name-input" id="async-email" type="email" placeholder="이메일 주소" autocomplete="email" style="width:100%;"/>
+        <input class="name-input" id="async-email2" type="email" placeholder="이메일 한 번 더 입력" style="width:100%;"/>
+        <div style="font-size:11px;color:var(--silver);opacity:0.7;">* 결과 재접속 시 사용돼요. 오타 없이 정확히 입력해주세요.</div>
+      </div>
+    </div>
+    <button class="btn-start" id="btn-async-start" disabled onclick="startAsyncQuiz()">
+      검사 시작하기 →
+    </button>
+    <div id="async-err" style="display:none;background:rgba(220,38,38,0.1);color:#F87171;padding:10px;border-radius:8px;font-size:12px;margin-top:10px;"></div>
+    <div class="disclaimer" style="margin-top:16px;">
+      이 분석은 오락·참고 목적의 커플 소통 스타일 분석이며,<br>전문적인 상담을 대체하지 않습니다.
+    </div>
+  </div>
+
+  <!-- ── 비동기 B 모드 시작 화면 (초대 받아서 진입) ── -->
+  <div id="start-async-join" style="display:none;text-align:center;">
+    <div class="start-hd">
+      <div class="start-badge">✦ 42WORLD COUPLE ✦</div>
+      <div class="start-title">💛 파트너가 당신을<br>기다리고 있어요</div>
+      <div class="start-sub">파트너 유형: <b id="async-partner-type" style="color:var(--gold);">—</b><br>이제 당신 차례예요. 이메일을 입력하고 검사를 시작해주세요.</div>
+    </div>
+    <div class="name-card">
+      <div class="name-row">
+        <div class="name-badge b">나</div>
+        <input class="name-input" id="join-name" type="text" placeholder="내 이름 (닉네임)" maxlength="10"/>
+      </div>
+    </div>
+    <div class="name-card">
+      <div class="name-row" style="flex-direction:column;align-items:stretch;gap:6px;">
+        <input class="name-input" id="join-email" type="email" placeholder="이메일 주소" autocomplete="email" style="width:100%;"/>
+        <input class="name-input" id="join-email2" type="email" placeholder="이메일 한 번 더 입력" style="width:100%;"/>
+        <div style="font-size:11px;color:var(--silver);opacity:0.7;">* 결과 재접속 시 사용돼요.</div>
+      </div>
+    </div>
+    <button class="btn-start" id="btn-join-start" disabled onclick="startJoinQuiz()">
+      검사 시작하기 →
+    </button>
+    <div id="join-err" style="display:none;background:rgba(220,38,38,0.1);color:#F87171;padding:10px;border-radius:8px;font-size:12px;margin-top:10px;"></div>
     <div class="disclaimer" style="margin-top:16px;">
       이 분석은 오락·참고 목적의 커플 소통 스타일 분석이며,<br>전문적인 상담을 대체하지 않습니다.
     </div>
@@ -263,6 +352,44 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <script>
 // ── 유형 정의
+// ─── 비동기 모드 감지 (기존 동기 로직과 완전 분리) ───
+const URL_PARAMS = new URLSearchParams(location.search);
+const ASYNC_MODE = URL_PARAMS.get('mode'); // 'async' | 'async_join' | null
+const INVITE_TOKEN = URL_PARAMS.get('t');
+const IS_ASYNC = (ASYNC_MODE === 'async' || ASYNC_MODE === 'async_join');
+let SOLO_MODE = false;
+let SOLO_ROLE = null; // 'A' | 'B'
+
+// 비동기 모드일 때만 Supabase SDK 로드 (동기 모드 성능 영향 없음)
+if (IS_ASYNC) {
+  (function loadSG(){
+    const s1 = document.createElement('script');
+    s1.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s1.onload = () => {
+      const s2 = document.createElement('script');
+      s2.src = '/couple/js/supabase-client.js';
+      s2.onload = () => {
+        const s3 = document.createElement('script');
+        s3.src = '/couple/js/session.js';
+        document.head.appendChild(s3);
+      };
+      document.head.appendChild(s2);
+    };
+    document.head.appendChild(s1);
+  })();
+}
+function waitForSG(timeout = 5000) {
+  return new Promise((resolve, reject) => {
+    const t0 = Date.now();
+    const check = () => {
+      if (window.SG && window.SG.session) resolve();
+      else if (Date.now() - t0 > timeout) reject(new Error('Supabase SDK 로드 실패'));
+      else setTimeout(check, 80);
+    };
+    check();
+  });
+}
+
 const TYPES = {
   STEADY:{icon:'🌿',name:'STEADY',
     sub:'꾸준하고 신뢰를 쌓아가는 스타일이에요.',
@@ -300,83 +427,85 @@ const TYPES = {
 
 // ── 1단계 A/B 12문항
 const Q_AB = [
-  {q:"갑자기 주말 계획이 바뀌었어요. 나는?",
-   a:{text:"솔직히 좀 불편해요. 미리 알았으면 좋았을 텐데.", scores:{STEADY:2,VISION:1}},
-   b:{text:"오히려 설레요! 즉흥이 더 재미있을 때도 있잖아요.", scores:{SPARK:2,PLAYER:1}}},
-  {q:"파트너와 대화할 때 나는 더 자주?",
-   a:{text:"내 생각이나 아이디어를 먼저 꺼내요.", scores:{SPARK:2,LEADER:1}},
-   b:{text:"상대방 말을 먼저 충분히 들어요.", scores:{HARMONY:2,SOUL:1}}},
-  {q:"우리가 크게 싸웠을 때, 나의 첫 반응은?",
-   a:{text:"상황을 정리하고 싶어요. 감정보다 해결이 먼저예요.", scores:{LOGIC:2,LEADER:1}},
-   b:{text:"감정이 먼저 올라와요. 바로 이야기해야 풀려요.", scores:{HARMONY:2,SOUL:1}}},
-  {q:"파트너에게 사랑을 표현하는 나만의 방식은?",
-   a:{text:"행동으로 보여줘요. 챙겨주고 함께 시간을 보내요.", scores:{STEADY:2,PLAYER:1}},
-   b:{text:"말로 직접 표현해요. 솔직하게 감정을 꺼내요.", scores:{SPARK:1,HARMONY:2}}},
-  {q:"5년 후 우리 커플의 모습을 상상할 때 나는?",
-   a:{text:"구체적인 계획과 일정이 머릿속에 그려져요.", scores:{STEADY:2,LEADER:1}},
-   b:{text:"큰 방향이나 느낌만 있어요. 흘러가면서 정해지겠죠.", scores:{VISION:2,SPARK:1}}},
-  {q:"파트너가 고민을 털어놓을 때, 나는?",
-   a:{text:"해결책을 같이 찾아줘요. 도움이 되고 싶어요.", scores:{LOGIC:2,LEADER:1}},
-   b:{text:"일단 다 들어줘요. 공감이 먼저라고 생각해요.", scores:{HARMONY:2,SOUL:1}}},
-  {q:"새로운 것을 시도하는 것에 대해 나는?",
-   a:{text:"검증된 방법이 편해요. 익숙한 것이 더 좋아요.", scores:{STEADY:2,LOGIC:1}},
-   b:{text:"새로운 시도가 좋아요! 안 해본 게 더 재미있잖아요.", scores:{SPARK:2,PLAYER:1}}},
-  {q:"관계에서 나에게 가장 중요한 건?",
-   a:{text:"서로 믿고 편안한 것. 안정감이 제일이에요.", scores:{STEADY:2,HARMONY:1}},
-   b:{text:"서로 성장하고 자극받는 것. 함께 더 나아가는 느낌이요.", scores:{VISION:2,LEADER:1}}},
-  {q:"파트너와 의견이 다를 때, 나는?",
-   a:{text:"논리적으로 내 입장을 설명해요.", scores:{LOGIC:2,LEADER:1}},
-   b:{text:"우선 상대방 입장을 이해하려고 해요.", scores:{HARMONY:2,SOUL:1}}},
-  {q:"혼자만의 시간이 필요할 때, 나는?",
-   a:{text:"솔직하게 말해요. '나 혼자 있고 싶어'라고요.", scores:{SOUL:2,LOGIC:1}},
-   b:{text:"눈치를 보거나 천천히 자연스럽게 거리를 둬요.", scores:{STEADY:1,VISION:2}}},
-  {q:"우리가 함께 있을 때 나는 주로?",
-   a:{text:"에너지가 올라가요. 같이 있는 게 충전이 돼요.", scores:{PLAYER:2,SPARK:1}},
-   b:{text:"편안한데 가끔 혼자 시간이 그리워요.", scores:{SOUL:2,VISION:1}}},
-  {q:"파트너에게 솔직하게 말해야 할 상황에서 나는?",
-   a:{text:"직접 말해요. 돌려 말하는 게 더 불편해요.", scores:{LEADER:2,LOGIC:1}},
-   b:{text:"어떻게 말해야 상처가 안 될지 고민이 더 돼요.", scores:{HARMONY:2,SOUL:1}}},
+  {q:"주말 아침, 우리 뭐 할까?",
+   a:{text:"미리 정해두는 게 좋아 — 기대감도 있고 준비도 되고 🗓", scores:{STEADY:2,LEADER:1}},
+   b:{text:"일어나서 그때 정하자 — 즉흥이 더 설레 ✨", scores:{SPARK:2,PLAYER:1}}},
+  {q:"새 카페 발견! 들어갈까?",
+   a:{text:"잠깐, 리뷰 먼저 — 별점이랑 메뉴 확인하고 😎", scores:{STEADY:2,LOGIC:1}},
+   b:{text:"일단 들어가 보자 — 분위기 보고 결정! 🚀", scores:{PLAYER:2,SPARK:1}}},
+  {q:"선물 고를 때 나는?",
+   a:{text:"상대가 원하는 걸 파악해서 딱 맞게 준비해 🎯", scores:{HARMONY:2,STEADY:1}},
+   b:{text:"내가 예쁘다 생각하는 걸로 — 내 취향이 담겨야 진짜지 💫", scores:{SOUL:2,VISION:1}}},
+  {q:"영화 볼 때 나는?",
+   a:{text:"결말이 어떻게 될지 계속 예측하면서 봐 🧩", scores:{VISION:2,LOGIC:1}},
+   b:{text:"그냥 빠져들어서 봐 — 결말은 결말에 알면 되지 🍿", scores:{PLAYER:2,SOUL:1}}},
+  {q:"연락 스타일은?",
+   a:{text:"짧게 자주 — 생각날 때마다 바로 보내 💬", scores:{SPARK:2,HARMONY:1}},
+   b:{text:"길게 가끔 — 쌓인 거 한 번에 📩", scores:{SOUL:2,VISION:1}}},
+  {q:"여행 짐 쌀 때 나는?",
+   a:{text:"리스트 만들어서 하나씩 체크 ✅", scores:{STEADY:2,LEADER:1}},
+   b:{text:"생각나는 것 일단 던져 넣어 — 뭔가 빠져도 현지서 사면 돼 😄", scores:{SPARK:2,PLAYER:1}}},
+  {q:"맛집 고를 때 나는?",
+   a:{text:"리뷰 별점·사진 꼼꼼히 보고 결정 📊", scores:{LOGIC:2,STEADY:1}},
+   b:{text:"분위기 보고 느낌으로 — 맛은 먹어봐야 알지 ✨", scores:{SOUL:2,SPARK:1}}},
+  {q:"드라마 보다가 결말이 궁금하면?",
+   a:{text:"스포 찾아봄 — 결말 알고 봐야 편해 🔍", scores:{LOGIC:2,LEADER:1}},
+   b:{text:"절대 스포 싫어 — 그 두근거림이 포인트지 💗", scores:{PLAYER:2,HARMONY:1}}},
+  {q:"쉬는 날 에너지 충전법은?",
+   a:{text:"밖에 나가야 충전 — 집에만 있으면 답답해 🌍", scores:{PLAYER:2,SPARK:1}},
+   b:{text:"집에 있어야 충전 — 조용한 게 최고야 🏠", scores:{SOUL:2,STEADY:1}}},
+  {q:"사진 찍을 때 나는?",
+   a:{text:"구도 잡고 여러 장 — 잘 나온 거 골라야지 📸", scores:{STEADY:2,VISION:1}},
+   b:{text:"그냥 찍어 한 장으로 OK — 자연스러운 게 최고 😆", scores:{PLAYER:2,SOUL:1}}},
+  {q:"식당 메뉴 고를 때 나는?",
+   a:{text:"늘 먹던 거 — 실패 없는 확실한 선택 👍", scores:{STEADY:2,LOGIC:1}},
+   b:{text:"새로운 거 도전 — 안 먹어본 게 더 당겨 🍜", scores:{SPARK:2,VISION:1}}},
+  {q:"기분이 복잡할 때 나는?",
+   a:{text:"혼자 정리하고 싶어 — 말하면 더 복잡해져 🌙", scores:{SOUL:2,LOGIC:1}},
+   b:{text:"누군가한테 털어놔야 해 — 말해야 풀려 💬", scores:{HARMONY:2,SPARK:1}}},
 ];
 
 // ── 2단계 4점 척도 12문항
 // val: 0=강하게 left, 1=약하게 left, 2=약하게 right, 3=강하게 right
+// axes: [left가 높을수록 유리한 유형 인덱스, right가 높을수록 유리한 유형 인덱스]
+// 유형 인덱스: 0=STEADY, 1=SPARK, 2=PLAYER, 3=VISION, 4=LOGIC, 5=HARMONY, 6=LEADER, 7=SOUL
 const Q4 = [
-  {q:"일상에서 계획대로 움직이는 게 얼마나 편한가요?",
-   left:"계획이 있어야 안심돼요", right:"흐름대로가 더 좋아요",
-   axes:[0,1]}, // 성실, 자발
-  {q:"대화할 때 새로운 아이디어나 연결이 얼마나 자주 떠오르나요?",
-   left:"자주 떠올라요", right:"별로 없어요",
-   axes:[1,3]},
-  {q:"사람들과 함께 있을 때 에너지는 어떻게 되나요?",
-   left:"충전돼요", right:"소모돼요",
-   axes:[2,7]},
-  {q:"대화할 때 직관이나 느낌을 얼마나 신뢰하나요?",
-   left:"많이 믿어요", right:"근거가 있어야 믿어요",
-   axes:[3,4]},
-  {q:"갈등 상황에서 논리와 감정 중 뭐가 먼저 나오나요?",
-   left:"논리가 먼저요", right:"감정이 먼저요",
-   axes:[4,5]},
-  {q:"파트너의 기분이 안 좋을 때, 얼마나 빨리 눈치채나요?",
-   left:"바로 알아요", right:"나중에 알게 돼요",
-   axes:[5,4]},
-  {q:"그룹에서 방향이나 결정을 이끄는 편인가요?",
-   left:"자주 이끄는 편이에요", right:"따라가는 편이에요",
-   axes:[6,5]},
-  {q:"감정을 말로 표현하는 게 얼마나 쉬운가요?",
-   left:"쉬워요", right:"어렵고 불편해요",
-   axes:[7,4]},
-  {q:"오늘 당장 해야 할 일을 미루는 편인가요?",
-   left:"잘 안 미뤄요", right:"자주 미뤄요",
-   axes:[0,1]},
-  {q:"행동하기 전에 분석하는 시간이 얼마나 필요한가요?",
-   left:"충분히 분석해요", right:"일단 해보고 생각해요",
-   axes:[4,2]},
-  {q:"파트너와 깊은 대화를 얼마나 자주 하고 싶은가요?",
-   left:"자주 하고 싶어요", right:"가끔이면 충분해요",
-   axes:[7,3]},
-  {q:"목표를 세우면 중간에 방향을 바꾸는 경우가 얼마나 되나요?",
-   left:"거의 안 바꿔요", right:"자주 바꿔요",
-   axes:[6,1]},
+  {q:"약속 하루 전날, 나는?",
+   left:"뭐 입을지 이미 정해놔요 👗", right:"당일 아침에 그때 정해요 🤷",
+   axes:[0,1]}, // STEADY vs SPARK
+  {q:"유튜브 볼 때 나는?",
+   left:"보고 싶은 거 검색해서 찾아봐요 🔍", right:"알고리즘 추천대로 그냥 봐요 🎲",
+   axes:[0,2]}, // STEADY vs PLAYER
+  {q:"친구 모임 끝나고 나는?",
+   left:"집 가서 혼자 있고 싶어요 🏠", right:"2차 가자! 에너지 아직 남았어요 🔥",
+   axes:[7,2]}, // SOUL vs PLAYER
+  {q:"뭔가 결정할 때 나는?",
+   left:"자료 찾아보고 꼼꼼히 비교해요 📊", right:"느낌이 오면 그냥 해요 ⚡",
+   axes:[4,3]}, // LOGIC vs VISION
+  {q:"의견이 다를 때 나는?",
+   left:"왜 그렇게 생각하는지 이유가 궁금해요 🧠", right:"일단 기분이 어떤지가 먼저예요 💗",
+   axes:[4,5]}, // LOGIC vs HARMONY
+  {q:"카톡 왔을 때 나는?",
+   left:"바로 확인하고 답장해요 ⚡", right:"나중에 몰아서 확인해요 📱",
+   axes:[1,7]}, // SPARK vs SOUL
+  {q:"모임에서 나는?",
+   left:"자연스럽게 분위기 이끄는 편이에요 🎤", right:"편하게 따라가는 편이에요 😊",
+   axes:[6,5]}, // LEADER vs HARMONY
+  {q:"기분이 복잡할 때 나는?",
+   left:"말로 표현하면 좀 나아요 💬", right:"혼자 정리될 때까지 기다려요 🌙",
+   axes:[5,7]}, // HARMONY vs SOUL
+  {q:"마감 있는 일은?",
+   left:"미리미리 해두는 편이에요 ✅", right:"마감 직전에 집중력 폭발해요 🚀",
+   axes:[0,1]}, // STEADY vs SPARK
+  {q:"새 가전 샀을 때 나는?",
+   left:"설명서 꼼꼼히 읽어요 📖", right:"일단 켜보고 만져봐요 🔧",
+   axes:[4,2]}, // LOGIC vs PLAYER
+  {q:"대화할 때 나는?",
+   left:"한 주제를 깊게 파고들어요 🔬", right:"이것저것 넓게 얘기하는 게 좋아요 🌐",
+   axes:[3,1]}, // VISION vs SPARK
+  {q:"인생 계획은?",
+   left:"5년 후까지 그림이 있어요 🗺", right:"지금 이 순간이 제일 중요해요 🌟",
+   axes:[6,2]}, // LEADER vs PLAYER
 ];
 
 // 4점 버튼 라벨
@@ -409,6 +538,91 @@ function startQuiz(){
   document.getElementById('quiz-screen').style.display='block';
   render();
 }
+
+// ─── 비동기 A: 먼저 혼자 검사 시작 ───
+function startAsyncQuiz(){
+  const name = document.getElementById('async-name').value.trim();
+  const email = document.getElementById('async-email').value.trim().toLowerCase();
+  sessionStorage.setItem('sg_solo_name', name);
+  sessionStorage.setItem('sg_solo_email', email);
+  sessionStorage.setItem('sg_solo_role', 'A');
+  SOLO_MODE = true; SOLO_ROLE = 'A';
+  nameA = name; nameB = '파트너';
+  document.getElementById('start-async').style.display='none';
+  document.getElementById('quiz-screen').style.display='block';
+  applySoloCSS();
+  render();
+}
+
+// ─── 비동기 B: 초대 링크 타고 진입한 사람 ───
+function startJoinQuiz(){
+  const name = document.getElementById('join-name').value.trim();
+  const email = document.getElementById('join-email').value.trim().toLowerCase();
+  sessionStorage.setItem('sg_solo_name', name);
+  sessionStorage.setItem('sg_solo_email', email);
+  sessionStorage.setItem('sg_solo_role', 'B');
+  sessionStorage.setItem('sg_invite_token', INVITE_TOKEN);
+  SOLO_MODE = true; SOLO_ROLE = 'B';
+  nameA = '파트너'; nameB = name;
+  document.getElementById('start-async-join').style.display='none';
+  document.getElementById('quiz-screen').style.display='block';
+  applySoloCSS();
+  render();
+}
+
+// SOLO 모드면 상대방 패널 숨김 (CSS 주입)
+function applySoloCSS(){
+  const style = document.createElement('style');
+  const hideSel = SOLO_ROLE === 'A' ? '.panel-b' : '.panel-a';
+  style.textContent = `${hideSel}{display:none !important;} .panels{justify-content:center;} .panel-ab{max-width:480px;margin:0 auto;}`;
+  document.head.appendChild(style);
+}
+
+// 이메일 2회 확인 + 이름 입력 유효성
+function setupAsyncValidation(prefix, btnId){
+  const n = document.getElementById(prefix+'-name');
+  const e1 = document.getElementById(prefix+'-email');
+  const e2 = document.getElementById(prefix+'-email2');
+  const btn = document.getElementById(btnId);
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const val = () => {
+    const ok = n.value.trim() && re.test(e1.value.trim()) && e1.value.trim() === e2.value.trim();
+    btn.disabled = !ok;
+  };
+  [n, e1, e2].forEach(i => i.addEventListener('input', val));
+}
+
+// 시작 화면 분기 (DOMContentLoaded)
+document.addEventListener('DOMContentLoaded', async () => {
+  if (ASYNC_MODE === 'async') {
+    document.getElementById('start-screen').style.display='none';
+    document.getElementById('start-async').style.display='block';
+    setupAsyncValidation('async', 'btn-async-start');
+  } else if (ASYNC_MODE === 'async_join' && INVITE_TOKEN) {
+    try {
+      await waitForSG();
+      const { session, participants } = await SG.session.getSessionByInviteToken(INVITE_TOKEN);
+      if (!session || new Date(session.expires_at) < new Date()) {
+        alert('초대 링크가 만료되었거나 잘못됐어요.');
+        location.href = '/';
+        return;
+      }
+      if (session.status === 'paid' || session.status === 'both_done') {
+        alert('이미 양쪽 검사가 완료된 세션이에요.');
+        location.href = `/couple/kr/download/?session=${session.id}`;
+        return;
+      }
+      const partnerA = (participants || []).find(p => p.role === 'A');
+      document.getElementById('async-partner-type').textContent = partnerA ? partnerA.type_code : '—';
+      document.getElementById('start-screen').style.display='none';
+      document.getElementById('start-async-join').style.display='block';
+      setupAsyncValidation('join', 'btn-join-start');
+    } catch (e) {
+      console.error(e);
+      alert('초대 링크 확인 중 오류: ' + e.message);
+    }
+  }
+});
 
 // ── 렌더
 function render(){
@@ -542,8 +756,9 @@ function selectAB(qi, who, val){
   const prevA=answersA[qi], prevB=answersB[qi];
   if(who==='A') answersA[qi]=val;
   else answersB[qi]=val;
-  if(answersA[qi]!==null && answersB[qi]!==null){
-    const bothJustDone=(prevA===null||prevB===null);
+  // SOLO 모드: 게이미피케이션 스킵 (혼자 답함)
+  if(!SOLO_MODE && answersA[qi]!==null && answersB[qi]!==null){
+    const bothJustDone = (prevA===null||prevB===null);
     if(bothJustDone) triggerReaction(answersA[qi]===answersB[qi]?'exact':'diff');
   }
   render();
@@ -553,12 +768,12 @@ function selectScale4(qi, who, val){
   const prevA=answersA[qi], prevB=answersB[qi];
   if(who==='A') answersA[qi]=val;
   else answersB[qi]=val;
-  if(answersA[qi]!==null && answersB[qi]!==null){
-    const bothJustDone=(prevA===null||prevB===null);
+  if(!SOLO_MODE && answersA[qi]!==null && answersB[qi]!==null){
+    const bothJustDone = (prevA===null||prevB===null);
     if(bothJustDone){
       const vA=answersA[qi], vB=answersB[qi];
-      const exact=vA===vB;
-      const sameDir=(vA<=1&&vB<=1)||(vA>=2&&vB>=2);
+      const exact = vA===vB;
+      const sameDir = (vA<=1&&vB<=1)||(vA>=2&&vB>=2);
       if(exact) triggerReaction('exact');
       else if(sameDir) triggerReaction('sameDir');
       else triggerReaction('diff');
@@ -567,16 +782,22 @@ function selectScale4(qi, who, val){
   render();
 }
 
+// ── 게이미피케이션
+// Q1~12 (A/B): exact=완전일치 → 큰폭죽 / diff → 진동
+// Q13~24 (4점): exact → 큰폭죽 / sameDir → 작은폭죽 / diff → 진동
 function triggerReaction(mode){
   if(mode==='exact'){
+    // 큰 폭죽 🎉
     confetti({particleCount:80,spread:70,origin:{y:0.6},colors:['#C9A84C','#E8D090','#8A70C0','#fff']});
     setTimeout(()=>confetti({particleCount:40,spread:50,origin:{y:0.5,x:0.3},colors:['#C9A84C','#FFD700']}),150);
     setTimeout(()=>confetti({particleCount:40,spread:50,origin:{y:0.5,x:0.7},colors:['#8A70C0','#fff']}),300);
     showToast('찰떡! 둘 다 같은 선택 🎉');
   } else if(mode==='sameDir'){
+    // 작은 폭죽 ✨ (방향 같음)
     confetti({particleCount:30,spread:45,origin:{y:0.65},scalar:0.7,colors:['#C9A84C','#E8D090','#8A70C0']});
     showToast('비슷한 편이에요~ ✨');
   } else {
+    // 진동 + 흔들기
     if(navigator.vibrate) navigator.vibrate([80,40,80]);
     shakeScreen();
     showToast('달라요~ 서로 다른 매력 💫');
@@ -593,9 +814,10 @@ function shakeScreen(){
 
 function updateWaitMsg(){
   const qi = currentQ;
+  const msg = document.getElementById('wait-msg');
+  if(SOLO_MODE){ msg.textContent=''; return; }
   const doneA = answersA[qi]!==null;
   const doneB = answersB[qi]!==null;
-  const msg = document.getElementById('wait-msg');
   if(doneA && doneB) msg.textContent='';
   else if(doneA) msg.textContent=`⏳ ${nameB}의 선택을 기다리고 있어요`;
   else if(doneB) msg.textContent=`⏳ ${nameA}의 선택을 기다리고 있어요`;
@@ -604,7 +826,12 @@ function updateWaitMsg(){
 
 function updateNextBtn(){
   const qi = currentQ;
-  const ready = answersA[qi]!==null && answersB[qi]!==null;
+  let ready;
+  if(SOLO_MODE){
+    ready = (SOLO_ROLE==='A' ? answersA[qi] : answersB[qi]) !== null;
+  } else {
+    ready = answersA[qi]!==null && answersB[qi]!==null;
+  }
   const btn = document.getElementById('btn-next');
   btn.className = 'btn-next' + (ready?' ready':'');
   btn.textContent = qi===23 ? '결과 보기 🔍' : '다음 →';
@@ -612,9 +839,14 @@ function updateNextBtn(){
 
 function nextQ(){
   const qi = currentQ;
-  if(answersA[qi]===null || answersB[qi]===null){
-    showToast('두 분 모두 선택해야 다음으로 넘어갈 수 있어요!');
-    return;
+  if(SOLO_MODE){
+    const myAns = SOLO_ROLE==='A' ? answersA[qi] : answersB[qi];
+    if(myAns===null){ showToast('선택해야 다음으로 넘어갈 수 있어요!'); return; }
+  } else {
+    if(answersA[qi]===null || answersB[qi]===null){
+      showToast('두 분 모두 선택해야 다음으로 넘어갈 수 있어요!');
+      return;
+    }
   }
   if(qi===23){ calcResult(); return; }
   currentQ++;
@@ -628,11 +860,14 @@ function prevQ(){
 }
 
 // ── 계산
+// 유형 인덱스 → 유형명 매핑 (Q4 axes에서 사용)
+const TYPE_BY_IDX = ['STEADY','SPARK','PLAYER','VISION','LOGIC','HARMONY','LEADER','SOUL'];
+
 function calcResult(){
-  // 유형 점수 초기화
   const initScores=()=>({STEADY:0,SPARK:0,PLAYER:0,VISION:0,LOGIC:0,HARMONY:0,LEADER:0,SOUL:0});
   typeScoresA=initScores(); typeScoresB=initScores();
 
+  // Q1~12: A/B 선택 → 유형 점수 직접 누적 (가중치 1.0)
   for(let i=0;i<12;i++){
     const q=Q_AB[i];
     const scA=(answersA[i]===0?q.a:q.b).scores;
@@ -641,24 +876,69 @@ function calcResult(){
     for(const[t,v] of Object.entries(scB)) typeScoresB[t]=(typeScoresB[t]||0)+v;
   }
 
-  // 4점 척도 보정 (0=강L,1=약L,2=약R,3=강R)
-  axisScoresA=[50,50,50,50,50,50,50,50];
-  axisScoresB=[50,50,50,50,50,50,50,50];
-  const applyScale=(scores,choice,axes)=>{
-    const[ax0,ax1]=axes;
-    const delta=[15,7,-7,-15]; // 강L=+15, 약L=+7, 약R=-7, 강R=-15 → ax0기준
-    scores[ax0]=Math.min(100,Math.max(0,scores[ax0]+delta[choice]));
-    scores[ax1]=Math.min(100,Math.max(0,scores[ax1]-delta[choice]));
-  };
+  // Q13~24: 4점 척도 → axes 기반 유형 점수 추가 반영 (가중치 1.5 — 정밀 측정)
+  // choice: 0=강하게left, 1=약하게left, 2=약하게right, 3=강하게right
+  const scaleBonus=[3,1.5,-1.5,-3]; // left유형 보너스, right는 반대
   for(let i=0;i<12;i++){
-    applyScale(axisScoresA,answersA[12+i],Q4[i].axes);
-    applyScale(axisScoresB,answersB[12+i],Q4[i].axes);
+    const choice=answersA[12+i];
+    if(choice===null) continue;
+    const[leftIdx,rightIdx]=Q4[i].axes;
+    const bonus=scaleBonus[choice];
+    typeScoresA[TYPE_BY_IDX[leftIdx]]=(typeScoresA[TYPE_BY_IDX[leftIdx]]||0)+bonus;
+    typeScoresA[TYPE_BY_IDX[rightIdx]]=(typeScoresA[TYPE_BY_IDX[rightIdx]]||0)-bonus;
+  }
+  for(let i=0;i<12;i++){
+    const choice=answersB[12+i];
+    if(choice===null) continue;
+    const[leftIdx,rightIdx]=Q4[i].axes;
+    const bonus=scaleBonus[choice];
+    typeScoresB[TYPE_BY_IDX[leftIdx]]=(typeScoresB[TYPE_BY_IDX[leftIdx]]||0)+bonus;
+    typeScoresB[TYPE_BY_IDX[rightIdx]]=(typeScoresB[TYPE_BY_IDX[rightIdx]]||0)-bonus;
   }
 
   const typeA=Object.entries(typeScoresA).sort((a,b)=>b[1]-a[1])[0][0];
   const typeB=Object.entries(typeScoresB).sort((a,b)=>b[1]-a[1])[0][0];
 
+  // ─── SOLO 분기: async A/B ───
+  if(SOLO_MODE && SOLO_ROLE==='A'){
+    saveAsyncAndRedirect(typeA, typeScoresA);
+    return;
+  }
+  if(SOLO_MODE && SOLO_ROLE==='B'){
+    joinAsyncAndRedirect(typeB, typeScoresB);
+    return;
+  }
+
   showDone(typeA, typeB);
+}
+
+async function saveAsyncAndRedirect(typeCode, scores){
+  const email = sessionStorage.getItem('sg_solo_email');
+  try {
+    await waitForSG();
+    const { session, invite_url } = await SG.session.createAsyncSession({
+      email, scores, typeCode
+    });
+    location.href = `/couple/kr/pending/?session=${session.id}`;
+  } catch (e) {
+    console.error(e);
+    alert('세션 생성 실패: ' + e.message);
+  }
+}
+
+async function joinAsyncAndRedirect(typeCode, scores){
+  const email = sessionStorage.getItem('sg_solo_email');
+  const token = sessionStorage.getItem('sg_invite_token');
+  try {
+    await waitForSG();
+    const { session } = await SG.session.joinAsyncSession(token, {
+      email, scores, typeCode
+    });
+    location.href = `/couple/kr/download/?session=${session.id}`;
+  } catch (e) {
+    console.error(e);
+    alert('세션 참여 실패: ' + e.message);
+  }
 }
 
 function makeTypeCard(type, personName, colorVar){
@@ -688,27 +968,6 @@ function makeTypeCard(type, personName, colorVar){
   `;
 }
 
-function launchConfetti(){
-  const colors=['#C9A84C','#E8D090','#FF6B9D','#A78BFA','#60A5FA','#34D399'];
-  for(let i=0;i<80;i++){
-    const el=document.createElement('div');
-    const size=Math.random()*8+4;
-    el.style.cssText=`position:fixed;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>0.5?'50%':'2px'};left:${Math.random()*100}vw;top:-10px;z-index:9999;pointer-events:none;opacity:1;`;
-    document.body.appendChild(el);
-    const tx=(Math.random()-0.5)*300;
-    const ty=window.innerHeight+20;
-    const rot=Math.random()*720;
-    el.animate([
-      {transform:`translate(0,0) rotate(0deg)`,opacity:1},
-      {transform:`translate(${tx}px,${ty}px) rotate(${rot}deg)`,opacity:0}
-    ],{duration:1800+Math.random()*800,easing:'cubic-bezier(0.25,0.46,0.45,0.94)',delay:Math.random()*400}).onfinish=()=>el.remove();
-  }
-}
-function launchShake(){
-  const done=document.getElementById('done-screen');
-  done.style.animation='shakeEffect 0.5s ease';
-  setTimeout(()=>done.style.animation='',500);
-}
 function showDone(typeA, typeB){
   document.getElementById('quiz-screen').style.display='none';
   const done=document.getElementById('done-screen');
@@ -729,12 +988,6 @@ function showDone(typeA, typeB){
   done.dataset.typeB=typeB;
 
   window.scrollTo({top:0,behavior:'smooth'});
-
-  // 같은 유형이면 폭죽, 다르면 흔들림+진동
-  setTimeout(()=>{
-    if(typeA===typeB){ launchConfetti(); }
-    else{ launchShake(); if(navigator.vibrate) navigator.vibrate([80,40,80]); }
-  }, 300);
 }
 
 function goResult(){
@@ -743,9 +996,7 @@ function goResult(){
   const typeB=done.dataset.typeB;
   const na=encodeURIComponent(nameA);
   const nb=encodeURIComponent(nameB);
-  const partner=new URLSearchParams(window.location.search).get('partner')||'';
-  const partnerStr=partner?`&partner=${encodeURIComponent(partner)}`:'';
-  window.location.href=`/couple/result/?a=${typeA}&b=${typeB}&na=${na}&nb=${nb}${partnerStr}`;
+  window.location.href=`/couple/result/?a=${typeA}&b=${typeB}&na=${na}&nb=${nb}`;
 }
 
 function showToast(msg){
@@ -766,15 +1017,18 @@ function showToast(msg){
     <button class="hw-close-btn" onclick="hwClose()">&#x2715;</button>
   </div>
   <div class="hw-section">
-    <div class="hw-section-label">Couple KR</div>
-    <a class="hw-item" href="/couple/kr/"><span class="hw-item-icon">&#x1F3E0;</span> 홈</a>
-    <a class="hw-item" href="/couple/test/"><span class="hw-item-icon">&#x270F;</span> 커플 유형 검사</a>
+    <a class="hw-item" href="/"><span class="hw-item-icon">&#x1F3E0;</span> 홈</a>
+  </div>
+  <div class="hw-section">
+    <div class="hw-section-label">Couple</div>
+    <a class="hw-item" href="/couple/test/"><span class="hw-item-icon">&#x270F;</span> 테스트 하기</a>
+    <a class="hw-item" href="/couple/shop/"><span class="hw-item-icon">&#x1F6CD;</span> Shop</a>
   </div>
   <div class="hw-section">
     <div class="hw-section-label">Legal</div>
     <a class="hw-item" href="/legal/terms.html"><span class="hw-item-icon">&#x1F4C4;</span> 이용약관</a>
     <a class="hw-item" href="/legal/privacy.html"><span class="hw-item-icon">&#x1F512;</span> 개인정보처리방침</a>
-    <a class="hw-item" href="/legal/faq.html"><span class="hw-item-icon">&#x2753;</span> FAQ</a>
+    <a class="hw-item" href="/legal/refund.html"><span class="hw-item-icon">&#x1F4B0;</span> 환불정책</a>
   </div>
 </div>
 <script>

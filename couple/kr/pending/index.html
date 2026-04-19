@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>파트너 대기 중 — 42world</title>
+<style>
+:root{
+  --dark:#1A2030; --gold:#B8860B; --gold-l:#D4A017; --silver:#8899AA;
+  --bg:#F7F5F0; --card:#FFFFFF; --text:#2A2F3A; --muted:#6B7280;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:24px}
+.wrap{max-width:520px;width:100%}
+.card{background:var(--card);border-radius:16px;padding:32px 24px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.04)}
+.brand{text-align:center;font-size:13px;letter-spacing:2px;color:var(--gold);
+  font-weight:600;margin-bottom:16px}
+h1{text-align:center;font-size:22px;margin:0 0 8px;color:var(--dark)}
+.sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.6}
+.link-box{background:#F8F4EA;border:1.5px dashed var(--gold);border-radius:10px;
+  padding:16px;word-break:break-all;font-size:13px;color:var(--dark);
+  text-align:center;margin-bottom:16px;font-family:monospace}
+.btn{display:block;width:100%;padding:14px;margin-top:10px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;
+  border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;
+  box-shadow:0 2px 8px rgba(184,134,11,0.3);text-decoration:none;text-align:center}
+.btn.secondary{background:#fff;color:var(--dark);border:1.5px solid #D0D4DC;box-shadow:none}
+.status-pill{display:inline-block;padding:6px 12px;border-radius:999px;
+  font-size:12px;font-weight:600;background:rgba(184,134,11,0.1);color:var(--gold);
+  margin-bottom:16px}
+.pulse{display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:var(--gold);margin-right:6px;animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.my-result{background:rgba(136,153,170,0.08);border-radius:10px;padding:14px;
+  text-align:center;margin-bottom:16px;font-size:14px}
+.my-result b{color:var(--gold);font-size:18px}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--dark);color:#fff;padding:10px 18px;border-radius:999px;
+  font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="brand">✦ 42WORLD × SHADOWGRAM ✦</div>
+
+    <div style="text-align:center">
+      <span class="status-pill"><span class="pulse"></span>파트너 대기 중</span>
+    </div>
+
+    <h1 id="main-title">당신 차례는 끝났어요 ✓</h1>
+    <p class="sub">이제 파트너에게 링크를 보내세요.<br>
+      둘 다 끝나면 리포트 결제 화면이 열려요.</p>
+
+    <div class="my-result">
+      내 유형: <b id="my-type">—</b>
+    </div>
+
+    <p style="font-size:13px;color:var(--muted);margin:16px 0 6px">파트너 초대 링크</p>
+    <div class="link-box" id="invite-link">—</div>
+
+    <button class="btn" id="btn-copy">📋 링크 복사하기</button>
+    <button class="btn secondary" id="btn-share">🔗 카톡/메신저로 공유</button>
+
+    <a class="btn secondary" href="/couple/kr/my/" style="margin-top:12px">
+      나중에 다시 오기 (이메일로 재접속)
+    </a>
+  </div>
+  <div class="footer">* 미결제 세션은 7일 후 자동 삭제됩니다</div>
+</div>
+
+<div class="toast" id="toast">복사됐어요 ✓</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/couple/js/supabase-client.js"></script>
+<script src="/couple/js/session.js"></script>
+<script>
+(async function(){
+  const params = new URLSearchParams(location.search);
+  const sessionId = params.get('session') || sessionStorage.getItem('sg_session_id');
+
+  if (!sessionId) { location.href = '/couple/test/'; return; }
+
+  try {
+    const { session, participants } = await SG.session.getSessionById(sessionId);
+    if (!session) { location.href = '/couple/test/'; return; }
+
+    const me = (participants||[]).find(p => p.role === 'A');
+    if (me) document.getElementById('my-type').textContent = me.type_code || '—';
+
+    const url = `${location.origin}/couple/invite/?t=${session.invite_token}`;
+    document.getElementById('invite-link').textContent = url;
+
+    // 양쪽 완료 감지 (폴링 5초)
+    const poll = setInterval(async () => {
+      const { session: s } = await SG.session.getSessionById(sessionId);
+      if (s && (s.status === 'both_done' || s.status === 'paid')) {
+        clearInterval(poll);
+        location.href = `/couple/kr/download/?session=${sessionId}`;
+      }
+    }, 5000);
+
+    // 복사
+    document.getElementById('btn-copy').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(url);
+        const t = document.getElementById('toast');
+        t.classList.add('show');
+        setTimeout(()=>t.classList.remove('show'), 1600);
+      } catch(e){ alert('복사 실패. 링크를 길게 눌러 복사해주세요.'); }
+    });
+
+    // 공유 (Web Share API)
+    document.getElementById('btn-share').addEventListener('click', async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: '42world 커플 리포트 - 파트너 검사 초대',
+            text: '내가 먼저 검사했어! 너도 해줘 💛',
+            url: url,
+          });
+        } catch(e){ /* 사용자 취소 */ }
+      } else {
+        alert('이 브라우저는 공유를 지원하지 않아요. 링크를 복사해서 붙여넣어주세요.');
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    alert('세션 정보를 가져오지 못했어요.');
+  }
+})();
+</script>
+</body>
+</html>

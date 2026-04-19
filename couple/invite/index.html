@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>커플 초대 — 42world</title>
+<style>
+:root{
+  --dark:#1A2030; --gold:#B8860B; --gold-l:#D4A017; --silver:#8899AA;
+  --bg:#F7F5F0; --card:#FFFFFF; --text:#2A2F3A; --muted:#6B7280;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:24px}
+.wrap{max-width:520px;width:100%}
+.card{background:var(--card);border-radius:16px;padding:32px 24px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.04)}
+.brand{text-align:center;font-size:13px;letter-spacing:2px;color:var(--gold);
+  font-weight:600;margin-bottom:16px}
+h1{text-align:center;font-size:22px;margin:0 0 8px;color:var(--dark)}
+.sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.6}
+.partner-info{background:rgba(184,134,11,0.06);border:1px solid rgba(184,134,11,0.2);
+  border-radius:10px;padding:14px 16px;margin-bottom:20px;font-size:14px}
+.partner-info b{color:var(--gold)}
+label{display:block;font-size:13px;font-weight:600;color:var(--dark);
+  margin-bottom:6px;margin-top:14px}
+input{width:100%;padding:12px 14px;border:1.5px solid #D0D4DC;border-radius:8px;
+  font-size:15px;outline:none;transition:border .2s}
+input:focus{border-color:var(--gold)}
+.btn{display:block;width:100%;padding:14px;margin-top:20px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;
+  border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;
+  box-shadow:0 2px 8px rgba(184,134,11,0.3)}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.err{display:none;background:#FEF2F2;color:#991B1B;padding:12px;
+  border-radius:8px;font-size:13px;margin-top:12px}
+.loading{text-align:center;color:var(--muted);padding:40px 0}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="brand">✦ 42WORLD × SHADOWGRAM ✦</div>
+
+    <div id="state-loading" class="loading">초대 확인 중...</div>
+
+    <div id="state-invalid" style="display:none">
+      <h1>초대 링크가 유효하지 않아요 😢</h1>
+      <p class="sub">링크가 만료되었거나 잘못된 주소예요.<br>
+        직접 검사를 시작하려면 아래 버튼을 눌러주세요.</p>
+      <a class="btn" href="/couple/test/" style="text-decoration:none;text-align:center">
+        새로 검사 시작하기
+      </a>
+    </div>
+
+    <div id="state-done" style="display:none">
+      <h1>이미 완료된 세션이에요 🎉</h1>
+      <p class="sub">양쪽 검사가 모두 끝났거나 결제가 완료된 세션입니다.<br>
+        이메일로 재접속해주세요.</p>
+      <a class="btn" href="/couple/kr/my/" style="text-decoration:none;text-align:center">
+        내 세션 찾기
+      </a>
+    </div>
+
+    <div id="state-ready" style="display:none">
+      <h1>파트너가 먼저 검사를 끝냈어요 💛</h1>
+      <p class="sub">이제 당신 차례예요.<br>
+        이메일을 입력하고 검사를 시작하세요.</p>
+
+      <div class="partner-info">
+        파트너 유형: <b id="partner-type">—</b><br>
+        <span style="color:var(--muted);font-size:12px">* 결과는 둘 다 검사 완료 후 공개돼요</span>
+      </div>
+
+      <label for="email">이메일 주소</label>
+      <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+      <label for="email2">이메일 확인</label>
+      <input type="email" id="email2" placeholder="한 번 더 입력" autocomplete="email">
+
+      <button class="btn" id="btn-start" disabled>검사 시작하기 →</button>
+      <div class="err" id="err"></div>
+    </div>
+  </div>
+  <div class="footer">문의: 42world.kr</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/couple/js/supabase-client.js"></script>
+<script src="/couple/js/session.js"></script>
+<script>
+(async function(){
+  const params = new URLSearchParams(location.search);
+  const token = params.get('t');
+
+  const $loading = document.getElementById('state-loading');
+  const $invalid = document.getElementById('state-invalid');
+  const $done = document.getElementById('state-done');
+  const $ready = document.getElementById('state-ready');
+  const $err = document.getElementById('err');
+
+  function show(el){ [$loading,$invalid,$done,$ready].forEach(x=>x.style.display='none'); el.style.display='block'; }
+
+  if (!token) { show($invalid); return; }
+
+  try {
+    const { session, participants } = await SG.session.getSessionByInviteToken(token);
+    if (!session) { show($invalid); return; }
+
+    // 만료 체크
+    if (new Date(session.expires_at) < new Date()) { show($invalid); return; }
+
+    if (session.status === 'paid' || session.status === 'both_done') { show($done); return; }
+
+    const partnerA = (participants||[]).find(p => p.role === 'A');
+    if (!partnerA) { show($invalid); return; }
+
+    document.getElementById('partner-type').textContent = partnerA.type_code || '—';
+    sessionStorage.setItem('sg_invite_token', token);
+    sessionStorage.setItem('sg_session_id', session.id);
+    sessionStorage.setItem('sg_partner_type', partnerA.type_code);
+    sessionStorage.setItem('sg_role', 'B');
+    show($ready);
+  } catch (e) {
+    console.error(e);
+    show($invalid);
+  }
+
+  // 이메일 유효성 + 일치 체크
+  const $email = document.getElementById('email');
+  const $email2 = document.getElementById('email2');
+  const $btn = document.getElementById('btn-start');
+
+  function validate(){
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const ok = re.test($email.value.trim()) && $email.value.trim() === $email2.value.trim();
+    $btn.disabled = !ok;
+  }
+  [$email,$email2].forEach(i=>i.addEventListener('input',validate));
+
+  $btn.addEventListener('click', () => {
+    sessionStorage.setItem('sg_email', $email.value.trim().toLowerCase());
+    // 실제 검사 페이지로 이동 (invite 모드 플래그와 함께)
+    location.href = '/couple/test/?mode=async_join';
+  });
+})();
+</script>
+</body>
+</html>
