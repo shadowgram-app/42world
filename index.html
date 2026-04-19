@@ -439,9 +439,19 @@ function showScreen(id){
 }
 
 function startTest(){
+  // 모드 선택 모달 열기 (동시 / 비동기)
+  var m = document.getElementById('mode-modal');
+  if (m) { m.classList.add('open'); }
+}
+function closeModeModal(){
+  var m = document.getElementById('mode-modal');
+  if (m) m.classList.remove('open');
+}
+function goMode(mode){
   var p = new URLSearchParams(location.search).get('partner');
   var partnerStr = p ? '&partner=' + encodeURIComponent(p) : '';
-  window.location.href = '/couple/test/?mode=async' + partnerStr;
+  // mode = 'sync' (함께) 또는 'async' (공유)
+  window.location.href = '/couple/test/?mode=' + mode + partnerStr;
 }
 
 function restart(){
@@ -756,6 +766,39 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')hwClose();});
     <a class="hw-item" href="/legal/terms.html"><span class="hw-item-icon">&#x1F4C4;</span> 이용약관</a>
     <a class="hw-item" href="/legal/privacy.html"><span class="hw-item-icon">&#x1F512;</span> 개인정보처리방침</a>
     <a class="hw-item" href="/legal/refund.html"><span class="hw-item-icon">&#x1F4B0;</span> 환불정책</a>
+  </div>
+</div>
+
+<!-- MODE SELECTION MODAL -->
+<style>
+  #mode-modal{position:fixed;inset:0;background:rgba(10,14,26,0.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:2000;padding:20px;animation:fadeIn .2s ease;}
+  #mode-modal.open{display:flex;}
+  .mm-card{background:#fff;border-radius:20px;max-width:420px;width:100%;padding:28px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35);}
+  .mm-title{font-size:18px;font-weight:800;color:#1A2030;text-align:center;margin-bottom:6px;}
+  .mm-sub{font-size:13px;color:#6B7280;text-align:center;margin-bottom:22px;line-height:1.6;}
+  .mm-btn{display:block;width:100%;padding:18px 16px;border-radius:14px;border:none;cursor:pointer;font-family:inherit;text-align:left;margin-bottom:10px;font-size:14px;line-height:1.45;transition:transform .15s;}
+  .mm-btn:hover{transform:translateY(-1px);}
+  .mm-btn.primary{background:linear-gradient(135deg,#B8860B,#D4A017);color:#fff;box-shadow:0 4px 16px rgba(184,134,11,.35);}
+  .mm-btn.primary .mm-label{font-size:15px;font-weight:800;display:block;margin-bottom:3px;}
+  .mm-btn.primary .mm-desc{font-size:12px;opacity:.85;}
+  .mm-btn.secondary{background:#F3F4F6;color:#1A2030;border:1px solid #E5E7EB;}
+  .mm-btn.secondary .mm-label{font-size:15px;font-weight:800;display:block;margin-bottom:3px;color:#1A2030;}
+  .mm-btn.secondary .mm-desc{font-size:12px;color:#6B7280;}
+  .mm-close{display:block;width:100%;background:transparent;border:none;color:#8899AA;font-size:12px;padding:10px 0 0;cursor:pointer;font-family:inherit;}
+</style>
+<div id="mode-modal" onclick="if(event.target.id==='mode-modal')closeModeModal()">
+  <div class="mm-card">
+    <div class="mm-title">어떻게 검사할까요?</div>
+    <div class="mm-sub">상황에 맞는 방식을 골라주세요</div>
+    <button class="mm-btn primary" onclick="goMode('async')">
+      <span class="mm-label">💌 공유 검사 · 따로 해요</span>
+      <span class="mm-desc">내가 먼저 하고, 링크를 보내 파트너가 나중에 완료</span>
+    </button>
+    <button class="mm-btn secondary" onclick="goMode('sync')">
+      <span class="mm-label">💕 함께 검사 · 지금 같이</span>
+      <span class="mm-desc">한 기기로 둘이 번갈아가며 바로 답해요</span>
+    </button>
+    <button class="mm-close" onclick="closeModeModal()">닫기</button>
   </div>
 </div>
 
