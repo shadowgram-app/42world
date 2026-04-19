@@ -67,11 +67,21 @@ input:focus{border-color:var(--gold)}
 <script src="/couple/js/supabase-client.js"></script>
 <script src="/couple/js/session.js"></script>
 <script>
-document.getElementById('btn-search').addEventListener('click', async () => {
+// 이메일 프리필 (localStorage에 마지막 사용 이메일이 있으면 자동 채움)
+(function(){
+  try {
+    const last = localStorage.getItem('sg_last_email');
+    if (last) document.getElementById('email').value = last;
+  } catch(_){}
+})();
+
+async function runSearch(){
   const email = document.getElementById('email').value.trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     alert('이메일 형식이 올바르지 않아요.'); return;
   }
+  // 다음 방문용으로 저장
+  try { localStorage.setItem('sg_last_email', email); } catch(_){}
   try {
     const items = await SG.session.findSessionsByEmail(email);
     const $list = document.getElementById('list');
@@ -126,7 +136,20 @@ document.getElementById('btn-search').addEventListener('click', async () => {
     console.error(e);
     alert('조회 중 오류가 발생했어요.');
   }
+}
+
+document.getElementById('btn-search').addEventListener('click', runSearch);
+// Enter 키로도 제출
+document.getElementById('email').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') runSearch();
 });
+// 이메일이 이미 프리필되어 있으면 자동 조회
+(function(){
+  const v = document.getElementById('email').value;
+  if (v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+    setTimeout(runSearch, 100);
+  }
+})();
 </script>
 </body>
 </html>

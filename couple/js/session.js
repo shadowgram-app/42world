@@ -245,14 +245,14 @@
     if (session.payment_status !== 'paid') throw new Error('결제가 완료되지 않았어요');
     if (!session.combo) throw new Error('검사 결과가 아직 없어요');
 
-    // 참여자 이메일 검증
-    const { data: participant } = await sb()
+    // 참여자 이메일 검증 (동일 세션에 같은 이메일 중복 row 허용)
+    const { data: participants, error: ppErr } = await sb()
       .from('session_participants')
       .select('id')
       .eq('session_id', sessionId)
-      .ilike('email', email)
-      .maybeSingle();
-    if (!participant) throw new Error('이 이메일은 이 세션에 속하지 않아요');
+      .ilike('email', email);
+    if (ppErr) throw new Error('참여자 조회 실패: ' + ppErr.message);
+    if (!participants || participants.length === 0) throw new Error('이 이메일은 이 세션에 속하지 않아요');
 
     const path = comboToPdfPath(session.combo);
     if (!path) throw new Error('리포트 파일을 찾을 수 없어요');

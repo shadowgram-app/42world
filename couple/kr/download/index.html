@@ -257,11 +257,11 @@ input:focus{border-color:var(--gold)}
     };
 
     document.getElementById('btn-redownload').addEventListener('click', doDl);
-    // localStorage 정리 (중복 자동 처리 방지)
+    // localStorage 정리 (session은 지우되 email은 /my/ 편의상 유지)
     try {
       localStorage.removeItem('sg_last_session');
-      localStorage.removeItem('sg_last_email');
       localStorage.removeItem('sg_last_combo');
+      localStorage.setItem('sg_last_email', mail); // /my/에서 자동 프리필
     } catch(_){}
     // 자동 다운로드 1회
     setTimeout(doDl, 700);
