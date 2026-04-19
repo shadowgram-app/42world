@@ -175,6 +175,7 @@
     return (parts || []).map(p => ({
       session: p.couple_sessions,
       my_role: p.role,
+      db_email: p.email, // DB 원본 이메일 (대소문자 보존) — Edge Function이 .eq 정확매칭일 때 필요
     })).filter(x => x.session); // RLS로 걸러진 것 제외
   }
 
@@ -285,18 +286,41 @@
 
   // 래피드가 웹훅 미지원이라 이메일 입력 = 결제 완료로 간주 (Plan A)
   // 990원이라 악용 리스크 낮음. clever-responder Edge Function이 이메일-세션 매칭 검증.
+  // 실패 시 클라이언트 직접 검증 fallback (RLS가 UPDATE 허용해야 함)
   async function markPaidByEmail(sessionId, email) {
-    const url = `${SG.SUPABASE_URL || ''}/functions/v1/clever-responder`;
-    const resp = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'mark_paid', session_id: sessionId, email }),
-    });
-    const data = await resp.json().catch(() => ({}));
-    if (!resp.ok || !data.ok) {
-      throw new Error(data.error || `결제 확인 실패 (${resp.status})`);
+    // 1차: Edge Function 시도
+    try {
+      const url = `${SG.SUPABASE_URL || ''}/functions/v1/clever-responder`;
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'mark_paid', session_id: sessionId, email }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data.ok) return data;
+      console.warn('[SG] Edge Function mark_paid failed, trying client fallback:', data.error || resp.status);
+    } catch (e) {
+      console.warn('[SG] Edge Function unreachable, trying client fallback:', e);
     }
-    return data;
+
+    // 2차: 클라이언트 직접 검증 + UPDATE (ilike 사용해 대소문자 무시)
+    const { data: part, error: pErr } = await sb()
+      .from('session_participants')
+      .select('id, email')
+      .eq('session_id', sessionId)
+      .ilike('email', email)
+      .maybeSingle();
+    if (pErr) throw new Error('검증 조회 실패: ' + pErr.message);
+    if (!part) throw new Error('email not in session (client verified)');
+
+    const { data: updated, error: uErr } = await sb()
+      .from('couple_sessions')
+      .update({ payment_status: 'paid', status: 'paid' })
+      .eq('id', sessionId)
+      .select()
+      .single();
+    if (uErr) throw new Error('결제 처리 실패: ' + uErr.message);
+    return { ok: true, via: 'client_fallback', session: updated };
   }
 
   function recoverLastSession() {

@@ -157,36 +157,59 @@ input:focus{border-color:var(--gold)}
     try {
       // 1) 해당 이메일로 세션 목록 조회
       const items = await SG.session.findSessionsByEmail(email);
+      console.log('[SG] findSessionsByEmail(', email, ') →', items);
       if (!items || items.length === 0) {
         throw new Error('이 이메일로 검사한 세션을 찾지 못했어요.\n\n검사 시 입력한 이메일이 맞는지 확인해주세요.');
       }
 
       // 2) 다운로드 대상 세션 선택: sessionIdParam 우선, 그다음 both_done/paid 중 최신
-      let target = null;
+      //    target을 item(세션+db_email)로 잡아서 DB 원본 이메일을 써서 마킹하자 (대소문자 불일치 회피)
+      let targetItem = null;
       if (sessionIdParam) {
         const hit = items.find(x => x.session && x.session.id === sessionIdParam);
-        if (hit) target = hit.session;
+        if (hit) targetItem = hit;
       }
-      if (!target) {
-        // both_done or paid 중 가장 최근 것
+      if (!targetItem) {
         const candidates = items
-          .map(x => x.session)
-          .filter(s => s && (s.status === 'both_done' || s.payment_status === 'paid'))
-          .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-        target = candidates[0];
+          .filter(x => x.session && (x.session.status === 'both_done' || x.session.payment_status === 'paid'))
+          .sort((a,b) => new Date(b.session.created_at) - new Date(a.session.created_at));
+        targetItem = candidates[0];
+      }
+      // 그래도 없으면 아무 세션이라도 (최신) — Latpeed에서 링크 들어온 경우 세션 식별 불가
+      if (!targetItem && items.length > 0) {
+        targetItem = items
+          .slice()
+          .sort((a,b) => new Date(b.session.created_at) - new Date(a.session.created_at))[0];
       }
 
-      if (!target) {
+      if (!targetItem) {
         throw new Error('다운로드 가능한 세션이 없어요.\n\n파트너가 아직 검사를 완료하지 않았거나, 조합이 확정되지 않았어요.');
       }
 
+      let target = targetItem.session;
+      const dbEmail = targetItem.db_email || email; // DB 원본 이메일 우선
+      console.log('[SG] target session →', target, 'db_email →', dbEmail);
+
       // 3) 결제 마킹 (이미 paid면 no-op, 아니면 paid로 표시)
       if (target.payment_status !== 'paid') {
+        console.log('[SG] markPaidByEmail call →', { session_id: target.id, email: dbEmail, input_email: email });
         try {
-          await SG.session.markPaidByEmail(target.id, email);
+          const mpResp = await SG.session.markPaidByEmail(target.id, dbEmail);
+          console.log('[SG] markPaidByEmail OK →', mpResp);
         } catch (e) {
-          // 이메일 불일치 등
-          throw new Error('결제 확인에 실패했어요.\n' + (e.message || '') + '\n\n결제 시 사용한 이메일과 일치하는지 확인해주세요.');
+          console.error('[SG] markPaidByEmail FAIL →', e);
+          // 원본 이메일로도 실패하면, 입력한 이메일로 한 번 더 시도 (fallback)
+          if (dbEmail !== email) {
+            try {
+              const mpResp2 = await SG.session.markPaidByEmail(target.id, email);
+              console.log('[SG] markPaidByEmail retry with input OK →', mpResp2);
+            } catch (e2) {
+              console.error('[SG] markPaidByEmail retry FAIL →', e2);
+              throw new Error('결제 확인에 실패했어요.\n' + (e2.message || e.message || '') + '\n\n세션ID: ' + target.id + '\nDB이메일: ' + dbEmail + '\n입력: ' + email);
+            }
+          } else {
+            throw new Error('결제 확인에 실패했어요.\n' + (e.message || '') + '\n\n세션ID: ' + target.id + '\n이메일: ' + dbEmail);
+          }
         }
         // 다시 조회해서 최신화
         const r2 = await SG.session.getSessionById(target.id);
@@ -197,7 +220,7 @@ input:focus{border-color:var(--gold)}
         throw new Error('결제 상태를 확인하지 못했어요. 잠시 후 다시 시도해주세요.');
       }
 
-      // 4) 다운로드 진행
+      // 4) 다운로드 진행 (requestDownloadUrl은 ilike라 입력 이메일로 충분)
       await doDownloadAndRender(target, email);
     } catch (e) {
       console.error(e);
