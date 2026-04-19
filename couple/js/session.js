@@ -304,22 +304,23 @@
     }
 
     // 2차: 클라이언트 직접 검증 + UPDATE (ilike 사용해 대소문자 무시)
-    const { data: part, error: pErr } = await sb()
+    // 같은 세션에 동일 이메일이 여러 row일 수 있음 (A+B 둘 다 본인 이메일 등) → limit 없이 배열로 받음
+    const { data: parts, error: pErr } = await sb()
       .from('session_participants')
       .select('id, email')
       .eq('session_id', sessionId)
-      .ilike('email', email)
-      .maybeSingle();
+      .ilike('email', email);
     if (pErr) throw new Error('검증 조회 실패: ' + pErr.message);
-    if (!part) throw new Error('email not in session (client verified)');
+    if (!parts || parts.length === 0) throw new Error('email not in session (client verified)');
 
-    const { data: updated, error: uErr } = await sb()
+    const { data: updatedRows, error: uErr } = await sb()
       .from('couple_sessions')
       .update({ payment_status: 'paid', status: 'paid' })
       .eq('id', sessionId)
-      .select()
-      .single();
+      .select();
     if (uErr) throw new Error('결제 처리 실패: ' + uErr.message);
+    const updated = Array.isArray(updatedRows) ? updatedRows[0] : updatedRows;
+    if (!updated) throw new Error('결제 처리 실패: 세션 업데이트 결과 없음');
     return { ok: true, via: 'client_fallback', session: updated };
   }
 
