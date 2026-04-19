@@ -261,19 +261,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="start-hd">
       <div class="start-badge">✦ 42WORLD COUPLE ✦</div>
       <div class="start-title">💛 파트너가 당신을<br>기다리고 있어요</div>
-      <div class="start-sub">파트너 유형: <b id="async-partner-type" style="color:var(--gold);">—</b><br>이제 당신 차례예요. 이메일을 입력하고 검사를 시작해주세요.</div>
+      <div class="start-sub">파트너 유형: <b id="async-partner-type" style="color:var(--gold);">—</b><br>이름만 입력하고 바로 시작할게요.</div>
     </div>
     <div class="name-card">
       <div class="name-row">
         <div class="name-badge b">나</div>
         <input class="name-input" id="join-name" type="text" placeholder="내 이름 (닉네임)" maxlength="10"/>
-      </div>
-    </div>
-    <div class="name-card">
-      <div class="name-row" style="flex-direction:column;align-items:stretch;gap:6px;">
-        <input class="name-input" id="join-email" type="email" placeholder="이메일 주소" autocomplete="email" style="width:100%;"/>
-        <input class="name-input" id="join-email2" type="email" placeholder="이메일 한 번 더 입력" style="width:100%;"/>
-        <div style="font-size:11px;color:var(--silver);opacity:0.7;">* 결과 재접속 시 사용돼요.</div>
       </div>
     </div>
     <button class="btn-start" id="btn-join-start" disabled onclick="startJoinQuiz()">
@@ -557,7 +550,13 @@ function startAsyncQuiz(){
 // ─── 비동기 B: 초대 링크 타고 진입한 사람 ───
 function startJoinQuiz(){
   const name = document.getElementById('join-name').value.trim();
-  const email = document.getElementById('join-email').value.trim().toLowerCase();
+  // 이메일은 invite 페이지에서 이미 받아서 sessionStorage에 저장됨
+  const email = (sessionStorage.getItem('sg_email') || '').toLowerCase();
+  if (!email) {
+    alert('이메일 정보가 없어요. 초대 링크를 다시 열어주세요.');
+    location.href = '/couple/invite/?t=' + encodeURIComponent(INVITE_TOKEN || '');
+    return;
+  }
   sessionStorage.setItem('sg_solo_name', name);
   sessionStorage.setItem('sg_solo_email', email);
   sessionStorage.setItem('sg_solo_role', 'B');
@@ -579,11 +578,17 @@ function applySoloCSS(){
 }
 
 // 이메일 2회 확인 + 이름 입력 유효성
+// prefix='async' (A: 이름+이메일 2회) | prefix='join' (B: 이름만, 이메일은 invite에서 이미 받음)
 function setupAsyncValidation(prefix, btnId){
   const n = document.getElementById(prefix+'-name');
+  const btn = document.getElementById(btnId);
+  if (prefix === 'join') {
+    const val = () => { btn.disabled = !n.value.trim(); };
+    n.addEventListener('input', val);
+    return;
+  }
   const e1 = document.getElementById(prefix+'-email');
   const e2 = document.getElementById(prefix+'-email2');
-  const btn = document.getElementById(btnId);
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const val = () => {
     const ok = n.value.trim() && re.test(e1.value.trim()) && e1.value.trim() === e2.value.trim();
@@ -931,10 +936,13 @@ async function joinAsyncAndRedirect(typeCode, scores){
   const token = sessionStorage.getItem('sg_invite_token');
   try {
     await waitForSG();
-    const { session } = await SG.session.joinAsyncSession(token, {
+    const { session, combo } = await SG.session.joinAsyncSession(token, {
       email, scores, typeCode
     });
-    location.href = `/couple/kr/download/?session=${session.id}`;
+    // combo "A_B" → 기존 결과 페이지로 이동 (드라마 포스터 + 빛과 그림자 + CTA)
+    const [a, b] = (combo || session.combo || '').split('_');
+    const partnerStr = (new URLSearchParams(location.search).get('partner')) ? '&partner=' + encodeURIComponent(new URLSearchParams(location.search).get('partner')) : '';
+    location.href = `/couple/result/?a=${a}&b=${b}&session=${session.id}${partnerStr}`;
   } catch (e) {
     console.error(e);
     alert('세션 참여 실패: ' + e.message);

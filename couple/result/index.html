@@ -1326,7 +1326,7 @@ function goTestWithPartner(e){
   var p = new URLSearchParams(location.search).get('partner');
   window.location.href = p ? '/?partner=' + encodeURIComponent(p) : '/';
 }
-function getReport(){
+async function getReport(){
   const params=new URLSearchParams(window.location.search);
   const a=(params.get('a')||'SPARK').toUpperCase();
   const b=(params.get('b')||'VISION').toUpperCase();
@@ -1343,6 +1343,27 @@ function getReport(){
   }
   document.cookie=`sg_combo=${combo};path=/;max-age=2592000;SameSite=Lax`;
   if(ref) document.cookie=`sg_ref=${ref};path=/;max-age=2592000;SameSite=Lax`;
+
+  // Supabase 비동기 세션이면 localStorage에 저장 (결제 리턴 후 자동 paid 처리용)
+  const sessionIdParam=params.get('session');
+  if(sessionIdParam){
+    try{
+      localStorage.setItem('sg_last_session',sessionIdParam);
+      localStorage.setItem('sg_last_combo',combo);
+      // 결제자 이메일: sessionStorage(sg_solo_email) → 참여자 조회 순
+      let payerEmail=null;
+      try{ payerEmail=sessionStorage.getItem('sg_solo_email'); }catch(_){}
+      if(!payerEmail && window.SG && SG.session){
+        try{
+          const r=await SG.session.getSessionById(sessionIdParam);
+          const anyP=(r.participants||[]).find(p=>p.email);
+          if(anyP) payerEmail=anyP.email;
+        }catch(_){}
+      }
+      if(payerEmail) localStorage.setItem('sg_last_email',payerEmail);
+    }catch(_){}
+  }
+
   // partner 번호로 전용 래피드 상품 매핑
   const partner=params.get('partner')||'';
   const baseUrl=LATPEED_PARTNER_MAP[partner]||LATPEED_URL;
@@ -1407,6 +1428,10 @@ function hwClose(){
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')hwClose();});
 </script>
+<!-- Supabase async session (결제 리턴 시 localStorage 주입용) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/couple/js/supabase-client.js"></script>
+<script src="/couple/js/session.js"></script>
 </body>
 </html>
 

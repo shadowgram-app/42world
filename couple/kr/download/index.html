@@ -19,23 +19,23 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-s
 .brand{text-align:center;font-size:13px;letter-spacing:2px;color:var(--gold);
   font-weight:600;margin-bottom:16px}
 h1{text-align:center;font-size:22px;margin:0 0 8px;color:var(--dark)}
-.sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.6}
-.combo-display{text-align:center;font-size:28px;font-weight:700;color:var(--gold);
+.sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:20px;line-height:1.6}
+.combo-display{text-align:center;font-size:26px;font-weight:700;color:var(--gold);
   margin:20px 0;letter-spacing:1px}
-label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;margin-top:14px}
-input{width:100%;padding:12px 14px;border:1.5px solid #D0D4DC;border-radius:8px;
-  font-size:15px;outline:none}
-input:focus{border-color:var(--gold)}
-.btn{display:block;width:100%;padding:14px;margin-top:14px;
+.btn{display:block;width:100%;padding:14px;margin-top:12px;
   background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;
   border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;
   box-shadow:0 2px 8px rgba(184,134,11,0.3);text-decoration:none;text-align:center}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
 .btn.secondary{background:#fff;color:var(--dark);border:1.5px solid #D0D4DC;box-shadow:none}
-.hint{font-size:12px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.6}
-.err{display:none;background:#FEF2F2;color:#991B1B;padding:12px;border-radius:8px;
-  font-size:13px;margin-top:12px}
-.loading{text-align:center;color:var(--muted);padding:40px 0}
+.hint{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.6}
+.err{background:#FEF2F2;color:#991B1B;padding:12px;border-radius:8px;
+  font-size:13px;margin-top:12px;line-height:1.5}
+.loading{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+.spinner{display:inline-block;width:24px;height:24px;border:3px solid #EFE8D5;
+  border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;
+  vertical-align:middle;margin-right:10px}
+@keyframes spin{to{transform:rotate(360deg)}}
 .state-banner{padding:12px;border-radius:8px;text-align:center;font-size:13px;
   font-weight:600;margin-bottom:14px}
 .state-banner.ready{background:#D4EDDA;color:#155724}
@@ -48,60 +48,33 @@ input:focus{border-color:var(--gold)}
   <div class="card">
     <div class="brand">✦ 42WORLD × SHADOWGRAM ✦</div>
 
-    <div id="state-loading" class="loading">세션 확인 중...</div>
+    <!-- 로딩 -->
+    <div id="state-loading" class="loading">
+      <div><span class="spinner"></span>결제 확인 중...</div>
+      <div style="font-size:12px;margin-top:10px;color:var(--silver)">잠시만 기다려주세요</div>
+    </div>
 
-    <!-- 결제 완료: 다운로드 가능 -->
+    <!-- 결제 완료: 다운로드 자동 + 수동 버튼 -->
     <div id="state-paid" style="display:none">
       <div class="state-banner ready">✓ 결제 완료</div>
       <h1>커플 리포트가 준비됐어요 📄</h1>
       <div class="combo-display" id="combo-display">—</div>
-      <p class="sub">아래 버튼을 누르면 24페이지 심층 분석 리포트를 받을 수 있어요.<br>
-        같은 이메일로 언제든 재다운로드 가능해요.</p>
-
-      <label for="email-verify">이메일 확인</label>
-      <input type="email" id="email-verify" placeholder="검사 시 입력한 이메일">
+      <p class="sub">잠시 후 리포트가 자동으로 다운로드돼요.<br>
+        다운로드가 시작되지 않으면 아래 버튼을 눌러주세요.</p>
       <button class="btn" id="btn-download">📥 리포트 다운로드</button>
-      <div class="err" id="err-download"></div>
-
       <a class="btn secondary" href="/couple/kr/my/">내 다른 세션 보기</a>
+      <div class="err" id="err-download" style="display:none"></div>
     </div>
 
-    <!-- 양쪽 완료, 미결제: 결제 유도 -->
-    <div id="state-unpaid" style="display:none">
-      <div class="state-banner pay">양쪽 검사 완료! 🎉</div>
-      <h1>리포트 잠금 해제</h1>
-      <div class="combo-display" id="combo-display-2">—</div>
-      <p class="sub">990원에 24페이지 심층 분석 리포트를 받으세요.<br>
-        한 번 결제하면 둘 다 언제든 다운로드 가능해요.</p>
-
-      <a class="btn" id="btn-pay">💳 990원 결제하기</a>
-      <div class="hint">결제 완료 후 이 페이지로 돌아와 이메일을 다시 입력하면 리포트를 받을 수 있어요.</div>
-    </div>
-
-    <!-- 결제 직후 리턴: 이메일 입력 → 결제 확인 처리 -->
-    <div id="state-return" style="display:none">
-      <div class="state-banner pay">결제를 확인하고 있어요</div>
-      <h1>이메일을 확인해주세요</h1>
-      <p class="sub">결제 시 입력한 이메일(=검사 시 입력한 이메일)을 넣어주시면<br>
-        즉시 리포트 다운로드가 가능해요.</p>
-
-      <label for="email-return">이메일</label>
-      <input type="email" id="email-return" placeholder="검사 시 입력한 이메일">
-      <button class="btn" id="btn-confirm-paid">✓ 결제 확인 & 리포트 받기</button>
-      <div class="err" id="err-return"></div>
-
-      <a class="btn secondary" href="/couple/kr/my/">이메일로 세션 찾기</a>
-    </div>
-
-    <!-- 에러 -->
+    <!-- 세션 없음 / 에러 -->
     <div id="state-error" style="display:none">
       <h1>세션을 찾을 수 없어요 😢</h1>
-      <p class="sub">링크가 만료되었거나 잘못된 주소일 수 있어요.</p>
+      <p class="sub" id="error-detail">링크가 만료되었거나 잘못된 주소일 수 있어요.</p>
       <a class="btn" href="/couple/kr/my/">이메일로 내 세션 찾기</a>
       <a class="btn secondary" href="/couple/test/">새로 검사 시작</a>
     </div>
 
-    <!-- 파트너 대기 -->
+    <!-- 파트너 대기 중 -->
     <div id="state-awaiting" style="display:none">
       <h1>파트너 검사를 기다리고 있어요 ⏳</h1>
       <p class="sub">상대방이 아직 검사를 완료하지 않았어요.</p>
@@ -117,127 +90,157 @@ input:focus{border-color:var(--gold)}
 <script>
 (async function(){
   const params = new URLSearchParams(location.search);
-  const sessionId = params.get('session');
+  const sessionIdParam = params.get('session');
   const emailParam = params.get('email');
 
-  const $states = ['loading','paid','unpaid','return','error','awaiting'].reduce((a,k)=>{a[k]=document.getElementById('state-'+k);return a},{});
+  const $states = ['loading','paid','error','awaiting'].reduce((a,k)=>{a[k]=document.getElementById('state-'+k);return a},{});
   function show(k){ Object.values($states).forEach(el=>el.style.display='none'); $states[k].style.display='block'; }
 
-  // 래피드가 동적 파라미터 미지원 → 결제 리턴 시 URL에 session 없음
-  // localStorage에서 직전 세션 복구 시도
-  let effectiveSessionId = sessionId;
-  if (!effectiveSessionId) {
-    const recovered = SG.session.recoverLastSession();
-    if (recovered.sessionId) {
-      effectiveSessionId = recovered.sessionId;
-      // 결제 직후 돌아온 경우일 가능성 높음 → return 화면으로
-      show('return');
-      const emailInput = document.getElementById('email-return');
-      if (recovered.email) emailInput.value = recovered.email;
-
-      document.getElementById('btn-confirm-paid').addEventListener('click', async () => {
-        const email = emailInput.value.trim().toLowerCase();
-        const $err = document.getElementById('err-return');
-        $err.style.display='none';
-        if (!email) { $err.textContent='⚠️ 이메일을 입력해주세요.'; $err.style.display='block'; return; }
-        try {
-          await SG.session.markPaidByEmail(effectiveSessionId, email);
-          // 결제 처리 완료 → localStorage 정리 + 같은 URL에 session 붙여 정상 흐름 재진입
-          try {
-            localStorage.removeItem('sg_last_session');
-            localStorage.removeItem('sg_last_email');
-          } catch(_){}
-          location.href = `/couple/kr/download/?session=${effectiveSessionId}&email=${encodeURIComponent(email)}`;
-        } catch (e) {
-          $err.textContent = '⚠️ ' + e.message;
-          $err.style.display = 'block';
-        }
-      });
-      return;
-    }
+  function showError(msg){
+    show('error');
+    if (msg) document.getElementById('error-detail').textContent = msg;
   }
 
-  // 세션 ID 없고 localStorage도 비어있음 → 레거시 fallback (쿠키 기반 기존 구조)
-  if (!effectiveSessionId) {
+  // 세션 ID + 이메일 복구 (URL → localStorage 순)
+  let sessionId = sessionIdParam;
+  let email = emailParam;
+  try {
+    if (!sessionId) sessionId = localStorage.getItem('sg_last_session');
+    if (!email)     email     = localStorage.getItem('sg_last_email');
+  } catch(_){}
+
+  // 레거시 쿠키 fallback (구버전)
+  if (!sessionId) {
     const combo = params.get('combo') || getCookie('sg_combo');
     if (combo) {
       show('paid');
       document.getElementById('combo-display').textContent = combo.replace('_',' × ');
-      document.getElementById('btn-download').onclick = () => {
-        legacyDownload(combo);
-      };
+      document.getElementById('btn-download').onclick = () => legacyDownload(combo);
+      // 자동 다운로드
+      setTimeout(() => legacyDownload(combo), 800);
       return;
     }
-    show('error'); return;
+    showError('결제 정보를 찾을 수 없어요. 이메일로 세션을 찾아주세요.');
+    return;
   }
 
+  // Supabase에서 세션 조회
+  let session, participants;
   try {
-    const { session, participants } = await SG.session.getSessionById(effectiveSessionId);
-    if (!session) { show('error'); return; }
-
-    const comboText = (session.combo || '—').replace('_',' × ');
-
-    if (session.payment_status === 'paid') {
-      show('paid');
-      document.getElementById('combo-display').textContent = comboText;
-      if (emailParam) document.getElementById('email-verify').value = emailParam;
-
-      document.getElementById('btn-download').addEventListener('click', async () => {
-        const email = document.getElementById('email-verify').value.trim().toLowerCase();
-        if (!email) { alert('이메일을 입력해주세요.'); return; }
-        const $err = document.getElementById('err-download');
-        $err.style.display='none';
-        try {
-          const resp = await SG.session.requestDownloadUrl(effectiveSessionId, email);
-          const a = document.createElement('a');
-          a.href = resp.url;
-          a.download = resp.filename;
-          a.click();
-        } catch (e) {
-          $err.textContent = '⚠️ ' + e.message;
-          $err.style.display = 'block';
-        }
-      });
-      return;
-    }
-
-    if (session.status === 'both_done') {
-      show('unpaid');
-      document.getElementById('combo-display-2').textContent = comboText;
-      // 결제 버튼 → 래피드 (session_id는 localStorage에 저장, URL은 고정)
-      const participant = (participants||[]).find(p => p.email) || {};
-      document.getElementById('btn-pay').href =
-        SG.session.buildLatpeedUrl(effectiveSessionId, participant.email);
-      return;
-    }
-
-    if (session.status === 'awaiting_partner') {
-      show('awaiting');
-      document.getElementById('btn-goto-pending').href = `/couple/kr/pending/?session=${effectiveSessionId}`;
-      return;
-    }
-
-    show('error');
+    const r = await SG.session.getSessionById(sessionId);
+    session = r.session; participants = r.participants;
   } catch (e) {
     console.error(e);
-    show('error');
+    showError('세션 조회 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.');
+    return;
   }
 
-  // ---- 레거시 fallback ----
+  if (!session) { showError('세션을 찾을 수 없어요.'); return; }
+
+  // 아직 파트너가 검사 안 함
+  if (session.status === 'awaiting_partner') {
+    show('awaiting');
+    document.getElementById('btn-goto-pending').href = `/couple/kr/pending/?session=${sessionId}`;
+    return;
+  }
+
+  // 이미 결제 완료 → 바로 다운로드
+  if (session.payment_status === 'paid') {
+    return await renderPaid(session, email);
+  }
+
+  // both_done이지만 아직 미결제 → 자동 paid 처리 시도
+  if (session.status === 'both_done' && email) {
+    try {
+      await SG.session.markPaidByEmail(sessionId, email);
+      // localStorage 정리
+      try { localStorage.removeItem('sg_last_session'); } catch(_){}
+      try { localStorage.removeItem('sg_last_email'); } catch(_){}
+      // 세션 재조회
+      const r2 = await SG.session.getSessionById(sessionId);
+      if (r2.session && r2.session.payment_status === 'paid') {
+        return await renderPaid(r2.session, email);
+      }
+      showError('결제 처리 후 세션 상태를 확인하지 못했어요. 잠시 후 다시 시도해주세요.');
+    } catch (e) {
+      console.error(e);
+      // email not in session 등
+      showError('결제 확인에 실패했어요: ' + (e.message || '알 수 없는 오류') + '\n\n이메일로 내 세션을 찾아 다시 시도해주세요.');
+    }
+    return;
+  }
+
+  // 그 밖
+  showError('세션 상태가 올바르지 않아요. 이메일로 내 세션을 찾아주세요.');
+
+  // ---------- helpers ----------
+  async function renderPaid(sess, mail){
+    show('paid');
+    const comboText = (sess.combo || '—').replace('_',' × ');
+    document.getElementById('combo-display').textContent = comboText;
+
+    const doDownload = async () => {
+      const $err = document.getElementById('err-download');
+      $err.style.display='none';
+      try {
+        // 이메일이 있으면 검증 다운로드, 없으면 combo → PDF 직접
+        let url, filename;
+        if (mail) {
+          const resp = await SG.session.requestDownloadUrl(sess.id, mail);
+          url = resp.url; filename = resp.filename;
+        } else if (sess.combo) {
+          // participants의 아무 이메일 사용
+          const anyP = (participants || []).find(p => p.email);
+          if (anyP) {
+            const resp = await SG.session.requestDownloadUrl(sess.id, anyP.email);
+            url = resp.url; filename = resp.filename;
+          } else {
+            // 최후 수단: 파일 경로 직접 조합
+            const [a, b] = sess.combo.split('_');
+            url = `/couple/pdfs/${legacyFilename(sess.combo)}`;
+            filename = `42world_Couple_${a}_${b}_KR.pdf`;
+          }
+        } else {
+          throw new Error('리포트 정보가 없어요');
+        }
+        const a = document.createElement('a');
+        a.href = url; a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } catch (e) {
+        console.error(e);
+        $err.textContent = '⚠️ ' + (e.message || '다운로드 실패');
+        $err.style.display = 'block';
+      }
+    };
+
+    document.getElementById('btn-download').addEventListener('click', doDownload);
+    // 자동 다운로드 (살짝 지연)
+    setTimeout(doDownload, 900);
+  }
+
   function getCookie(name){
     const v = document.cookie.split(';').find(c=>c.trim().startsWith(name+'='));
     return v ? decodeURIComponent(v.trim().split('=')[1]) : null;
   }
-  function legacyDownload(combo){
+  function legacyFilename(combo){
     const TYPES = ['SPARK','VISION','HARMONY','SOUL','LOGIC','LEADER','STEADY','PLAYER'];
     const [a,b] = combo.toUpperCase().split('_');
-    if (!TYPES.includes(a)||!TYPES.includes(b)) return;
+    if (!TYPES.includes(a)||!TYPES.includes(b)) return '';
     const num = String(TYPES.indexOf(a)*8 + TYPES.indexOf(b) + 1).padStart(2,'0');
-    const filename = `${num}_${a}_${b}_KR.pdf`;
+    return `${num}_${a}_${b}_KR.pdf`;
+  }
+  function legacyDownload(combo){
+    const filename = legacyFilename(combo);
+    if (!filename) return;
+    const [a,b] = combo.toUpperCase().split('_');
     const link = document.createElement('a');
     link.href = `/couple/pdfs/${filename}`;
     link.download = `42world_Couple_${a}_${b}_KR.pdf`;
+    document.body.appendChild(link);
     link.click();
+    link.remove();
   }
 })();
 </script>
