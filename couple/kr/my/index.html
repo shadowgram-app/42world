@@ -93,10 +93,18 @@ document.getElementById('btn-search').addEventListener('click', async () => {
         const dateStr = new Date(session.created_at).toLocaleDateString('ko-KR');
 
         let action = '';
+        // combo 파싱 (유형 A, B)
+        const [ca, cb] = (session.combo || '').split('_');
+        const resultUrl = (ca && cb)
+          ? `/couple/result/?a=${ca}&b=${cb}&session=${session.id}`
+          : null;
+
         if (session.payment_status === 'paid') {
-          action = `<a class="btn small" href="/couple/kr/download/?session=${session.id}&email=${encodeURIComponent(email)}">📥 리포트 다운로드</a>`;
-        } else if (session.status === 'both_done') {
-          action = `<a class="btn small" href="/couple/kr/download/?session=${session.id}&email=${encodeURIComponent(email)}">💳 결제하고 받기</a>`;
+          // 이미 결제된 세션은 리포트 다운로드 링크 (download 페이지는 이메일 재입력해서 다운)
+          action = `<a class="btn small" href="/couple/kr/download/?session=${session.id}&email=${encodeURIComponent(email)}&v=1">📥 리포트 다운로드</a>`;
+        } else if (session.status === 'both_done' && resultUrl) {
+          // 결제 대기 중 — 무료 결과 페이지로만 이동 (거기서 리포트 구매 버튼 누르면 래피드로)
+          action = `<a class="btn small" href="${resultUrl}">💫 결과 다시 보기</a>`;
         } else if (session.status === 'awaiting_partner') {
           action = `<a class="btn small secondary" href="/couple/kr/pending/?session=${session.id}">⏳ 파트너 대기 중</a>`;
         }

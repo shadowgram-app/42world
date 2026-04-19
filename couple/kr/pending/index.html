@@ -101,7 +101,13 @@ h1{text-align:center;font-size:22px;margin:0 0 8px;color:var(--dark)}
       const { session: s } = await SG.session.getSessionById(sessionId);
       if (s && (s.status === 'both_done' || s.status === 'paid')) {
         clearInterval(poll);
-        location.href = `/couple/kr/download/?session=${sessionId}`;
+        const [ra, rb] = (s.combo || '').split('_');
+        if (ra && rb) {
+          // 결과 페이지로 (드라마 포스터 + 리포트 구매 CTA)
+          location.href = `/couple/result/?a=${ra}&b=${rb}&session=${sessionId}`;
+        } else {
+          location.href = '/couple/kr/my/';
+        }
       }
     }, 5000);
 

@@ -19,10 +19,14 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR',sans-s
 .brand{text-align:center;font-size:13px;letter-spacing:2px;color:var(--gold);
   font-weight:600;margin-bottom:16px}
 h1{text-align:center;font-size:22px;margin:0 0 8px;color:var(--dark)}
-.sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:20px;line-height:1.6}
+.sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:22px;line-height:1.6}
 .combo-display{text-align:center;font-size:26px;font-weight:700;color:var(--gold);
-  margin:20px 0;letter-spacing:1px}
-.btn{display:block;width:100%;padding:14px;margin-top:12px;
+  margin:16px 0;letter-spacing:1px}
+label{display:block;font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;margin-top:14px}
+input{width:100%;padding:12px 14px;border:1.5px solid #D0D4DC;border-radius:8px;
+  font-size:15px;outline:none}
+input:focus{border-color:var(--gold)}
+.btn{display:block;width:100%;padding:14px;margin-top:14px;
   background:linear-gradient(135deg,var(--gold),var(--gold-l));color:#fff;
   border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;
   box-shadow:0 2px 8px rgba(184,134,11,0.3);text-decoration:none;text-align:center}
@@ -30,7 +34,7 @@ h1{text-align:center;font-size:22px;margin:0 0 8px;color:var(--dark)}
 .btn.secondary{background:#fff;color:var(--dark);border:1.5px solid #D0D4DC;box-shadow:none}
 .hint{font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.6}
 .err{background:#FEF2F2;color:#991B1B;padding:12px;border-radius:8px;
-  font-size:13px;margin-top:12px;line-height:1.5}
+  font-size:13px;margin-top:12px;line-height:1.5;white-space:pre-line}
 .loading{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
 .spinner{display:inline-block;width:24px;height:24px;border:3px solid #EFE8D5;
   border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;
@@ -50,35 +54,42 @@ h1{text-align:center;font-size:22px;margin:0 0 8px;color:var(--dark)}
 
     <!-- 로딩 -->
     <div id="state-loading" class="loading">
-      <div><span class="spinner"></span>결제 확인 중...</div>
-      <div style="font-size:12px;margin-top:10px;color:var(--silver)">잠시만 기다려주세요</div>
+      <div><span class="spinner"></span>확인 중...</div>
     </div>
 
-    <!-- 결제 완료: 다운로드 자동 + 수동 버튼 -->
+    <!-- 이메일 입력 (기본) -->
+    <div id="state-input" style="display:none">
+      <div class="state-banner pay">결제해주셔서 감사합니다 💛</div>
+      <h1>이메일로 리포트 받기</h1>
+      <p class="sub">결제 시 사용한 이메일(=검사 때 입력한 이메일)을 입력해주시면<br>
+        24페이지 심층 리포트를 바로 다운로드해드려요.</p>
+
+      <label for="email">이메일 주소</label>
+      <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+
+      <button class="btn" id="btn-get">📥 리포트 받기</button>
+      <div class="err" id="err" style="display:none"></div>
+
+      <div class="hint">아직 결제를 안 하셨나요? <a href="/couple/kr/my/" style="color:var(--gold);text-decoration:none;font-weight:700;">이메일로 내 세션 찾기 →</a></div>
+    </div>
+
+    <!-- 다운로드 진행 -->
     <div id="state-paid" style="display:none">
-      <div class="state-banner ready">✓ 결제 완료</div>
-      <h1>커플 리포트가 준비됐어요 📄</h1>
+      <div class="state-banner ready">✓ 리포트 준비 완료</div>
+      <h1>리포트가 다운로드됐어요 📄</h1>
       <div class="combo-display" id="combo-display">—</div>
-      <p class="sub">잠시 후 리포트가 자동으로 다운로드돼요.<br>
-        다운로드가 시작되지 않으면 아래 버튼을 눌러주세요.</p>
-      <button class="btn" id="btn-download">📥 리포트 다운로드</button>
+      <p class="sub">다운로드가 자동으로 시작되지 않았다면<br>아래 버튼을 눌러주세요.</p>
+      <button class="btn" id="btn-redownload">📥 다시 다운로드</button>
       <a class="btn secondary" href="/couple/kr/my/">내 다른 세션 보기</a>
-      <div class="err" id="err-download" style="display:none"></div>
+      <div class="err" id="err-paid" style="display:none"></div>
     </div>
 
-    <!-- 세션 없음 / 에러 -->
+    <!-- 에러 -->
     <div id="state-error" style="display:none">
-      <h1>세션을 찾을 수 없어요 😢</h1>
-      <p class="sub" id="error-detail">링크가 만료되었거나 잘못된 주소일 수 있어요.</p>
+      <h1>안내</h1>
+      <p class="sub" id="error-detail">—</p>
       <a class="btn" href="/couple/kr/my/">이메일로 내 세션 찾기</a>
       <a class="btn secondary" href="/couple/test/">새로 검사 시작</a>
-    </div>
-
-    <!-- 파트너 대기 중 -->
-    <div id="state-awaiting" style="display:none">
-      <h1>파트너 검사를 기다리고 있어요 ⏳</h1>
-      <p class="sub">상대방이 아직 검사를 완료하지 않았어요.</p>
-      <a class="btn" id="btn-goto-pending">대기 페이지로 →</a>
     </div>
   </div>
   <div class="footer">문의: 42world.kr</div>
@@ -93,154 +104,144 @@ h1{text-align:center;font-size:22px;margin:0 0 8px;color:var(--dark)}
   const sessionIdParam = params.get('session');
   const emailParam = params.get('email');
 
-  const $states = ['loading','paid','error','awaiting'].reduce((a,k)=>{a[k]=document.getElementById('state-'+k);return a},{});
+  const $states = ['loading','input','paid','error'].reduce((a,k)=>{a[k]=document.getElementById('state-'+k);return a},{});
   function show(k){ Object.values($states).forEach(el=>el.style.display='none'); $states[k].style.display='block'; }
+  function showError(msg){ show('error'); document.getElementById('error-detail').textContent = msg; }
 
-  function showError(msg){
-    show('error');
-    if (msg) document.getElementById('error-detail').textContent = msg;
+  // SG 클라이언트 준비 대기 (session.js, supabase-client.js 초기화)
+  async function waitForSG(timeout=4000){
+    const t0 = Date.now();
+    while (!(window.SG && window.SG.session && window.SG.supabase)) {
+      if (Date.now() - t0 > timeout) throw new Error('Supabase 초기화 실패');
+      await new Promise(r => setTimeout(r, 50));
+    }
   }
 
-  // 세션 ID + 이메일 복구 (URL → localStorage 순)
-  let sessionId = sessionIdParam;
-  let email = emailParam;
-  try {
-    if (!sessionId) sessionId = localStorage.getItem('sg_last_session');
-    if (!email)     email     = localStorage.getItem('sg_last_email');
-  } catch(_){}
+  try { await waitForSG(); } catch(e) { showError('시스템 초기화 실패 — 잠시 후 다시 시도해주세요.'); return; }
 
-  // 레거시 쿠키 fallback (구버전)
-  if (!sessionId) {
-    const combo = params.get('combo') || getCookie('sg_combo');
-    if (combo) {
-      show('paid');
-      document.getElementById('combo-display').textContent = combo.replace('_',' × ');
-      document.getElementById('btn-download').onclick = () => legacyDownload(combo);
-      // 자동 다운로드
-      setTimeout(() => legacyDownload(combo), 800);
+  // URL에 session+email이 모두 있으면 (내 세션에서 왔을 때) 바로 paid 확인
+  if (sessionIdParam && emailParam) {
+    try {
+      const { session } = await SG.session.getSessionById(sessionIdParam);
+      if (session && session.payment_status === 'paid') {
+        return await doDownloadAndRender(session, emailParam);
+      }
+    } catch(_){}
+  }
+
+  // 이메일 입력 화면 기본 (localStorage 자동 paid 처리는 하지 않음)
+  show('input');
+  const $email = document.getElementById('email');
+  const $btn = document.getElementById('btn-get');
+  const $err = document.getElementById('err');
+
+  // 이메일 프리필 (URL > localStorage 순)
+  let prefillEmail = emailParam;
+  if (!prefillEmail) {
+    try { prefillEmail = localStorage.getItem('sg_last_email'); } catch(_){}
+  }
+  if (prefillEmail) $email.value = prefillEmail;
+
+  $btn.addEventListener('click', async () => {
+    $err.style.display = 'none';
+    const email = $email.value.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      $err.textContent = '이메일 형식이 올바르지 않아요.';
+      $err.style.display = 'block';
       return;
     }
-    showError('결제 정보를 찾을 수 없어요. 이메일로 세션을 찾아주세요.');
-    return;
-  }
 
-  // Supabase에서 세션 조회
-  let session, participants;
-  try {
-    const r = await SG.session.getSessionById(sessionId);
-    session = r.session; participants = r.participants;
-  } catch (e) {
-    console.error(e);
-    showError('세션 조회 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.');
-    return;
-  }
+    $btn.disabled = true;
+    $btn.textContent = '확인 중...';
 
-  if (!session) { showError('세션을 찾을 수 없어요.'); return; }
-
-  // 아직 파트너가 검사 안 함
-  if (session.status === 'awaiting_partner') {
-    show('awaiting');
-    document.getElementById('btn-goto-pending').href = `/couple/kr/pending/?session=${sessionId}`;
-    return;
-  }
-
-  // 이미 결제 완료 → 바로 다운로드
-  if (session.payment_status === 'paid') {
-    return await renderPaid(session, email);
-  }
-
-  // both_done이지만 아직 미결제 → 자동 paid 처리 시도
-  if (session.status === 'both_done' && email) {
     try {
-      await SG.session.markPaidByEmail(sessionId, email);
-      // localStorage 정리
-      try { localStorage.removeItem('sg_last_session'); } catch(_){}
-      try { localStorage.removeItem('sg_last_email'); } catch(_){}
-      // 세션 재조회
-      const r2 = await SG.session.getSessionById(sessionId);
-      if (r2.session && r2.session.payment_status === 'paid') {
-        return await renderPaid(r2.session, email);
+      // 1) 해당 이메일로 세션 목록 조회
+      const items = await SG.session.findSessionsByEmail(email);
+      if (!items || items.length === 0) {
+        throw new Error('이 이메일로 검사한 세션을 찾지 못했어요.\n\n검사 시 입력한 이메일이 맞는지 확인해주세요.');
       }
-      showError('결제 처리 후 세션 상태를 확인하지 못했어요. 잠시 후 다시 시도해주세요.');
+
+      // 2) 다운로드 대상 세션 선택: sessionIdParam 우선, 그다음 both_done/paid 중 최신
+      let target = null;
+      if (sessionIdParam) {
+        const hit = items.find(x => x.session && x.session.id === sessionIdParam);
+        if (hit) target = hit.session;
+      }
+      if (!target) {
+        // both_done or paid 중 가장 최근 것
+        const candidates = items
+          .map(x => x.session)
+          .filter(s => s && (s.status === 'both_done' || s.payment_status === 'paid'))
+          .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+        target = candidates[0];
+      }
+
+      if (!target) {
+        throw new Error('다운로드 가능한 세션이 없어요.\n\n파트너가 아직 검사를 완료하지 않았거나, 조합이 확정되지 않았어요.');
+      }
+
+      // 3) 결제 마킹 (이미 paid면 no-op, 아니면 paid로 표시)
+      if (target.payment_status !== 'paid') {
+        try {
+          await SG.session.markPaidByEmail(target.id, email);
+        } catch (e) {
+          // 이메일 불일치 등
+          throw new Error('결제 확인에 실패했어요.\n' + (e.message || '') + '\n\n결제 시 사용한 이메일과 일치하는지 확인해주세요.');
+        }
+        // 다시 조회해서 최신화
+        const r2 = await SG.session.getSessionById(target.id);
+        if (r2.session) target = r2.session;
+      }
+
+      if (target.payment_status !== 'paid') {
+        throw new Error('결제 상태를 확인하지 못했어요. 잠시 후 다시 시도해주세요.');
+      }
+
+      // 4) 다운로드 진행
+      await doDownloadAndRender(target, email);
     } catch (e) {
       console.error(e);
-      // email not in session 등
-      showError('결제 확인에 실패했어요: ' + (e.message || '알 수 없는 오류') + '\n\n이메일로 내 세션을 찾아 다시 시도해주세요.');
+      $err.textContent = '⚠️ ' + (e.message || '오류가 발생했어요');
+      $err.style.display = 'block';
+    } finally {
+      $btn.disabled = false;
+      $btn.textContent = '📥 리포트 받기';
     }
-    return;
-  }
+  });
 
-  // 그 밖
-  showError('세션 상태가 올바르지 않아요. 이메일로 내 세션을 찾아주세요.');
-
-  // ---------- helpers ----------
-  async function renderPaid(sess, mail){
+  // 화면 전환 + 자동 다운로드
+  async function doDownloadAndRender(sess, mail){
     show('paid');
     const comboText = (sess.combo || '—').replace('_',' × ');
     document.getElementById('combo-display').textContent = comboText;
 
-    const doDownload = async () => {
-      const $err = document.getElementById('err-download');
-      $err.style.display='none';
+    const doDl = async () => {
+      const $e = document.getElementById('err-paid');
+      $e.style.display = 'none';
       try {
-        // 이메일이 있으면 검증 다운로드, 없으면 combo → PDF 직접
-        let url, filename;
-        if (mail) {
-          const resp = await SG.session.requestDownloadUrl(sess.id, mail);
-          url = resp.url; filename = resp.filename;
-        } else if (sess.combo) {
-          // participants의 아무 이메일 사용
-          const anyP = (participants || []).find(p => p.email);
-          if (anyP) {
-            const resp = await SG.session.requestDownloadUrl(sess.id, anyP.email);
-            url = resp.url; filename = resp.filename;
-          } else {
-            // 최후 수단: 파일 경로 직접 조합
-            const [a, b] = sess.combo.split('_');
-            url = `/couple/pdfs/${legacyFilename(sess.combo)}`;
-            filename = `42world_Couple_${a}_${b}_KR.pdf`;
-          }
-        } else {
-          throw new Error('리포트 정보가 없어요');
-        }
+        const resp = await SG.session.requestDownloadUrl(sess.id, mail);
         const a = document.createElement('a');
-        a.href = url; a.download = filename;
+        a.href = resp.url;
+        a.download = resp.filename;
         document.body.appendChild(a);
         a.click();
         a.remove();
       } catch (e) {
         console.error(e);
-        $err.textContent = '⚠️ ' + (e.message || '다운로드 실패');
-        $err.style.display = 'block';
+        $e.textContent = '⚠️ ' + (e.message || '다운로드 실패');
+        $e.style.display = 'block';
       }
     };
 
-    document.getElementById('btn-download').addEventListener('click', doDownload);
-    // 자동 다운로드 (살짝 지연)
-    setTimeout(doDownload, 900);
-  }
-
-  function getCookie(name){
-    const v = document.cookie.split(';').find(c=>c.trim().startsWith(name+'='));
-    return v ? decodeURIComponent(v.trim().split('=')[1]) : null;
-  }
-  function legacyFilename(combo){
-    const TYPES = ['SPARK','VISION','HARMONY','SOUL','LOGIC','LEADER','STEADY','PLAYER'];
-    const [a,b] = combo.toUpperCase().split('_');
-    if (!TYPES.includes(a)||!TYPES.includes(b)) return '';
-    const num = String(TYPES.indexOf(a)*8 + TYPES.indexOf(b) + 1).padStart(2,'0');
-    return `${num}_${a}_${b}_KR.pdf`;
-  }
-  function legacyDownload(combo){
-    const filename = legacyFilename(combo);
-    if (!filename) return;
-    const [a,b] = combo.toUpperCase().split('_');
-    const link = document.createElement('a');
-    link.href = `/couple/pdfs/${filename}`;
-    link.download = `42world_Couple_${a}_${b}_KR.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    document.getElementById('btn-redownload').addEventListener('click', doDl);
+    // localStorage 정리 (중복 자동 처리 방지)
+    try {
+      localStorage.removeItem('sg_last_session');
+      localStorage.removeItem('sg_last_email');
+      localStorage.removeItem('sg_last_combo');
+    } catch(_){}
+    // 자동 다운로드 1회
+    setTimeout(doDl, 700);
   }
 })();
 </script>

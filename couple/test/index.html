@@ -614,7 +614,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       if (session.status === 'paid' || session.status === 'both_done') {
         alert('이미 양쪽 검사가 완료된 세션이에요.');
-        location.href = `/couple/kr/download/?session=${session.id}`;
+        const [ra, rb] = (session.combo || '').split('_');
+        if (ra && rb) {
+          location.href = `/couple/result/?a=${ra}&b=${rb}&session=${session.id}`;
+        } else {
+          location.href = '/couple/kr/my/';
+        }
         return;
       }
       const partnerA = (participants || []).find(p => p.role === 'A');
