@@ -439,23 +439,9 @@ function showScreen(id){
 }
 
 function startTest(){
-  openModeModal();
-}
-
-function openModeModal(){
-  document.getElementById('mode-modal').style.display='flex';
-}
-function closeModeModal(){
-  document.getElementById('mode-modal').style.display='none';
-}
-function pickMode(mode){
   var p = new URLSearchParams(location.search).get('partner');
   var partnerStr = p ? '&partner=' + encodeURIComponent(p) : '';
-  if (mode === 'sync') {
-    window.location.href = p ? '/couple/test/?partner=' + encodeURIComponent(p) : '/couple/test/';
-  } else {
-    window.location.href = '/couple/test/?mode=async' + partnerStr;
-  }
+  window.location.href = '/couple/test/?mode=async' + partnerStr;
 }
 
 function restart(){
@@ -762,7 +748,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')hwClose();});
   </div>
   <div class="hw-section">
     <div class="hw-section-label">Couple</div>
-    <a class="hw-item" href="#" onclick="event.preventDefault();hwClose();openModeModal();return false;"><span class="hw-item-icon">&#x270F;</span> 테스트 하기</a>
+    <a class="hw-item" href="#" onclick="event.preventDefault();hwClose();startTest();return false;"><span class="hw-item-icon">&#x270F;</span> 테스트 하기</a>
     <a class="hw-item" href="/couple/shop/"><span class="hw-item-icon">&#x1F6CD;</span> Shop</a>
   </div>
   <div class="hw-section">
@@ -770,26 +756,6 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')hwClose();});
     <a class="hw-item" href="/legal/terms.html"><span class="hw-item-icon">&#x1F4C4;</span> 이용약관</a>
     <a class="hw-item" href="/legal/privacy.html"><span class="hw-item-icon">&#x1F512;</span> 개인정보처리방침</a>
     <a class="hw-item" href="/legal/refund.html"><span class="hw-item-icon">&#x1F4B0;</span> 환불정책</a>
-  </div>
-</div>
-
-<!-- 모드 선택 모달 (동기/비동기) -->
-<div id="mode-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;align-items:center;justify-content:center;padding:24px" onclick="if(event.target===this)closeModeModal()">
-  <div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:420px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.25)">
-    <h3 style="margin:0 0 8px;font-size:18px;color:#1A2030;text-align:center">어떻게 시작할까요?</h3>
-    <p style="text-align:center;color:#6B7280;font-size:13px;margin:0 0 18px">둘의 상황에 맞게 골라주세요</p>
-
-    <button onclick="pickMode('sync')" style="width:100%;padding:16px;border:2px solid #C9A84C;background:linear-gradient(135deg,#B8860B,#D4A017);color:#fff;border-radius:12px;font-size:15px;font-weight:700;margin-bottom:10px;cursor:pointer;text-align:left;font-family:inherit">
-      💕 지금 함께 있어요
-      <div style="font-size:12px;font-weight:400;opacity:.9;margin-top:3px">나란히 앉아 같이 답해보기</div>
-    </button>
-
-    <button onclick="pickMode('async')" style="width:100%;padding:16px;border:2px solid #D0D4DC;background:#fff;color:#1A2030;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-align:left;font-family:inherit">
-      💌 내가 먼저 보낼게
-      <div style="font-size:12px;font-weight:400;color:#6B7280;margin-top:3px">먼저 답하고 파트너에게 초대 링크 전달</div>
-    </button>
-
-    <button onclick="closeModeModal()" style="width:100%;padding:10px;background:transparent;border:none;color:#6B7280;font-size:12px;margin-top:10px;cursor:pointer;font-family:inherit">취소</button>
   </div>
 </div>
 

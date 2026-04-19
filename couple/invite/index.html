@@ -142,8 +142,8 @@ input:focus{border-color:var(--gold)}
 
   $btn.addEventListener('click', () => {
     sessionStorage.setItem('sg_email', $email.value.trim().toLowerCase());
-    // 실제 검사 페이지로 이동 (invite 모드 플래그와 함께)
-    location.href = '/couple/test/?mode=async_join';
+    // 실제 검사 페이지로 이동 (invite 모드 플래그 + 토큰 전달)
+    location.href = '/couple/test/?mode=async_join&t=' + encodeURIComponent(token);
   });
 })();
 </script>
