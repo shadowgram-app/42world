@@ -79,6 +79,12 @@ footer{margin-top:20px;text-align:center;font-size:12px;color:var(--muted)}
       <div class="err" id="cErr"></div>
       <button class="btn" id="btnCreate" type="button">방 만들고 링크 받기</button>
     </div>
+    <div class="card">
+      <h2>이미 만든 방이 있나요?</h2>
+      <p class="muted">방을 만들 때 쓴 이메일을 입력하면 내 방을 다시 열 수 있어요. (테스트 기간에는 인증 없이 열려요)</p>
+      <div class="mi"><input type="email" id="findEmail" placeholder="you@example.com" autocomplete="email" inputmode="email"><button type="button" id="btnFind" style="width:64px;font-size:14px;font-weight:700;color:var(--indigo)">찾기</button></div>
+      <div class="err" id="fErr"></div><div id="found"></div>
+    </div>
     <div class="card hidden" id="myRooms"><h2>내가 만든 방</h2><div id="roomList"></div>
       <p class="small">이 기기에서 만든 방만 보여요. 주소(링크)를 잃어버리면 다시 열 수 없으니 꼭 북마크해 두세요.</p></div>
   </section>
@@ -152,6 +158,14 @@ function initCreate(){
     $("myRooms").classList.remove("hidden");
     $("roomList").innerHTML = rooms.slice().reverse().map(r => `<div class="mrow"><div class="h"><b>${esc(r.family)}</b><a class="btn ghost sm" href="?h=${encodeURIComponent(r.h)}">열기</a></div></div>`).join("");
   }
+  $("btnFind").onclick = async () => {
+    $("fErr").textContent = ""; $("found").innerHTML = "";
+    try{
+      const rs = await FF.rpc("ff_rooms_by_email", { p_email: $("findEmail").value });
+      if (!rs.length){ $("fErr").textContent = "이 이메일로 만든 방이 없어요."; return; }
+      $("found").innerHTML = rs.map(r => `<div class="mrow"><div class="h"><span><b>${esc(r.family)}</b><br><span class="small">${r.done}/${r.total}명 완료 · ${esc(new Date(r.created_at).toLocaleDateString("ko-KR"))}</span></span><a class="btn ghost sm" href="?h=${encodeURIComponent(r.host_token)}">열기</a></div></div>`).join("");
+    }catch(e){ $("fErr").textContent = FF.errText(e); }
+  };
   $("btnCreate").onclick = async () => {
     $("cErr").textContent = "";
     const names = mrows().map(r => r.querySelector("input").value.trim()).filter(Boolean);

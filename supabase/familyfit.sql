@@ -122,6 +122,25 @@ begin
   return v_out;
 end $$;
 
+-- 호스트: 이메일로 내 방 찾기 (테스트 기간 한정 / 인증 없음)
+--  ※ 이메일을 아는 사람은 누구나 그 이메일의 방(호스트 열쇠)을 열 수 있습니다.
+--    정식 운영 전에는 이 함수의 권한을 거두고(아래 revoke 한 줄) 메일 링크 방식으로 바꾸세요:
+--    revoke execute on function public.ff_rooms_by_email(text) from anon, authenticated;
+create or replace function public.ff_rooms_by_email(p_email text) returns json
+language plpgsql stable security definer set search_path = public
+as $$
+declare v_email text := lower(btrim(coalesce(p_email, '')));
+begin
+  if v_email !~ '^[^@\s]+@[^@\s]+\.[^@\s]+$' or length(v_email) > 120 then raise exception 'invalid_email'; end if;
+  return coalesce((
+    select json_agg(x order by x.created_at desc)
+    from (select r.host_token, r.family_name as family, r.created_at,
+                 (select count(*) from ff_members m where m.room_id = r.id) as total,
+                 (select count(*) from ff_members m where m.room_id = r.id and m.submitted_at is not null) as done
+          from ff_rooms r where lower(r.email) = v_email order by r.created_at desc limit 10) x
+  ), '[]'::json);
+end $$;
+
 -- 호스트: 구성원 추가 (최대 8명)
 create or replace function public.ff_add_member(p_host text, p_nickname text) returns json
 language plpgsql security definer set search_path = public
@@ -269,6 +288,7 @@ revoke execute on function
   public.ff_get_report(text),
   public.ff_get_member(text),
   public.ff_submit(text, int[], text, text),
+  public.ff_rooms_by_email(text),
   public.ff_report_input(text),
   public.ff_save_report(uuid, text, jsonb)
 from public, anon, authenticated;
@@ -280,7 +300,8 @@ grant execute on function
   public.ff_dashboard(text),
   public.ff_get_report(text),
   public.ff_get_member(text),
-  public.ff_submit(text, int[], text, text)
+  public.ff_submit(text, int[], text, text),
+  public.ff_rooms_by_email(text)
 to anon, authenticated;
 
 grant execute on function
