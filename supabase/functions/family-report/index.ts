@@ -119,7 +119,8 @@ Deno.serve(async (req) => {
 
   const members = (input.members ?? []).filter((m: any) => Array.isArray(m.counts) && m.counts.length === 4);
   if (members.length < 2) return json(req, { error: "need_two" }, 400);
-  if (!body.force && input.existing_hash === input.hash) return json(req, { status: "cached" });
+  // 이미 저장된 리포트가 있으면 다시 생성하지 않고 그대로 돌려줍니다 (force 일 때만 새로 만듦)
+  if (!body.force && input.existing_hash) return json(req, { status: "cached" });
   if (input.gen_count >= MAX_GEN) return json(req, { error: "limit" }, 429);
 
   const key = Deno.env.get("ANTHROPIC_API_KEY");
@@ -149,6 +150,7 @@ Deno.serve(async (req) => {
     const text = (data.content ?? []).map((c: any) => c.text ?? "").join("");
     const content = sanitize(extractJson(text), names);
     if (!content.headline || Object.keys(content.members).length === 0) throw new Error("empty");
+    content.snapshot = members.map((m: any) => ({ nickname: m.nickname, counts: m.counts, winner: m.winner, tie: m.tie ?? null })); // 저장 당시 점수를 함께 고정
     await rpc("ff_save_report", { p_room: input.room_id, p_hash: input.hash, p_content: content });
     return json(req, { status: "generated" });
   } catch (e) {

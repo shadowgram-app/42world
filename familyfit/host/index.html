@@ -225,10 +225,10 @@ function render(){
   const n = done.length, stale = D.report && D.report.input_hash !== D.data_hash;
   $("btnReport").href = "../report/?h=" + encodeURIComponent(HOST);
   $("btnReport").classList.toggle("off", n < 2);
-  $("rMsg").textContent = n < 2 ? "결과가 2명 이상 모이면 리포트를 볼 수 있어요."
-    : (n < total ? `지금 ${n}명 기준으로 먼저 볼 수 있어요. 나머지 결과가 들어오면 새로 만들 수 있어요.`
-    : (D.report ? (stale ? "새 결과가 들어왔어요. 리포트를 새로 만들 수 있어요." : "리포트가 준비되어 있어요.") : "모두 모였어요. 리포트를 만들어 볼까요?"));
-  $("btnReport").textContent = D.report && !stale ? "가족 리포트 다시 보기" : "가족 리포트 만들기";
+  $("rMsg").textContent = n < 2 ? "결과가 2명 이상 모이면 리포트를 만들 수 있어요."
+    : (D.report ? (stale ? "저장된 리포트가 있어요. 그 뒤로 새 결과가 들어왔고, 리포트 화면에서 새로 만들 수 있어요." : "저장된 리포트가 있어요. 열 때마다 똑같이 보여요.")
+    : (n < total ? `지금 ${n}명 기준으로 만들 수 있어요. 한 번 만들면 저장되니, 모두 끝난 뒤에 만드는 것을 권해요.` : "모두 모였어요. 리포트를 만들어 볼까요? 한 번 만들면 저장돼요."));
+  $("btnReport").textContent = D.report ? "저장된 가족 리포트 보기" : "가족 리포트 만들기";
 }
 function initDash(){
   $("vDash").classList.remove("hidden");
