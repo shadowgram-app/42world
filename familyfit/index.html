@@ -187,6 +187,8 @@ footer{margin-top:24px;text-align:center;font-size:12px;color:var(--muted)}
 <div class="toast" id="toast"></div>
 <noscript><p style="padding:20px">이 페이지는 자바스크립트가 필요해요.</p></noscript>
 
+<script src="config.js"></script>
+<script src="ff.js"></script>
 <script>
 /* =========================================================
    운영자 설정 (여기만 고치면 됩니다)
@@ -369,9 +371,13 @@ async function shareOrCopy(text){
 }
 
 const params = new URLSearchParams(location.search);
-const FAM = (params.get("f") || "").slice(0, 12).trim();
+let FAM = (params.get("f") || "").slice(0, 12).trim();
 const BASE = location.origin.startsWith("http") ? location.origin + location.pathname : location.href.split("?")[0];
 let me = lsGet("ff1_me");
+/* 방 연동: ?m=<구성원 토큰> 으로 들어오면 결과가 호스트 대시보드로 자동 전달됩니다 */
+const MTOKEN = /^[0-9a-f]{64}$/.test(params.get("m") || "") ? params.get("m") : "";
+const ROOM = !!(MTOKEN && window.FF && FF.enabled);
+let syncState = null;
 
 /* ----- 홈 ----- */
 if (me) $("btnPrev").classList.remove("hidden");
@@ -404,6 +410,15 @@ $("btnToCollect").onclick = () => openCollect();
 if (FAM){
   $("introFam").textContent = FAM + " 가족";
   view("vIntro");
+}
+if (ROOM){
+  (async () => {
+    try{
+      const r = await FF.rpc("ff_get_member", {p_token: MTOKEN});
+      FAM = r.family; $("introFam").textContent = FAM + " 가족" + (r.submitted ? " · 이미 보낸 결과가 있어요. 다시 하면 새 결과로 바뀌어요" : "");
+      $("nick").value = r.nickname; $("nick").readOnly = true; onNickInput(); view("vIntro");
+    }catch(e){ toast(FF.errText(e)); }
+  })();
 }
 function onNickInput(){ $("btnStart").disabled = !$("nick").value.trim(); }
 $("nick").addEventListener("input", onNickInput);
@@ -452,14 +467,21 @@ document.addEventListener("keydown", e => {
   else if (tiePhase && (k === "c" || k === "d")) btns[k.charCodeAt(0) - 97] && btns[k.charCodeAt(0) - 97].click();
 });
 
-function finishGame(winnerIfTie){
+async function finishGame(winnerIfTie){
   const {raw, share} = tally(picks), L = leaders(share);
   const w = L.length > 1 ? (L.includes(winnerIfTie) ? winnerIfTie : L[0]) : L[0];
   const tieNote = L.length > 1 ? L.map(t => TENSES[t].name).join(", ") : "";
   me = {f: FAM, n: nick, w, c: KEYS.map(k => raw[k]), tie: tieNote};
   me.code = makeCode(me);
   lsSet("ff1_me", me);
+  syncState = null;
+  if (ROOM){ $("stage").innerHTML = '<div class="qtext" style="text-align:center">결과를 보내는 중…</div>'; syncState = await syncToRoom(me); }
   showResult(me, false);
+}
+
+async function syncToRoom(m){
+  try{ await FF.rpc("ff_submit", {p_token: MTOKEN, p_counts: m.c, p_winner: m.w, p_tie: m.tie || null}); return "ok"; }
+  catch(e){ return "fail"; }
 }
 
 /* ----- 개인 결과 ----- */
@@ -474,6 +496,18 @@ function showResult(m, fromSaved){
   const fullTest = CFG.FULL_TEST_URL
     ? `<a class="btn ghost" style="display:block;text-align:center;text-decoration:none" href="${esc(CFG.FULL_TEST_URL)}" target="_blank" rel="noopener">${esc(CFG.FULL_TEST_LABEL)} 해보기</a>`
     : `<button class="btn ghost" disabled>${esc(CFG.FULL_TEST_LABEL)} · 준비 중</button>`;
+  const codeCard = `<div class="card">
+      <h2>${ROOM ? "자동 전달이 안 되면 이렇게 보내요" : "이제 호스트에게 보내요"}</h2>
+      <p class="muted">아래 버튼을 누르면 결과 코드가 담긴 메시지가 만들어져요. 가족 단톡방에 보내면 호스트가 모아서 <b>우리 집 시제 지도</b>를 만들 수 있어요.</p>
+      <div class="codebox" id="myCode">${esc(m.code)}</div>
+      <div class="stack" style="margin-top:12px">
+        <button class="btn" id="btnSend">결과를 가족방에 보내기</button>
+        <button class="btn ghost" id="btnCopyCode">코드만 복사</button>
+      </div>
+    </div>`;
+  let sendCard = codeCard;
+  if (ROOM && syncState === "ok") sendCard = `<div class="card" style="border-color:#bfe3d0;background:#f2fbf6"><h2>✅ 호스트에게 전달했어요</h2><p class="muted" style="margin:0">${esc(m.f)} 가족 호스트의 대시보드에 ${esc(m.n)}님의 결과가 표시돼요. 가족이 모두 끝나면 호스트가 가족 리포트를 열 수 있어요.</p></div>`;
+  else if (ROOM) sendCard = `<div class="card" style="border-color:#f0c9c4;background:#fff6f5"><h2>아직 전달되지 않았어요</h2><p class="muted">${syncState === "fail" ? "인터넷 연결이 불안정했을 수 있어요. " : ""}아래 버튼으로 다시 보내 주세요.</p><button class="btn" id="btnSync">호스트에게 다시 보내기</button></div>` + codeCard;
   $("vResult").innerHTML = `
     <div class="hero" style="background:linear-gradient(135deg,#2b2f4a,${T.color})">
       <small>${famLabel}${esc(m.n)}님의 시제</small>
@@ -489,15 +523,7 @@ function showResult(m, fromSaved){
       <p class="small">지금의 모습이지 전부가 아니에요. 상황과 사람에 따라 다른 시제가 크게 나오기도 합니다.</p>
     </div>
     <div class="card"><h2>내가 고른 시제 비율</h2>${bars}</div>
-    <div class="card">
-      <h2>이제 호스트에게 보내요</h2>
-      <p class="muted">아래 버튼을 누르면 결과 코드가 담긴 메시지가 만들어져요. 가족 단톡방에 보내면 호스트가 모아서 <b>우리 집 시제 지도</b>를 만들 수 있어요.</p>
-      <div class="codebox" id="myCode">${esc(m.code)}</div>
-      <div class="stack" style="margin-top:12px">
-        <button class="btn" id="btnSend">결과를 가족방에 보내기</button>
-        <button class="btn ghost" id="btnCopyCode">코드만 복사</button>
-      </div>
-    </div>
+    ${sendCard}
     <div class="card">
       <h2>더 깊이 알고 싶다면</h2>
       <p class="muted">${esc(CFG.NEXT_SERIES_NOTE)} 나만의 정밀한 코칭이 궁금하다면 풀테스트로 이어 가세요.</p>
@@ -506,8 +532,9 @@ function showResult(m, fromSaved){
     <div class="stack"><button class="btn ghost" id="btnRedo">다시 해보기</button>
       ${m.f ? "" : `<button class="btn ghost" id="btnToHost">가족 모으기 (호스트)</button>`}</div>`;
   view("vResult");
-  $("btnSend").onclick = () => shareOrCopy(`[${m.f ? m.f + " " : ""}시제 게임] ${m.n} · ${T.name} (${T.title})\n아래 코드를 호스트가 ‘가족 지도’에 붙여 넣어요 👇\n${m.code}`);
-  $("btnCopyCode").onclick = async () => toast((await copyText(m.code)) ? "코드를 복사했어요" : "복사가 안 됐어요");
+  const bs = $("btnSync"); if (bs) bs.onclick = async () => { bs.disabled = true; bs.textContent = "보내는 중…"; syncState = await syncToRoom(m); showResult(m, fromSaved); };
+  if ($("btnSend")) $("btnSend").onclick = () => shareOrCopy(`[${m.f ? m.f + " " : ""}시제 게임] ${m.n} · ${T.name} (${T.title})\n아래 코드를 호스트가 ‘가족 지도’에 붙여 넣어요 👇\n${m.code}`);
+  if ($("btnCopyCode")) $("btnCopyCode").onclick = async () => toast((await copyText(m.code)) ? "코드를 복사했어요" : "복사가 안 됐어요");
   $("btnRedo").onclick = () => { $("nick").value = m.n; onNickInput(); view(FAM || !m.f ? "vIntro" : "vIntro"); };
   const bh = $("btnToHost"); if (bh) bh.onclick = () => { view("vHost"); const h = lsGet("ff1_host"); if (h && h.fam){ $("famName").value = h.fam; onFamInput(); } };
 }

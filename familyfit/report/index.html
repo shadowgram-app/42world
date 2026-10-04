@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>가족 시제 리포트 · 42world 패밀리핏</title>
+<style>
+:root{--cream:#F0EBE0;--paper:#fff;--ink:#232323;--muted:#6b6f78;--line:#e4ddd0;--indigo:#3B4C8C;--gold:#B8860B;
+ --P:#B5654A;--S:#E0794F;--F:#D9A441;--T:#7A3B3B}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--cream);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased;-webkit-print-color-adjust:exact;print-color-adjust:exact;
+ font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",sans-serif}
+.tools{position:sticky;top:0;z-index:10;background:rgba(240,235,224,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.tools .in{max-width:794px;margin:0 auto;padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.btn{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;border-radius:10px;padding:9px 14px;background:var(--indigo);color:#fff;font-size:14px;text-decoration:none;display:inline-block}
+.btn.ghost{background:#fff;color:var(--indigo);border:1.5px solid var(--indigo)}
+.btn:disabled{background:#c5c8d3}
+.status{max-width:794px;margin:12px auto 0;padding:0 16px;font-size:14px;color:var(--muted)}
+.note{max-width:794px;margin:12px auto 0;padding:10px 14px;background:#fff7e0;border:1px solid #f0dfa3;border-radius:12px;font-size:14px}
+.pages{max-width:794px;margin:14px auto 40px;padding:0 12px}
+.page{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:30px 26px 22px;margin-bottom:16px;position:relative;display:flex;flex-direction:column}
+.page .body{flex:1}
+.pfoot{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:8px;margin-top:20px}
+@media(min-width:820px){.page{min-height:1100px;padding:44px 44px 26px}}
+.eyebrow{font-size:11.5px;letter-spacing:.2em;font-weight:800;color:var(--indigo)}
+h1{font-family:"Noto Serif KR","Nanum Myeongjo",serif;font-size:34px;line-height:1.3;margin:8px 0 6px;font-weight:900}
+h2{font-family:"Noto Serif KR","Nanum Myeongjo",serif;font-size:23px;margin:4px 0 4px;font-weight:900}
+h3{font-size:15.5px;margin:0 0 4px}
+p{margin:0 0 10px}.muted{color:var(--muted);font-size:14px}.small{font-size:12.5px;color:var(--muted)}
+.lead{font-size:17px;color:#333}
+.hr{height:3px;width:56px;background:var(--gold);margin:12px 0 18px;border-radius:2px}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.col{border-radius:16px;padding:14px;color:#fff;min-height:110px}.col .ct{font-weight:800;font-size:16px}.col .cs{font-size:12px;opacity:.9;margin-bottom:8px}
+.col.empty{opacity:.4}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{background:rgba(255,255,255,.93);color:#2a2a2a;border-radius:99px;padding:3px 11px;font-size:14px;font-weight:700}
+.sb{display:flex;height:22px;border-radius:7px;overflow:hidden;background:#eee}
+.sb i{display:block;height:100%}
+.sbrow{display:grid;grid-template-columns:78px 1fr;gap:10px;align-items:center;margin:10px 0}
+.sbrow .nm{font-weight:700;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;margin:6px 0 4px}.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;background:var(--c)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:center}th:first-child,td:first-child{text-align:left;font-weight:700}
+th{font-size:12.5px;color:var(--muted);font-weight:700}
+tr.avg td{background:#faf7f0;font-weight:800}
+.cards{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+@media(min-width:620px){.cards{grid-template-columns:1fr 1fr}}
+.pc{border:1px solid var(--line);border-radius:16px;padding:14px;break-inside:avoid;background:#fffdf9}
+.pc .hd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.badge{font-size:12px;font-weight:800;color:#fff;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.pc .sb{height:10px;margin:4px 0 10px}
+.pc dl{margin:0;font-size:13.5px}.pc dt{font-weight:800;color:var(--indigo);font-size:12.5px;margin-top:7px}.pc dd{margin:2px 0 0}
+.mx td,.mx th{padding:6px 4px;font-size:12.5px;min-width:38px}.mx td:first-child,.mx th:first-child{min-width:54px}
+.mx td.sim{font-weight:800}
+.pair{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;background:#fffdf9;break-inside:avoid}
+.pair .t{font-weight:800;color:var(--indigo);margin-bottom:4px}
+.say{background:#f4f1ea;border-radius:10px;padding:8px 10px;margin-top:6px;font-size:14px;white-space:pre-line}
+ol.pl{padding-left:20px;margin:8px 0}ol.pl li{margin-bottom:8px}
+.q{border-left:4px solid var(--gold);background:#faf7f0;padding:10px 14px;margin:8px 0;border-radius:0 10px 10px 0;font-size:15px}
+.cta{border:1.5px dashed var(--indigo);border-radius:14px;padding:14px;margin-top:14px}
+.disc{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.6}
+.hidden{display:none!important}
+@media print{
+  @page{size:A4;margin:10mm}
+  body{background:#fff}.tools,.status,.note,.noprint{display:none!important}
+  .pages{max-width:none;margin:0;padding:0}
+  .page{border:0;border-radius:0;margin:0;padding:6mm 4mm;min-height:0;page-break-after:always;break-after:page}
+  .page:last-child{page-break-after:auto;break-after:auto}
+  .pfoot{position:static}
+}
+</style>
+</head>
+<body>
+<div class="tools noprint"><div class="in">
+  <a class="btn ghost" id="aBack" href="#">← 대시보드</a>
+  <span style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn ghost" id="btnRegen" type="button" disabled>문장 새로 만들기</button>
+    <button class="btn" id="btnPrint" type="button" disabled>PDF로 저장 / 인쇄</button>
+  </span></div></div>
+<div class="status" id="status">리포트를 불러오는 중…</div>
+<div class="note hidden" id="note"></div>
+<div class="pages" id="pages"></div>
+
+<script src="../config.js"></script>
+<script src="../ff.js"></script>
+<script>
+const $ = id => document.getElementById(id), esc = FF.esc, K = FF.KEYS;
+const nl = s => esc(s).replace(/\n/g, "<br>");
+const HOST = (new URLSearchParams(location.search).get("h") || "").trim();
+$("aBack").href = "../host/?h=" + encodeURIComponent(HOST);
+
+function bar(counts){ return `<div class="sb">${counts.map((c,i) => c ? `<i style="width:${c/12*100}%;background:var(--${K[i]})" title="${FF.TENSES[K[i]].name} ${Math.round(c/12*100)}%"></i>` : "").join("")}</div>`; }
+function legend(){ return `<div class="legend">${K.map(k => `<span style="--c:var(--${k})">${FF.TENSES[k].name}</span>`).join("")}</div>`; }
+function pageWrap(n, total, fam, inner){ return `<section class="page"><div class="body">${inner}</div><div class="pfoot"><span>42WORLD · FAMILYFIT · ${esc(fam)} 가족</span><span>${n} / ${total}</span></div></section>`; }
+
+function build(D, N){
+  const ms = D.members.filter(m => m.submitted && Array.isArray(m.counts)), fam = D.family, TOT = 5;
+  const by = { P:[], S:[], F:[], T:[] }; ms.forEach(m => by[m.winner].push(m));
+  const avg = FF.familyAvg(ms), order = K.map((k,i)=>[k,avg[i]]).sort((a,b)=>b[1]-a[1]);
+  const date = new Date().toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric"});
+
+  // 1쪽 표지 + 지도
+  const board = K.map(k => `<div class="col ${by[k].length?"":"empty"}" style="background:var(--${k})"><div class="ct">${FF.TENSES[k].name}</div><div class="cs">${FF.TENSES[k].title}</div><div class="chips">${by[k].map(m=>`<span class="chip">${esc(m.nickname)}</span>`).join("") || `<span class="cs">아직 없어요</span>`}</div></div>`).join("");
+  const p1 = `<div class="eyebrow">42WORLD · FAMILYFIT · 시리즈 1 시제 편</div>
+    <h1>${esc(fam)} 가족<br>시제 리포트</h1><div class="hr"></div>
+    <p class="lead">${esc(N.headline)}</p>
+    <p class="muted">${esc(date)} · ${ms.length}명의 결과를 바탕으로 만들었어요.</p>
+    <h2 style="margin-top:22px">우리 집 시제 지도</h2>
+    <p class="muted">각자 가장 크게 나온 시제로 모았어요. 시제는 사람이 정보를 받아들이는 순서일 뿐, 좋고 나쁨이 아니에요.</p>
+    <div class="board">${board}</div>
+    <p class="small">과거형(Si) 기록과 경험 · 현재형(Se) 지금 이 순간 · 미래형(Ne) 가능성 · 초월형(Ni) 흐름과 의미</p>
+    <div class="disc">이 리포트는 재미로 보는 가이드이며 진단이나 평가가 아닙니다. 지금의 모습이지 전부가 아니고, 상황과 사람에 따라 다른 시제가 크게 나오기도 해요.</div>`;
+
+  // 2쪽 점수 비교
+  const rows = ms.map(m => `<tr><td>${esc(m.nickname)}</td>${FF.pct(m.counts).map(v=>`<td>${v}%</td>`).join("")}</tr>`).join("");
+  const p2 = `<div class="eyebrow">SCORE</div><h2>점수 비교</h2><div class="hr"></div>
+    <p class="muted">12장면에서 각 시제를 고른 비율이에요. 한 사람 안에도 여러 시제가 함께 있어요.</p>
+    ${legend()}
+    ${ms.map(m=>`<div class="sbrow"><span class="nm">${esc(m.nickname)}</span>${bar(m.counts)}</div>`).join("")}
+    <div class="sbrow"><span class="nm" style="color:var(--indigo)">가족 평균</span>${bar(K.map((_,i)=>Math.round(avg[i]/100*12*10)/10))}</div>
+    <table><tr><th></th>${K.map(k=>`<th>${FF.TENSES[k].name}</th>`).join("")}</tr>${rows}
+      <tr class="avg"><td>가족 평균</td>${avg.map(v=>`<td>${v}%</td>`).join("")}</tr></table>
+    <h3 style="margin-top:16px">한눈에 보기</h3>
+    <p>우리 가족이 가장 많이 쓰는 시제는 <b>${FF.TENSES[order[0][0]].name}(${order[0][1]}%)</b>, 가장 적게 쓰는 시제는 <b>${FF.TENSES[order[3][0]].name}(${order[3][1]}%)</b>예요.</p>
+    <p>${nl(N.dynamics.overview)}</p>`;
+
+  // 3쪽 개인 특성
+  const cards = ms.map(m => { const T = FF.TENSES[m.winner], x = N.members[m.nickname] || {};
+    return `<div class="pc"><div class="hd"><h3>${esc(m.nickname)}</h3><span class="badge" style="background:var(--${m.winner})">${T.name} · ${T.title}</span></div>
+      ${bar(m.counts)}
+      <dl><dt>가족 안에서의 강점</dt><dd>${nl(x.strength)}</dd><dt>지치거나 오해받기 쉬운 순간</dt><dd>${nl(x.stress)}</dd><dt>이렇게 말해 주세요</dt><dd>${nl(x.tip)}</dd></dl>${m.tie?`<div class="small" style="margin-top:6px">선택이 비슷해 마지막 한 장면으로 정했어요.</div>`:""}</div>`; }).join("");
+  const p3 = `<div class="eyebrow">PEOPLE</div><h2>개인 특성</h2><div class="hr"></div>
+    <p class="muted">각자의 강점과, 가족이 알아 두면 좋은 말하기 방법이에요.</p><div class="cards">${cards}</div>`;
+
+  // 4쪽 역동
+  const head = ms.map(m=>`<th>${esc(m.nickname)}</th>`).join("");
+  const mx = ms.map((a,i) => `<tr><td>${esc(a.nickname)}</td>${ms.map((b,j) => { if (i===j) return `<td>-</td>`; const s = FF.similarity(a.counts,b.counts); return `<td class="sim" style="background:rgba(59,76,140,${(s/100*0.55).toFixed(2)});color:${s>=62?"#fff":"#232323"}">${s}</td>`; }).join("")}</tr>`).join("");
+  const pairs = N.dynamics.pairs.map(p => `<div class="pair"><div class="t">${esc(p.a)} × ${esc(p.b)}</div><p style="margin:0">${nl(p.insight)}</p>${p.script?`<div class="say">${nl(p.script)}</div>`:""}</div>`).join("");
+  const p4 = `<div class="eyebrow">DYNAMICS</div><h2>가족 역동</h2><div class="hr"></div>
+    <h3>서로 얼마나 비슷하게 말하는지 (0~100)</h3>
+    <p class="muted">숫자가 높을수록 받아들이는 방식이 비슷해요. 궁합이 아니에요. 낮다고 사이가 나쁜 것도, 높다고 늘 편한 것도 아니에요.</p>
+    <table class="mx"><tr><th></th>${head}</tr>${mx}</table>
+    <h3 style="margin-top:18px">번역이 필요한 짝</h3>
+    ${pairs || `<p class="muted">서로의 방식이 비슷해서 큰 번역은 필요하지 않아요.</p>`}
+    <h3 style="margin-top:18px">우리 가족의 빈칸</h3><p>${nl(N.dynamics.blindspot)}</p>`;
+
+  // 5쪽 약속과 질문
+  const p5 = `<div class="eyebrow">ACTION</div><h2>우리 가족 약속과 질문</h2><div class="hr"></div>
+    <h3>이번 여행 실천 약속</h3><ol class="pl">${N.promises.map(x=>`<li>${nl(x)}</li>`).join("")}</ol>
+    <h3 style="margin-top:18px">함께 나눠 볼 질문</h3>${N.questions.map(x=>`<div class="q">${nl(x)}</div>`).join("")}
+    <div class="cta"><h3>다음 단계</h3><p class="muted" style="margin:0">시리즈 2 · 인칭 편에서는 ‘우리가 어떻게 말하고 표현하는지’를 살펴봐요. 나만의 더 정밀한 코칭이 궁금하다면 OTTI 80문항 풀테스트로 이어 가세요. 워크숍 진행자에게 안내를 받을 수 있어요.</p></div>
+    <div class="disc">재미로 보는 가이드이며 진단이 아닙니다. 이 결과를 입시, 채용, 평가 등 어떤 판단의 근거로도 사용하지 마세요. 42world.kr/familyfit</div>`;
+
+  $("pages").innerHTML = [p1,p2,p3,p4,p5].map((p,i)=>pageWrap(i+1,TOT,fam,p)).join("");
+}
+
+function merge(fb, sv){
+  if (!sv) return fb;
+  const out = JSON.parse(JSON.stringify(fb)); out.fallback = false;
+  if (sv.headline) out.headline = sv.headline;
+  Object.keys(fb.members).forEach(n => { const s = sv.members && sv.members[n]; if (s) ["strength","stress","tip"].forEach(f => { if (s[f]) out.members[n][f] = s[f]; }); });
+  const d = sv.dynamics || {};
+  if (d.overview) out.dynamics.overview = d.overview;
+  if (d.blindspot) out.dynamics.blindspot = d.blindspot;
+  if (Array.isArray(d.pairs) && d.pairs.length) out.dynamics.pairs = d.pairs;
+  if (Array.isArray(sv.promises) && sv.promises.length) out.promises = sv.promises;
+  if (Array.isArray(sv.questions) && sv.questions.length) out.questions = sv.questions;
+  return out;
+}
+
+let D = null;
+async function run(force){
+  $("btnRegen").disabled = true; $("btnPrint").disabled = true; $("note").classList.add("hidden");
+  try{
+    D = await FF.rpc("ff_dashboard", { p_host: HOST });
+    const ms = D.members.filter(m => m.submitted);
+    if (ms.length < 2){ $("status").textContent = "결과가 2명 이상 모이면 리포트를 볼 수 있어요."; return; }
+    $("status").textContent = "가족 리포트를 만드는 중이에요… (최대 30초)";
+    let note = "";
+    try{ await FF.generate(HOST, force); }catch(e){ note = FF.errText(e); if (e.message === "limit" || e.message === "need_two") note = FF.errText(e); }
+    let sv = null;
+    try{ const r = await FF.rpc("ff_get_report", { p_host: HOST }); if (r && r.content && r.input_hash === D.data_hash) sv = r.content; else if (r && r.content && !note) note = "새 결과가 들어와서 이전 문구를 쓰지 않았어요."; }catch(e){}
+    const N = merge(FF.fallback(D.family, ms), sv);
+    build(D, N);
+    $("status").textContent = (sv ? "" : "") + `${ms.length}명 결과 기준 · ${new Date().toLocaleString("ko-KR")}`;
+    if (note){ $("note").textContent = sv ? "새 문장을 만들지 못해 이전에 만든 문구를 보여 드려요." : note; $("note").classList.remove("hidden"); }
+    $("btnPrint").disabled = false; $("btnRegen").disabled = false;
+  }catch(e){
+    $("status").textContent = FF.errText(e);
+  }
+}
+$("btnPrint").onclick = () => window.print();
+$("btnRegen").onclick = () => run(true);
+if (!FF.enabled) $("status").textContent = "아직 서버가 연결되지 않았어요.";
+else if (!/^[0-9a-f]{64}$/.test(HOST)) $("status").textContent = "주소가 올바르지 않아요. 호스트 대시보드에서 다시 열어 주세요.";
+else run(false);
+</script>
+</body>
+</html>
