@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>호스트 대시보드 · 42world 패밀리핏</title>
+<style>
+:root{--cream:#F7F3EC;--card:#fff;--ink:#232323;--muted:#6b6f78;--line:#e4ddd0;--indigo:#3B4C8C;--indigo-2:#2e3d73;--ok:#2f9e6b;--warn:#c97a14;--bad:#c0392b;
+ --P:#B5654A;--S:#E0794F;--F:#D9A441;--T:#7A3B3B}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{background:var(--cream);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",sans-serif}
+.wrap{max-width:600px;margin:0 auto;padding:0 16px 56px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.brand{font-size:12px;letter-spacing:.18em;font-weight:800;color:var(--indigo)}
+.brand a{color:inherit;text-decoration:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 18px;margin-bottom:14px}
+h1{font-family:"Noto Serif KR","Nanum Myeongjo",serif;font-size:26px;line-height:1.35;margin:2px 0 8px;font-weight:900}
+h2{font-size:18px;margin:0 0 6px}p{margin:0 0 10px}
+.muted{color:var(--muted);font-size:14px}.small{font-size:12.5px;color:var(--muted)}
+.btn{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;border-radius:14px;padding:14px 18px;background:var(--indigo);color:#fff;width:100%;font-size:16px;text-align:center;text-decoration:none;display:block}
+.btn:hover{background:var(--indigo-2)}.btn:disabled,.btn.off{background:#c5c8d3;cursor:not-allowed;pointer-events:none}
+.btn.ghost{background:#fff;color:var(--indigo);border:1.5px solid var(--indigo)}.btn.ghost:hover{background:#f1f3fa}
+.btn.sm{width:auto;padding:8px 12px;font-size:13.5px;border-radius:10px;display:inline-block}
+.stack{display:grid;gap:10px}.row{display:flex;gap:8px;flex-wrap:wrap}
+.hidden{display:none!important}
+label.f{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+input[type=text],input[type=email]{width:100%;font:inherit;font-size:16px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;color:var(--ink)}
+input:focus{outline:none;border-color:var(--indigo)}
+.mi{display:flex;gap:8px;margin-bottom:8px}.mi button{flex:none;appearance:none;border:1.5px solid var(--line);background:#fff;border-radius:12px;width:44px;font-size:18px;color:var(--muted);cursor:pointer}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#444;margin-top:14px;background:#faf7f0;border:1px solid var(--line);border-radius:12px;padding:12px}
+.check input{margin-top:4px;width:18px;height:18px;flex:none}
+.err{color:var(--bad);font-size:14px;margin-top:10px;min-height:20px}
+.bar{height:12px;background:#e8e1d3;border-radius:99px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--P),var(--F));transition:width .4s}
+.big{font-size:34px;font-weight:900;font-family:"Noto Serif KR",serif}
+.mrow{border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0;background:#fff}
+.mrow .h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chip{font-size:12.5px;font-weight:700;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.chip.wait{background:#f3efe6;color:#7a6f55}.chip.done{background:#e4f5ec;color:#1f7a50}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+.link{font:12px/1.4 ui-monospace,Menlo,monospace;background:#f4f1ea;border-radius:8px;padding:6px 8px;margin:8px 0;word-break:break-all;color:#555}
+.key{background:#fff7e0;border:1px solid #f0dfa3;border-radius:12px;padding:12px 14px;font-size:14px;margin-bottom:14px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#232323;color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:90%;text-align:center}.toast.on{opacity:1}
+.ln{background:none;border:0;font:inherit;font-size:13px;color:var(--muted);text-decoration:underline;cursor:pointer;padding:4px 0}
+footer{margin-top:20px;text-align:center;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span class="brand"><a href="../">42WORLD · FAMILYFIT</a></span><span class="small">호스트</span></div>
+
+  <div id="vOff" class="card hidden">
+    <h2>준비 중이에요</h2>
+    <p class="muted">가족 방 기능이 아직 서버에 연결되지 않았어요. 그동안은 <a href="../">결과 코드 붙여넣기 방식</a>으로 이용해 주세요.</p>
+  </div>
+
+  <!-- 방 만들기 -->
+  <section id="vCreate" class="hidden">
+    <div class="card">
+      <span class="small">패밀리핏 시리즈 1 · 시제 편</span>
+      <h1>가족 방 만들기</h1>
+      <p class="muted">구성원 이름을 등록하면 사람마다 <b>자기 링크</b>가 만들어져요. 링크를 단톡방에 보내고, 결과가 모이는 걸 여기서 확인하면 돼요. 로그인은 없어요.</p>
+
+      <label class="f" for="email">이메일</label>
+      <input type="email" id="email" placeholder="you@example.com" autocomplete="email" inputmode="email">
+      <p class="small" style="margin-top:6px">인증 메일은 보내지 않아요. 안내 연락용으로만 저장합니다.</p>
+
+      <label class="f" for="fam">가족 이름</label>
+      <input type="text" id="fam" maxlength="12" placeholder="예: 조씨네" autocomplete="off">
+
+      <label class="f">구성원 (2~8명)</label>
+      <div id="mlist"></div>
+      <button class="btn ghost" id="btnAddRow" type="button" style="margin-top:4px">+ 구성원 추가</button>
+
+      <label class="check"><input type="checkbox" id="consent">
+        <span>이메일, 구성원 이름(애칭), 게임 응답을 가족 리포트 제공을 위해 수집·이용하는 데 동의합니다. 만 14세 미만 구성원이 있다면 보호자인 제가 대신 진행합니다. (<a href="../../legal/privacy.html" target="_blank" rel="noopener">개인정보처리방침</a>)</span>
+      </label>
+      <div class="err" id="cErr"></div>
+      <button class="btn" id="btnCreate" type="button">방 만들고 링크 받기</button>
+    </div>
+    <div class="card">
+      <h2>이미 만든 방이 있나요?</h2>
+      <p class="muted">방을 만들 때 쓴 이메일을 입력하면 내 방을 다시 열 수 있어요. (테스트 기간에는 인증 없이 열려요)</p>
+      <div class="mi"><input type="email" id="findEmail" placeholder="you@example.com" autocomplete="email" inputmode="email"><button type="button" id="btnFind" style="width:64px;font-size:14px;font-weight:700;color:var(--indigo)">찾기</button></div>
+      <div class="err" id="fErr"></div><div id="found"></div>
+    </div>
+    <div class="card hidden" id="myRooms"><h2>내가 만든 방</h2><div id="roomList"></div>
+      <p class="small">이 기기에서 만든 방만 보여요. 주소(링크)를 잃어버리면 다시 열 수 없으니 꼭 북마크해 두세요.</p></div>
+  </section>
+
+  <!-- 대시보드 -->
+  <section id="vDash" class="hidden">
+    <div class="card">
+      <span class="small" id="dSub"></span>
+      <h1 id="dFam"></h1>
+      <div class="big"><span id="dDone">0</span><span style="font-size:20px;color:var(--muted)"> / <span id="dTotal">0</span>명 완료</span></div>
+      <div class="bar"><i id="dBar"></i></div>
+      <p class="muted" id="dMsg"></p>
+      <div class="row">
+        <button class="btn ghost sm" id="btnRefresh" type="button">새로고침</button>
+        <span class="small" id="dTime" style="align-self:center"></span>
+      </div>
+    </div>
+
+    <div class="key"><b>이 페이지 주소가 호스트 열쇠예요.</b> 북마크해 두고, 가족 단톡방에는 아래 구성원 링크만 보내세요.
+      <div style="margin-top:8px"><button class="btn ghost sm" id="btnCopyHost" type="button">호스트 주소 복사</button></div></div>
+
+    <div class="card">
+      <h2>구성원</h2>
+      <div class="stack" style="margin-bottom:6px">
+        <button class="btn" id="btnShareAll" type="button">전체 안내문 단톡방에 보내기</button>
+        <button class="btn ghost" id="btnRemind" type="button">아직 안 한 사람만 다시 알리기</button>
+      </div>
+      <div id="mrows"></div>
+      <div class="mi" style="margin-top:12px"><input type="text" id="newName" maxlength="8" placeholder="구성원 이름 추가" autocomplete="off"><button type="button" id="btnAddM" style="width:64px;font-size:14px;font-weight:700;color:var(--indigo)">추가</button></div>
+      <div class="err" id="dErr"></div>
+    </div>
+
+    <div class="card">
+      <h2>가족 리포트</h2>
+      <p class="muted" id="rMsg"></p>
+      <a class="btn" id="btnReport" href="#">가족 리포트 보기</a>
+      <p class="small" style="margin-top:10px">리포트는 점수 비교, 개인 특성, 가족 역동, 실천 약속을 4~5쪽으로 보여 줘요. 결과가 더 들어오면 새로 만들 수 있어요.</p>
+    </div>
+  </section>
+
+  <footer>42world.kr · 재미로 보는 가이드이며 진단이 아닙니다.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script src="../config.js"></script>
+<script src="../ff.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = FF.esc;
+function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),2200); }
+const params = new URLSearchParams(location.search);
+const HOST = (params.get("h")||"").trim();
+const BASE = new URL("../", location.href).href.split("?")[0];       // .../familyfit/
+const memberLink = tok => BASE + "?m=" + tok;
+const hostLink = () => location.origin + location.pathname + "?h=" + HOST;
+
+/* ---------------- 방 만들기 ---------------- */
+const DEFAULTS = ["엄마","아빠","첫째"];
+function rowHtml(v){ return `<div class="mi"><input type="text" maxlength="8" placeholder="이름 또는 애칭" value="${esc(v||"")}" autocomplete="off"><button type="button" aria-label="삭제">×</button></div>`; }
+function mrows(){ return [...$("mlist").querySelectorAll(".mi")]; }
+function addRow(v){
+  if (mrows().length >= 8) return;
+  $("mlist").insertAdjacentHTML("beforeend", rowHtml(v));
+  const r = mrows().pop(); r.querySelector("button").onclick = () => { if (mrows().length > 2) r.remove(); };
+  $("btnAddRow").classList.toggle("hidden", mrows().length >= 8);
+}
+function initCreate(){
+  DEFAULTS.forEach(addRow);
+  $("btnAddRow").onclick = () => addRow("");
+  const rooms = FF.lsGet("ff_rooms") || [];
+  if (rooms.length){
+    $("myRooms").classList.remove("hidden");
+    $("roomList").innerHTML = rooms.slice().reverse().map(r => `<div class="mrow"><div class="h"><b>${esc(r.family)}</b><a class="btn ghost sm" href="?h=${encodeURIComponent(r.h)}">열기</a></div></div>`).join("");
+  }
+  $("btnFind").onclick = async () => {
+    $("fErr").textContent = ""; $("found").innerHTML = "";
+    try{
+      const rs = await FF.rpc("ff_rooms_by_email", { p_email: $("findEmail").value });
+      if (!rs.length){ $("fErr").textContent = "이 이메일로 만든 방이 없어요."; return; }
+      $("found").innerHTML = rs.map(r => `<div class="mrow"><div class="h"><span><b>${esc(r.family)}</b><br><span class="small">${r.done}/${r.total}명 완료 · ${esc(new Date(r.created_at).toLocaleDateString("ko-KR"))}</span></span><a class="btn ghost sm" href="?h=${encodeURIComponent(r.host_token)}">열기</a></div></div>`).join("");
+    }catch(e){ $("fErr").textContent = FF.errText(e); }
+  };
+  $("btnCreate").onclick = async () => {
+    $("cErr").textContent = "";
+    const names = mrows().map(r => r.querySelector("input").value.trim()).filter(Boolean);
+    if (!$("consent").checked){ $("cErr").textContent = "개인정보 수집·이용에 동의해 주세요."; return; }
+    if (new Set(names).size !== names.length){ $("cErr").textContent = "같은 이름이 있어요. 구분되게 적어 주세요."; return; }
+    $("btnCreate").disabled = true; $("btnCreate").textContent = "만드는 중…";
+    try{
+      const r = await FF.rpc("ff_create_room", { p_email: $("email").value, p_family: $("fam").value, p_members: names });
+      const list = FF.lsGet("ff_rooms") || []; list.push({ h: r.host_token, family: r.family, ts: Date.now() }); FF.lsSet("ff_rooms", list.slice(-10));
+      location.replace("?h=" + r.host_token);
+    }catch(e){
+      $("cErr").textContent = FF.errText(e); $("btnCreate").disabled = false; $("btnCreate").textContent = "방 만들고 링크 받기";
+    }
+  };
+}
+
+/* ---------------- 대시보드 ---------------- */
+let D = null, timer = null;
+function msgAll(list){
+  return `[${D.family} 시제 게임] 우리 가족 2분 게임이에요 🙂\n내 이름 옆 링크로 들어가서 해 주세요. (내 링크는 나만 써요)\n` +
+    list.map(m => `${m.nickname}: ${memberLink(m.token)}`).join("\n");
+}
+async function load(quiet){
+  try{
+    D = await FF.rpc("ff_dashboard", { p_host: HOST });
+    render(); $("dErr").textContent = "";
+  }catch(e){
+    if (!quiet || !D) $("dErr").textContent = FF.errText(e);
+    if (e.message === "not_found" && !D){ $("vDash").classList.add("hidden"); $("vOff").classList.remove("hidden"); $("vOff").innerHTML = `<h2>방을 찾을 수 없어요</h2><p class="muted">주소가 잘렸거나 잘못되었을 수 있어요. 처음 받은 호스트 주소를 확인해 주세요.</p><a class="btn ghost" href="./">새 방 만들기</a>`; }
+  }
+}
+function render(){
+  const ms = D.members, done = ms.filter(m => m.submitted), total = ms.length;
+  $("dSub").textContent = "호스트 대시보드"; $("dFam").textContent = D.family + " 가족";
+  $("dDone").textContent = done.length; $("dTotal").textContent = total; $("dBar").style.width = (done.length/total*100) + "%";
+  const wait = ms.filter(m => !m.submitted).map(m => m.nickname);
+  $("dMsg").textContent = wait.length ? `아직 ${wait.join(", ")}님의 결과를 기다리고 있어요.` : "모두 완료했어요! 가족 리포트를 열어 보세요. 🎉";
+  $("dTime").textContent = "마지막 확인 " + new Date().toLocaleTimeString("ko-KR",{hour:"2-digit",minute:"2-digit"});
+  $("btnRemind").classList.toggle("hidden", wait.length === 0);
+  $("mrows").innerHTML = ms.map(m => {
+    const T = m.submitted ? FF.TENSES[m.winner] : null;
+    return `<div class="mrow" data-t="${esc(m.token)}"><div class="h"><b>${esc(m.nickname)}</b>
+      ${m.submitted ? `<span class="chip done"><span class="dot" style="background:${T.color}"></span>${T.name} · ${T.title}</span>` : `<span class="chip wait">대기 중</span>`}</div>
+      <div class="link">${esc(memberLink(m.token))}</div>
+      <div class="row"><button class="btn ghost sm" data-a="share">${m.submitted ? "다시 보내기" : "이 사람에게 보내기"}</button><button class="btn ghost sm" data-a="copy">링크 복사</button><button class="ln" data-a="del">빼기</button></div></div>`;
+  }).join("");
+  $("mrows").querySelectorAll(".mrow").forEach(row => {
+    const m = ms.find(x => x.token === row.dataset.t);
+    row.querySelector('[data-a="share"]').onclick = () => FF.share(msgAll([m]), toast);
+    row.querySelector('[data-a="copy"]').onclick = async () => toast((await FF.copy(memberLink(m.token))) ? "링크를 복사했어요" : "복사가 안 됐어요");
+    row.querySelector('[data-a="del"]').onclick = async () => {
+      if (!confirm(`${m.nickname}님을 빼고 결과도 지울까요?`)) return;
+      try{ await FF.rpc("ff_remove_member", { p_host: HOST, p_member_token: m.token }); load(); }catch(e){ $("dErr").textContent = FF.errText(e); }
+    };
+  });
+  // 리포트 영역
+  const n = done.length, stale = D.report && D.report.input_hash !== D.data_hash;
+  $("btnReport").href = "../report/?h=" + encodeURIComponent(HOST);
+  $("btnReport").classList.toggle("off", n < 2);
+  $("rMsg").textContent = n < 2 ? "결과가 2명 이상 모이면 리포트를 볼 수 있어요."
+    : (n < total ? `지금 ${n}명 기준으로 먼저 볼 수 있어요. 나머지 결과가 들어오면 새로 만들 수 있어요.`
+    : (D.report ? (stale ? "새 결과가 들어왔어요. 리포트를 새로 만들 수 있어요." : "리포트가 준비되어 있어요.") : "모두 모였어요. 리포트를 만들어 볼까요?"));
+  $("btnReport").textContent = D.report && !stale ? "가족 리포트 다시 보기" : "가족 리포트 만들기";
+}
+function initDash(){
+  $("vDash").classList.remove("hidden");
+  $("btnRefresh").onclick = () => { load(); toast("새로 확인했어요"); };
+  $("btnCopyHost").onclick = async () => toast((await FF.copy(hostLink())) ? "호스트 주소를 복사했어요" : "복사가 안 됐어요");
+  $("btnShareAll").onclick = () => FF.share(msgAll(D.members), toast);
+  $("btnRemind").onclick = () => {
+    const list = D.members.filter(m => !m.submitted);
+    FF.share(`[${D.family} 시제 게임] 아직 못 한 분들! 2분이면 끝나요 🙂\n` + list.map(m => `${m.nickname}: ${memberLink(m.token)}`).join("\n"), toast);
+  };
+  $("btnAddM").onclick = async () => {
+    const v = $("newName").value.trim(); if (!v) return;
+    try{ await FF.rpc("ff_add_member", { p_host: HOST, p_nickname: v }); $("newName").value = ""; load(); }catch(e){ $("dErr").textContent = FF.errText(e); }
+  };
+  load();
+  timer = setInterval(() => { if (!document.hidden) load(true); }, 15000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) load(true); });
+}
+
+if (!FF.enabled) $("vOff").classList.remove("hidden");
+else if (HOST){ if (!/^[0-9a-f]{64}$/.test(HOST)){ $("vOff").classList.remove("hidden"); $("vOff").innerHTML = "<h2>주소가 올바르지 않아요</h2><p class='muted'>호스트 주소 전체를 다시 열어 주세요.</p>"; } else initDash(); }
+else { $("vCreate").classList.remove("hidden"); initCreate(); }
+</script>
+</body>
+</html>
