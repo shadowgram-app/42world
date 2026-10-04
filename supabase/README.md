@@ -16,12 +16,12 @@ CLI 방식(권장):
 ```
 supabase login
 supabase link --project-ref <프로젝트 ref>
-supabase functions deploy family-report
+supabase functions deploy family-report --no-verify-jwt
 supabase secrets set ANTHROPIC_API_KEY=<Claude API 키>
 ```
 (선택) 모델을 바꾸려면 `supabase secrets set ANTHROPIC_MODEL=<모델명>`. 기본값은 `claude-sonnet-5-5` 입니다.
 
-CLI가 어려우면 대시보드 > Edge Functions > Create a function 에서 이름을 `family-report` 로 하고 `index.ts` 내용을 붙여 넣은 뒤, Secrets에 `ANTHROPIC_API_KEY` 를 추가해도 됩니다. (JWT 검증은 기본값 그대로 켜 두세요.)
+CLI가 어려우면 대시보드 > Edge Functions > Create a function 에서 이름을 `family-report` 로 하고 `index.ts` 내용을 붙여 넣은 뒤, Secrets에 `ANTHROPIC_API_KEY` 를 추가해도 됩니다. (공개 키가 `sb_publishable_…` 형식이면 JWT 검증을 꺼야 합니다: 함수 설정에서 "Verify JWT" 끄기. 함수는 64자 호스트 토큰과 방당 10회 생성 한도로 보호됩니다.)
 
 ## 3. 주소와 키 넣기
 Project Settings > API 에서 `Project URL` 과 `anon public` 키를 복사해 `familyfit/config.js` 에 넣고 푸시합니다. anon 키는 공개되어도 되는 키이며, `service_role` 키는 절대 넣지 않습니다.

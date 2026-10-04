@@ -9,7 +9,12 @@
   FF.esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   /* ---------- 서버 호출 (로그인 없이 토큰으로) ---------- */
-  function headers() { return { apikey: cfg.ANON_KEY, Authorization: "Bearer " + cfg.ANON_KEY, "Content-Type": "application/json" }; }
+  function headers() {
+    // 새 방식의 공개 키(sb_publishable_…)는 JWT가 아니므로 apikey 헤더로만 보냅니다. 예전 anon JWT 키는 Authorization 도 함께 보냅니다.
+    const h = { apikey: cfg.ANON_KEY, "Content-Type": "application/json" };
+    if (!/^sb_/.test(cfg.ANON_KEY)) h.Authorization = "Bearer " + cfg.ANON_KEY;
+    return h;
+  }
   FF.rpc = async function (name, args) {
     if (!FF.enabled) throw new Error("disabled");
     let r;
