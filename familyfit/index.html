@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우리 가족 시제 게임 · 옥타고라스 패밀리핏</title>
+<meta name="description" content="2분이면 끝! 우리 가족은 어떤 시제로 살고 있을까? 옥타고라스 패밀리핏 시리즈 1">
+<meta property="og:type" content="website">
+<meta property="og:title" content="우리 가족 시제 게임 · 옥타고라스 패밀리핏">
+<meta property="og:description" content="12개 장면, 2분. 우리 가족은 어떤 시제로 살고 있을까?">
+<meta property="og:image" content="https://42world.kr/familyfit/og.png">
+<meta property="og:url" content="https://42world.kr/familyfit/">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{
+  --cream:#F7F3EC; --card:#ffffff; --ink:#232323; --muted:#6b6f78; --line:#e4ddd0;
+  --indigo:#3B4C8C; --indigo-2:#2e3d73;
+  --P:#B5654A; --S:#E0794F; --F:#D9A441; --T:#7A3B3B;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--cream);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased;
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px 56px}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.brand{font-size:12px;letter-spacing:.18em;font-weight:800;color:var(--indigo)}
+.linkbtn{appearance:none;background:none;border:0;font:inherit;font-size:13px;color:var(--muted);cursor:pointer;padding:6px 0;text-decoration:underline}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px 20px;box-shadow:0 1px 2px rgba(35,35,35,.04);margin-bottom:14px}
+h1{font-family:"Noto Serif KR","Nanum Myeongjo",serif;font-size:28px;line-height:1.35;margin:4px 0 10px;font-weight:900}
+h1 em{font-style:normal;color:var(--P)}
+h2{font-size:18px;margin:0 0 8px}
+h3{font-size:15px;margin:16px 0 4px;color:var(--indigo)}
+p{margin:0 0 10px}
+.muted{color:var(--muted);font-size:14px}
+.small{font-size:12.5px;color:var(--muted)}
+.btn{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;border-radius:14px;padding:15px 20px;
+  background:var(--indigo);color:#fff;width:100%;font-size:16px;transition:background .15s,transform .1s}
+.btn:hover{background:var(--indigo-2)}
+.btn:active{transform:scale(.985)}
+.btn.ghost{background:#fff;color:var(--indigo);border:1.5px solid var(--indigo)}
+.btn.ghost:hover{background:#f1f3fa}
+.btn:disabled{background:#c5c8d3;cursor:not-allowed}
+.stack{display:grid;gap:10px}
+.hidden{display:none!important}
+label.f{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
+input[type=text],textarea{width:100%;font:inherit;font-size:16px;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;color:var(--ink)}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--indigo)}
+textarea{min-height:130px;resize:vertical;line-height:1.5}
+.steps{counter-reset:s;list-style:none;margin:14px 0 0;padding:0}
+.steps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;margin:0 0 10px;font-size:15px}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;background:var(--indigo);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;margin-top:2px}
+
+/* game */
+.prog{margin:4px 0 14px}
+.prog .meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px}
+.bar{height:8px;background:#e8e1d3;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--P),var(--F));transition:width .3s}
+.qno{font-size:12px;letter-spacing:.14em;color:var(--P);font-weight:800}
+.qtext{font-size:21px;font-weight:800;line-height:1.5;margin:4px 0 16px}
+.choice{appearance:none;font:inherit;text-align:left;cursor:pointer;display:flex;gap:14px;align-items:flex-start;width:100%;
+  background:#fff;border:2px solid var(--line);border-radius:18px;padding:18px 16px;margin-bottom:12px;color:var(--ink);
+  transition:border-color .12s,transform .1s,background .12s}
+.choice:hover,.choice:focus-visible{border-color:var(--indigo);outline:none}
+.choice:active{transform:scale(.99)}
+.choice .tag{flex:none;width:34px;height:34px;border-radius:50%;background:var(--indigo);color:#fff;display:grid;place-items:center;font-weight:800}
+.choice .txt{font-size:16.5px;font-weight:600;line-height:1.55;padding-top:3px}
+.choice.picked{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.choice.picked .tag{background:#fff;color:var(--indigo)}
+.stage{animation:in .22s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* result */
+.hero{border-radius:22px;padding:28px 22px;color:#fff;margin-bottom:14px}
+.hero small{opacity:.85;letter-spacing:.1em;font-weight:700}
+.hero .big{font-family:"Noto Serif KR","Nanum Myeongjo",serif;font-size:34px;font-weight:900;line-height:1.25;margin:6px 0 2px}
+.hero .code{font-size:14px;opacity:.85;font-weight:600}
+.hero .tag{margin-top:10px;font-size:16px;font-weight:600}
+.dist{margin:12px 0}
+.dist .h{display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px}
+.dist .track{height:12px;border-radius:99px;background:#eee7da;overflow:hidden}
+.dist .fill{height:100%;border-radius:99px}
+.note{background:#fff7e0;border:1px solid #f0dfa3;border-radius:12px;padding:10px 14px;font-size:14px;margin:12px 0}
+.codebox{font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;background:#f4f1ea;border:1px dashed #cfc6b3;border-radius:10px;padding:10px 12px;word-break:break-all;color:#4a4a4a}
+
+/* family map */
+.board{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.col{border-radius:16px;padding:12px 12px 14px;color:#fff;min-height:96px}
+.col .ct{font-weight:800;font-size:15px}
+.col .cs{font-size:12px;opacity:.9;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:rgba(255,255,255,.92);color:#2a2a2a;border-radius:99px;padding:3px 11px;font-size:14px;font-weight:700}
+.col.empty{opacity:.45}
+.pair{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0;background:#fffdf9}
+.pair b.pt{color:var(--indigo)}
+.pair .say{font-size:14.5px;margin:4px 0 0}
+.members{display:grid;gap:8px;margin:10px 0}
+.mrow{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:8px 12px;background:#fff;font-size:15px}
+.mrow button{appearance:none;border:0;background:none;color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#232323;color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:90%;text-align:center}
+.toast.on{opacity:1}
+footer{margin-top:24px;text-align:center;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><span class="brand">OCTAGORAS · FAMILY FIT</span><button class="linkbtn" id="goHome">처음으로</button></div>
+
+  <!-- HOME -->
+  <section id="vHome">
+    <div class="card">
+      <span class="small">패밀리핏 시리즈 1 · 시제 편</span>
+      <h1>우리 가족은<br>어떤 <em>시제</em>로 살고 있을까?</h1>
+      <p class="muted">12개의 장면 중 더 나다운 쪽을 고르면 끝. 2분이면 충분하고, 정답은 없어요. 결과는 재미로 보는 가이드이며 진단이 아닙니다.</p>
+      <ol class="steps">
+        <li>호스트가 가족 링크를 단톡방에 보내요</li>
+        <li>가족 모두가 각자 2분 게임을 해요</li>
+        <li>결과 코드를 호스트에게 보내요</li>
+        <li>호스트가 모으면 <b>우리 집 시제 지도</b>가 완성돼요</li>
+      </ol>
+    </div>
+    <div class="stack">
+      <button class="btn" id="btnHost">가족 모으기 (호스트)</button>
+      <button class="btn ghost" id="btnSolo">나 혼자 먼저 해보기</button>
+      <button class="btn ghost hidden" id="btnPrev">내 지난 결과 다시 보기</button>
+    </div>
+  </section>
+
+  <!-- HOST SETUP -->
+  <section id="vHost" class="hidden">
+    <div class="card">
+      <h2>가족 방 만들기</h2>
+      <p class="muted">가족 이름을 정하면 공유할 링크가 만들어져요.</p>
+      <label class="f" for="famName">가족 이름</label>
+      <input type="text" id="famName" maxlength="12" placeholder="예: 조씨네" autocomplete="off">
+      <div id="shareBox" class="hidden">
+        <label class="f">공유 링크</label>
+        <div class="codebox" id="shareLink"></div>
+        <div class="stack" style="margin-top:12px">
+          <button class="btn" id="btnShare">가족 단톡방에 보내기</button>
+          <button class="btn ghost" id="btnCopyLink">링크 복사</button>
+          <button class="btn ghost" id="btnToCollect">가족 지도 모으러 가기</button>
+        </div>
+        <p class="small" style="margin-top:10px">카카오톡 안에서 링크를 열면 공유 버튼이 복사로 바뀔 수 있어요. 그럴 땐 복사해서 단톡방에 붙여 넣어 주세요.</p>
+      </div>
+      <button class="btn" id="btnMakeLink" style="margin-top:14px" disabled>링크 만들기</button>
+    </div>
+  </section>
+
+  <!-- INTRO (member) -->
+  <section id="vIntro" class="hidden">
+    <div class="card">
+      <span class="small" id="introFam"></span>
+      <h1>우리 가족<br><em>시제 게임</em></h1>
+      <p class="muted">12개 장면, 2분. 더 나다운 쪽을 직감으로 골라 주세요.</p>
+      <label class="f" for="nick">가족이 부르는 내 애칭</label>
+      <input type="text" id="nick" maxlength="8" placeholder="예: 엄마, 첫째, 아빠" autocomplete="off">
+      <button class="btn" id="btnStart" style="margin-top:14px" disabled>시작하기</button>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section id="vGame" class="hidden">
+    <div class="prog"><div class="meta"><span id="plabel"></span><span>하나를 골라요</span></div><div class="bar"><i id="pfill"></i></div></div>
+    <div class="card"><div id="stage" class="stage"></div>
+      <div style="text-align:center;margin-top:4px"><button class="linkbtn" id="btnBack">← 이전 장면</button></div>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="vResult" class="hidden"></section>
+
+  <!-- COLLECT (host) -->
+  <section id="vCollect" class="hidden">
+    <div class="card">
+      <h2 id="colTitle">가족 지도 모으기</h2>
+      <p class="muted">가족이 단톡방에 보낸 메시지를 <b>그대로 붙여 넣으면</b> 안에 든 결과 코드(OTTI1.으로 시작)를 찾아서 모아 줘요. 여러 명 것을 한꺼번에 붙여 넣어도 됩니다.</p>
+      <textarea id="paste" placeholder="여기에 붙여 넣기"></textarea>
+      <div class="stack" style="margin-top:10px"><button class="btn" id="btnAdd">코드 찾아서 추가하기</button></div>
+      <div id="members" class="members"></div>
+    </div>
+    <div id="mapBox"></div>
+  </section>
+
+  <footer>옥타고라스 오해유형연구소 · 재미로 보는 가이드이며 진단이 아닙니다.<br>지금의 모습이지 전부가 아니에요.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<noscript><p style="padding:20px">이 페이지는 자바스크립트가 필요해요.</p></noscript>
+
+<script>
+/* =========================================================
+   운영자 설정 (여기만 고치면 됩니다)
+   ========================================================= */
+const CFG = {
+  FULL_TEST_URL: "",          // OTTI 80문항 풀테스트 주소 (없으면 비워 두세요: '준비 중'으로 표시)
+  FULL_TEST_LABEL: "OTTI 80문항 풀테스트",
+  NEXT_SERIES_NOTE: "시리즈 2 · 인칭 편은 여행 중에 열려요."
+};
+
+/* =========================================================
+   데이터
+   P=과거형(Si) S=현재형(Se) F=미래형(Ne) T=초월형(Ni)
+   ========================================================= */
+const TENSES = {
+  P:{name:"과거형", code:"Si", title:"든든한 기록관", color:"#B5654A",
+     tag:"검증된 것에서 안심을 얻는 사람",
+     family:"가족의 기억과 전통을 지키는 사람이에요. 예전에 이랬던 일, 좋았던 곳, 정해진 순서를 정확히 기억해요. 갑자기 계획이 바뀌면 잠깐 숨을 고를 시간이 필요해요.",
+     trip:"숙소와 맛집 후기를 미리 읽고 일정표를 챙기는 쪽이에요. 목표는 실패 없는 여행!",
+     say:"“이번엔 이거 하자”보다 “지난번 방식에서 이 부분만 바꿔 볼까?”라고 말해 주세요."},
+  S:{name:"현재형", code:"Se", title:"현장 해결사", color:"#E0794F",
+     tag:"지금 이 순간에 가장 잘 반응하는 사람",
+     family:"눈앞의 상황을 가장 빨리 읽고 바로 움직여요. 분위기를 띄우고 막힌 일을 그 자리에서 풀어요. 먼 미래 얘기가 길어지면 몸이 먼저 들썩여요.",
+     trip:"발길 닿는 대로 걷고, 눈에 띄는 것부터 맛보고, 현장에서 즉석으로 방향을 정해요.",
+     say:"“나중에 어떻게 될지”보다 “지금 당장 이것부터 하자”라고 말해 주세요."},
+  F:{name:"미래형", code:"Ne", title:"아이디어 탐험가", color:"#D9A441",
+     tag:"가능성을 펼칠 때 가장 신나는 사람",
+     family:"하나의 이야기에서 열 가지 가능성을 꺼내요. 새 계획과 새 시도, 엉뚱한 연결이 에너지원이에요. 같은 일의 반복과 세부 확인에는 쉽게 지쳐요.",
+     trip:"“여기도 가 보고 저기도 가 보자!” 계획이 계속 늘어나고, 즉석 변경도 즐겨요.",
+     say:"“안 돼”보다 “그 아이디어 좋다, 그중 하나만 먼저 해 볼까?”라고 말해 주세요."},
+  T:{name:"초월형", code:"Ni", title:"분위기 통찰가", color:"#7A3B3B",
+     tag:"보이지 않는 흐름을 먼저 읽는 사람",
+     family:"말보다 분위기와 흐름을 먼저 읽고, 오래 조용히 생각한 뒤 핵심 한마디를 건네요. 설명을 길게 하지 않아서 가끔 오해를 받아요.",
+     trip:"겉핥기보다 마음에 남는 한두 곳을 깊이 보고, 이 여행이 우리에게 어떤 의미인지 생각해요.",
+     say:"“왜?”를 다그치기보다 “어떤 느낌이 들었어?” 하고 천천히 물어봐 주세요."}
+};
+const KEYS = ["P","S","F","T"];
+
+//CORE-START
+/* 12문항: 여섯 가지 짝(P-F, S-T, P-S, F-S, T-P, F-T)이 각 2번씩, 각 시제가 정확히 6번 등장 */
+const QUESTIONS = [
+ {q:"가족 여행지를 정해야 해요. 나는?",
+  a:["예전에 좋았던 곳, 후기가 검증된 곳으로 가고 싶다.","P"], b:["아무도 안 가 본 새로운 곳을 찾아보고 싶다.","F"]},
+ {q:"기항지에서 자유시간 2시간이 생겼어요.",
+  a:["눈에 띄는 가게와 길거리 음식부터, 발길 닿는 대로 돌아다닌다.","S"], b:["그 도시의 분위기를 느끼며 천천히 걷고, 마음에 남는 한 곳을 깊이 본다.","T"]},
+ {q:"식당에서 메뉴를 고를 때 나는?",
+  a:["늘 먹던 실패 없는 메뉴를 고른다.","P"], b:["지금 눈에 들어온 것, 옆 테이블 음식이 맛있어 보이면 바로 시킨다.","S"]},
+ {q:"여행 전날, 짐을 쌀 때 나는?",
+  a:["“혹시 필요할지도 몰라” 하며 가능성에 대비해 짐이 계속 늘어난다.","F"], b:["당장 필요한 것만 가볍게 챙기고, 부족하면 현지에서 산다.","S"]},
+ {q:"여행에서 돌아와 사진을 정리할 때, 마음에 남는 건?",
+  a:["그날의 분위기와 ‘그때 우리가 어땠는지’ 하는 느낌","T"], b:["언제 어디서 누가 뭘 했는지, 정확한 디테일","P"]},
+ {q:"가족끼리 수다를 떨 때 나는 이런 쪽이 더 좋다.",
+  a:["이 얘기 저 얘기 튀면서 아이디어가 마구 쏟아지는 수다","F"], b:["한 가지 주제를 깊이 파고들어 핵심을 짚는 대화","T"]},
+ {q:"가족 생신 잔치를 준비한다면?",
+  a:["작년에 좋았던 방식 그대로, 검증된 순서대로 준비한다.","P"], b:["올해는 색다른 이벤트를 새로 기획해 본다.","F"]},
+ {q:"스트레스를 풀고 싶을 때 나는?",
+  a:["맛있는 걸 먹고 몸을 움직이며 지금 바로 푼다.","S"], b:["다음 여행이나 먼 계획을 상상하며 설레는 걸로 푼다.","F"]},
+ {q:"가족이 이야기할 때, 나는 먼저 이걸 챙긴다.",
+  a:["그 사람이 실제로 한 말과 사실 관계","P"], b:["말 뒤에 숨은 진짜 마음과 흐름","T"]},
+ {q:"가족끼리 분위기가 싸해졌을 때 나는?",
+  a:["일단 분위기를 바꿀 행동부터 한다. 간식을 꺼내거나 자리를 옮기거나.","S"], b:["‘이 분위기의 진짜 이유가 뭘까’ 조용히 읽어 본다.","T"]},
+ {q:"처음 가는 길을 찾을 때 나는?",
+  a:["지도와 미리 조사한 경로를 확인하고 간다.","P"], b:["일단 걸으면서 주변을 보고 감으로 찾아간다.","S"]},
+ {q:"가족의 앞날(이사, 취업, 진로)을 생각할 때 나는?",
+  a:["여러 가지 가능성과 선택지를 신나게 펼쳐 본다.","F"], b:["시간이 지나면 결국 이렇게 될 것 같다는 하나의 그림이 조용히 그려진다.","T"]}
+];
+const TIEBREAK = {
+  q:"가족 여행 중 계획에 없던 일이 터졌어요. 마음속에서 가장 먼저 올라오는 말은?",
+  opts:{
+    P:"“전에 이런 일 있었을 땐 어떻게 했더라?”",
+    S:"“일단 지금 할 수 있는 것부터 하자!”",
+    F:"“오히려 잘됐다, 다른 방법이 있을지도 몰라!”",
+    T:"“이 일이 우리에게 주려는 게 뭘까?”"
+  }
+};
+
+function appearances(){
+  const n = {P:0,S:0,F:0,T:0};
+  QUESTIONS.forEach(q => { n[q.a[1]]++; n[q.b[1]]++; });
+  return n;
+}
+function tally(picks){
+  const raw = {P:0,S:0,F:0,T:0}, ap = appearances(), share = {};
+  picks.forEach(t => raw[t]++);
+  KEYS.forEach(t => share[t] = raw[t] / ap[t]);
+  return {raw, share};
+}
+function leaders(share){
+  const max = Math.max(...KEYS.map(k => share[k]));
+  return KEYS.filter(t => Math.abs(share[t] - max) < 1e-9);
+}
+
+/* ----- 결과 코드: 가족이 호스트에게 보내는 짧은 문자열 ----- */
+function b64urlEncode(str){
+  const bytes = new TextEncoder().encode(str); let bin = "";
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function b64urlDecode(s){
+  let b = s.replace(/-/g,"+").replace(/_/g,"/"); while (b.length % 4) b += "=";
+  const bin = atob(b), bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+function makeCode(o){ // o = {f, n, w, c:[P,S,F,T]}
+  return "OTTI1." + b64urlEncode(JSON.stringify({v:1, f:o.f, n:o.n, w:o.w, c:o.c}));
+}
+function readCode(code){
+  try{
+    const m = /^OTTI1\.([A-Za-z0-9_-]+)$/.exec(code); if (!m) return null;
+    const o = JSON.parse(b64urlDecode(m[1]));
+    if (!o || o.v !== 1) return null;
+    if (typeof o.n !== "string" || !o.n.trim() || o.n.length > 12) return null;
+    if (typeof o.f !== "string" || o.f.length > 20) return null;
+    if (!"PSFT".includes(o.w) || o.w.length !== 1) return null;
+    if (!Array.isArray(o.c) || o.c.length !== 4) return null;
+    if (!o.c.every(x => Number.isInteger(x) && x >= 0 && x <= 12)) return null;
+    return {f:o.f, n:o.n.trim(), w:o.w, c:o.c};
+  }catch(e){ return null; }
+}
+function findCodes(text){
+  return (String(text).match(/OTTI1\.[A-Za-z0-9_-]+/g) || []);
+}
+//CORE-END
+
+/* ----- 가족 지도 문구 ----- */
+const PAIR = {
+  PF:{opp:true, mis:"과거형은 “예전엔 이렇게 했잖아”라고 말하고, 미래형은 그 말을 ‘새로운 시도를 막는다’고 들어요. 반대로 미래형의 “이번엔 이거 어때?”는 과거형에게 ‘근거 없이 흔든다’로 들려요.",
+      a:"과거형 → 미래형: “그 아이디어, 지난번 방식에서 어디를 바꾸는 거야?”",
+      b:"미래형 → 과거형: “검증된 건 그대로 두고, 딱 한 가지만 새로 해 보면 어때?”"},
+  ST:{opp:true, mis:"현재형은 “그래서 지금 뭘 하자는 거야?”라고 묻고, 초월형은 말 속의 이유를 알아주길 바라요. 서로 ‘왜 내 말을 못 알아듣지?’ 하고 느낄 수 있어요.",
+      a:"현재형 → 초월형: “네가 보는 큰 그림을 한 문장으로 말해 줘. 그다음 내가 지금 할 일을 정할게.”",
+      b:"초월형 → 현재형: “지금 해야 할 일 하나만 정해 줘. 나머지는 그다음에 얘기하자.”"},
+  PS:{opp:false, mis:"과거형은 즉흥이 불안하고, 현재형은 짜 놓은 계획이 답답해요.",
+      a:"과거형 → 현재형: “큰 일정은 정해 두고, 중간에 자유시간 2시간을 줄게.”",
+      b:"현재형 → 과거형: “큰 일정은 네 계획대로 하고, 중간 빈 칸만 내가 채울게.”"},
+  SF:{opp:false, mis:"미래형은 “다음엔 이거!” 하고 넘어가고, 현재형은 “일단 지금 이것부터” 하고 붙들어요. 서로 속도가 달라 보여요.",
+      a:"미래형 → 현재형: “이 아이디어는 메모만 해 둘게. 지금 일부터 끝내자.”",
+      b:"현재형 → 미래형: “그 아이디어, 오늘 저녁 시간에 같이 얘기해 보자.”"},
+  PT:{opp:false, mis:"과거형은 사실과 디테일을, 초월형은 의미와 흐름을 먼저 봐요. 과거형은 “근거가 뭐야?”, 초월형은 “그걸 왜 몰라?” 하고 서로 답답해할 수 있어요.",
+      a:"과거형 → 초월형: “그렇게 느낀 계기가 뭐였어?”",
+      b:"초월형 → 과거형: “사실 하나만 먼저 말하고, 해석은 그다음에 말할게.”"},
+  FT:{opp:false, mis:"미래형은 이야기가 사방으로 퍼지고, 초월형은 조용히 하나의 결론으로 모여요. 미래형에게는 초월형이 닫혀 있는 것처럼, 초월형에게는 미래형이 흩어지는 것처럼 보여요.",
+      a:"미래형 → 초월형: “결론까지 어떤 생각을 했는지 한 줄만 들려줘.”",
+      b:"초월형 → 미래형: “아이디어 중에 마음에 걸리는 하나를 골라서 말할게.”"},
+  PP:{opp:false, same:true, mis:"서로의 방식이 익숙해서 편하지만, 새로운 시도가 줄어들 수 있어요.", a:"함께: “이번 여행에 ‘처음 해보는 것’ 하나만 넣어 볼까?”", b:""},
+  SS:{opp:false, same:true, mis:"모두 즉흥이라 재미있지만, 큰 일정이 비어 있을 수 있어요.", a:"함께: “예약이 필요한 것 하나만 미리 정해 두자.”", b:""},
+  FF:{opp:false, same:true, mis:"아이디어는 넘치는데 정리하는 사람이 없을 수 있어요.", a:"함께: “오늘 나온 아이디어 중 하나만 골라 실행하자.”", b:""},
+  TT:{opp:false, same:true, mis:"말하지 않아도 알 것 같지만, 확인하지 않으면 오해가 쌓일 수 있어요.", a:"함께: “내가 이해한 게 맞는지 한 번만 말로 확인하자.”", b:""}
+};
+const MISSING = {
+  P:"기록과 점검 담당이 없어요. 예약·시간·준비물 확인을 돌아가며 맡아 보세요.",
+  S:"현장 대응 담당이 없어요. 변수가 생겼을 때 ‘지금 당장 할 일’을 누가 정할지 미리 정해 두세요.",
+  F:"새로운 시도 담당이 없어요. 이번 여행에 ‘처음 해보는 것’을 하나씩 넣어 보세요.",
+  T:"분위기와 의미 담당이 없어요. 하루 끝에 ‘오늘 마음에 남은 순간’을 한 줄씩 나눠 보세요."
+};
+
+/* =========================================================
+   UI
+   ========================================================= */
+const $ = id => document.getElementById(id);
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function toast(m){ const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("on"), 2200); }
+function view(id){ ["vHome","vHost","vIntro","vGame","vResult","vCollect"].forEach(v => $(v).classList.toggle("hidden", v !== id)); window.scrollTo({top:0}); }
+function lsGet(k){ try{ const s = localStorage.getItem(k); return s ? JSON.parse(s) : null; }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+
+async function copyText(t){
+  try{ if (navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(t); return true; } }catch(e){}
+  const ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta);
+  ta.focus(); ta.select(); let ok = false; try{ ok = document.execCommand("copy"); }catch(e){} ta.remove(); return ok;
+}
+async function shareOrCopy(text){
+  if (navigator.share){
+    try{ await navigator.share({text}); return; }catch(e){ if (e && e.name === "AbortError") return; }
+  }
+  const ok = await copyText(text);
+  toast(ok ? "복사했어요. 단톡방에 붙여 넣어 주세요" : "복사가 안 됐어요. 아래 글을 직접 복사해 주세요");
+  if (!ok) prompt("아래 글을 복사해 주세요", text);
+}
+
+const params = new URLSearchParams(location.search);
+const FAM = (params.get("f") || "").slice(0, 12).trim();
+const BASE = location.origin.startsWith("http") ? location.origin + location.pathname : location.href.split("?")[0];
+let me = lsGet("ff1_me");
+
+/* ----- 홈 ----- */
+if (me) $("btnPrev").classList.remove("hidden");
+$("goHome").onclick = () => view(FAM ? "vIntro" : "vHome");
+$("btnHost").onclick = () => { const h = lsGet("ff1_host"); if (h && h.fam){ $("famName").value = h.fam; onFamInput(); } view("vHost"); };
+$("btnSolo").onclick = () => { $("introFam").textContent = "나 혼자 해보는 시제 게임"; view("vIntro"); $("nick").focus(); };
+$("btnPrev").onclick = () => showResult(me, true);
+
+/* ----- 호스트: 가족 방 ----- */
+function onFamInput(){
+  const v = $("famName").value.trim();
+  $("btnMakeLink").disabled = !v;
+}
+$("famName").addEventListener("input", onFamInput);
+function hostLink(){ return BASE + "?f=" + encodeURIComponent($("famName").value.trim()); }
+function hostMessage(){
+  const fam = $("famName").value.trim();
+  return `[${fam} 시제 게임] 우리 가족은 어떤 시제로 살고 있을까? 🙂\n2분이면 끝나요. 링크에서 각자 해보고, 마지막에 나오는 결과 코드를 이 방에 보내 주세요.\n${hostLink()}`;
+}
+$("btnMakeLink").onclick = () => {
+  const fam = $("famName").value.trim(); if (!fam) return;
+  $("shareLink").textContent = hostLink(); $("shareBox").classList.remove("hidden"); $("btnMakeLink").classList.add("hidden");
+  const h = lsGet("ff1_host") || {}; h.fam = fam; lsSet("ff1_host", h);
+};
+$("btnShare").onclick = () => shareOrCopy(hostMessage());
+$("btnCopyLink").onclick = async () => toast((await copyText(hostLink())) ? "링크를 복사했어요" : "복사가 안 됐어요");
+$("btnToCollect").onclick = () => openCollect();
+
+/* ----- 멤버: 인트로 ----- */
+if (FAM){
+  $("introFam").textContent = FAM + " 가족";
+  view("vIntro");
+}
+function onNickInput(){ $("btnStart").disabled = !$("nick").value.trim(); }
+$("nick").addEventListener("input", onNickInput);
+if (me && me.n) { $("nick").value = me.n; onNickInput(); }
+
+/* ----- 게임 ----- */
+let idx = 0, picks = [], flips = [], tiePhase = false, tied = [], lock = false, nick = "";
+$("btnStart").onclick = () => {
+  nick = $("nick").value.trim(); if (!nick) return;
+  idx = 0; picks = []; tiePhase = false; tied = []; flips = QUESTIONS.map(() => Math.random() < .5);
+  view("vGame"); render();
+};
+function render(){
+  const stage = $("stage"); stage.style.animation = "none"; void stage.offsetWidth; stage.style.animation = "";
+  if (tiePhase){
+    $("plabel").textContent = "마지막 한 장면"; $("pfill").style.width = "100%";
+    const opts = tied.slice().sort(() => Math.random() - .5);
+    stage.innerHTML = `<div class="qno">마지막 결판</div><div class="qtext">${esc(TIEBREAK.q)}</div>` +
+      opts.map((t,i) => `<button class="choice" data-t="${t}"><span class="tag">${String.fromCharCode(65+i)}</span><span class="txt">${esc(TIEBREAK.opts[t])}</span></button>`).join("");
+    stage.querySelectorAll(".choice").forEach(b => b.onclick = () => finishGame(b.dataset.t));
+    $("btnBack").style.visibility = "hidden"; return;
+  }
+  const Q = QUESTIONS[idx], L = flips[idx] ? Q.b : Q.a, R = flips[idx] ? Q.a : Q.b;
+  $("plabel").textContent = `${idx + 1} / ${QUESTIONS.length}`;
+  $("pfill").style.width = (idx / QUESTIONS.length * 100) + "%";
+  stage.innerHTML = `<div class="qno">장면 ${idx + 1}</div><div class="qtext">${esc(Q.q)}</div>
+    <button class="choice" data-t="${L[1]}"><span class="tag">A</span><span class="txt">${esc(L[0])}</span></button>
+    <button class="choice" data-t="${R[1]}"><span class="tag">B</span><span class="txt">${esc(R[0])}</span></button>`;
+  stage.querySelectorAll(".choice").forEach(b => b.onclick = () => pick(b));
+  $("btnBack").style.visibility = idx === 0 ? "hidden" : "visible";
+}
+function pick(btn){
+  if (lock) return; lock = true; btn.classList.add("picked"); picks[idx] = btn.dataset.t;
+  setTimeout(() => {
+    lock = false;
+    if (idx < QUESTIONS.length - 1){ idx++; render(); }
+    else { const {share} = tally(picks), L = leaders(share); if (L.length > 1){ tiePhase = true; tied = L; render(); } else finishGame(L[0]); }
+  }, 200);
+}
+$("btnBack").onclick = () => { if (tiePhase || idx === 0) return; idx--; picks.length = idx; render(); };
+document.addEventListener("keydown", e => {
+  if ($("vGame").classList.contains("hidden")) return;
+  const btns = document.querySelectorAll("#stage .choice"), k = e.key.toLowerCase();
+  if (k === "a" || k === "arrowleft") btns[0] && btns[0].click();
+  else if (k === "b" || k === "arrowright") btns[1] && btns[1].click();
+  else if (tiePhase && (k === "c" || k === "d")) btns[k.charCodeAt(0) - 97] && btns[k.charCodeAt(0) - 97].click();
+});
+
+function finishGame(winnerIfTie){
+  const {raw, share} = tally(picks), L = leaders(share);
+  const w = L.length > 1 ? (L.includes(winnerIfTie) ? winnerIfTie : L[0]) : L[0];
+  const tieNote = L.length > 1 ? L.map(t => TENSES[t].name).join(", ") : "";
+  me = {f: FAM, n: nick, w, c: KEYS.map(k => raw[k]), tie: tieNote};
+  me.code = makeCode(me);
+  lsSet("ff1_me", me);
+  showResult(me, false);
+}
+
+/* ----- 개인 결과 ----- */
+function showResult(m, fromSaved){
+  const T = TENSES[m.w];
+  const ap = appearances();
+  const order = KEYS.slice().sort((a,b) => m.c[KEYS.indexOf(b)] / ap[b] - m.c[KEYS.indexOf(a)] / ap[a]);
+  const bars = order.map(k => { const pct = Math.round(m.c[KEYS.indexOf(k)] / ap[k] * 100);
+    return `<div class="dist"><div class="h"><span>${TENSES[k].name} <span class="small">(${TENSES[k].code})</span></span><b>${pct}%</b></div>
+    <div class="track"><div class="fill" style="width:${pct}%;background:${TENSES[k].color}"></div></div></div>`; }).join("");
+  const famLabel = m.f ? esc(m.f) + " 가족 · " : "";
+  const fullTest = CFG.FULL_TEST_URL
+    ? `<a class="btn ghost" style="display:block;text-align:center;text-decoration:none" href="${esc(CFG.FULL_TEST_URL)}" target="_blank" rel="noopener">${esc(CFG.FULL_TEST_LABEL)} 해보기</a>`
+    : `<button class="btn ghost" disabled>${esc(CFG.FULL_TEST_LABEL)} · 준비 중</button>`;
+  $("vResult").innerHTML = `
+    <div class="hero" style="background:linear-gradient(135deg,#2b2f4a,${T.color})">
+      <small>${famLabel}${esc(m.n)}님의 시제</small>
+      <div class="big">${T.name}</div>
+      <div class="code">${T.title} · ${T.code}</div>
+      <div class="tag">${T.tag}</div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">가족 안에서의 나</h3><p>${T.family}</p>
+      <h3>여행에서의 나</h3><p>${T.trip}</p>
+      <h3>가족이 나에게 이렇게 말해 주면 좋아요</h3><p>${T.say}</p>
+      ${m.tie ? `<div class="note">선택 비율이 비슷해서 마지막 한 장면으로 정했어요. (${esc(m.tie)})</div>` : ""}
+      <p class="small">지금의 모습이지 전부가 아니에요. 상황과 사람에 따라 다른 시제가 크게 나오기도 합니다.</p>
+    </div>
+    <div class="card"><h2>내가 고른 시제 비율</h2>${bars}</div>
+    <div class="card">
+      <h2>이제 호스트에게 보내요</h2>
+      <p class="muted">아래 버튼을 누르면 결과 코드가 담긴 메시지가 만들어져요. 가족 단톡방에 보내면 호스트가 모아서 <b>우리 집 시제 지도</b>를 만들 수 있어요.</p>
+      <div class="codebox" id="myCode">${esc(m.code)}</div>
+      <div class="stack" style="margin-top:12px">
+        <button class="btn" id="btnSend">결과를 가족방에 보내기</button>
+        <button class="btn ghost" id="btnCopyCode">코드만 복사</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>더 깊이 알고 싶다면</h2>
+      <p class="muted">${esc(CFG.NEXT_SERIES_NOTE)} 나만의 정밀한 코칭이 궁금하다면 풀테스트로 이어 가세요.</p>
+      ${fullTest}
+    </div>
+    <div class="stack"><button class="btn ghost" id="btnRedo">다시 해보기</button>
+      ${m.f ? "" : `<button class="btn ghost" id="btnToHost">가족 모으기 (호스트)</button>`}</div>`;
+  view("vResult");
+  $("btnSend").onclick = () => shareOrCopy(`[${m.f ? m.f + " " : ""}시제 게임] ${m.n} · ${T.name} (${T.title})\n아래 코드를 호스트가 ‘가족 지도’에 붙여 넣어요 👇\n${m.code}`);
+  $("btnCopyCode").onclick = async () => toast((await copyText(m.code)) ? "코드를 복사했어요" : "복사가 안 됐어요");
+  $("btnRedo").onclick = () => { $("nick").value = m.n; onNickInput(); view(FAM || !m.f ? "vIntro" : "vIntro"); };
+  const bh = $("btnToHost"); if (bh) bh.onclick = () => { view("vHost"); const h = lsGet("ff1_host"); if (h && h.fam){ $("famName").value = h.fam; onFamInput(); } };
+}
+
+/* ----- 호스트: 취합과 가족 지도 ----- */
+function hostState(){ const h = lsGet("ff1_host") || {}; if (!Array.isArray(h.members)) h.members = []; return h; }
+function openCollect(){
+  const h = hostState(), fam = ($("famName").value.trim() || h.fam || "우리 가족");
+  h.fam = fam; lsSet("ff1_host", h);
+  $("colTitle").textContent = fam + " 가족 지도 모으기";
+  if (me && me.code && !h.members.some(x => x.n === me.n)) { /* 호스트 본인 결과가 있으면 자동 포함 */
+    const r = readCode(me.code); if (r){ h.members.push(r); lsSet("ff1_host", h); }
+  }
+  renderMembers(); renderMap(); view("vCollect");
+}
+function renderMembers(){
+  const h = hostState();
+  $("members").innerHTML = h.members.length
+    ? h.members.map((m,i) => `<div class="mrow"><span><span class="dot" style="background:${TENSES[m.w].color}"></span>${esc(m.n)} · ${TENSES[m.w].name}</span><button data-i="${i}">빼기</button></div>`).join("")
+    : `<p class="small">아직 모은 결과가 없어요.</p>`;
+  $("members").querySelectorAll("button").forEach(b => b.onclick = () => { const h2 = hostState(); h2.members.splice(+b.dataset.i, 1); lsSet("ff1_host", h2); renderMembers(); renderMap(); });
+}
+$("btnAdd").onclick = () => {
+  const codes = findCodes($("paste").value);
+  if (!codes.length){ toast("결과 코드(OTTI1.…)를 찾지 못했어요"); return; }
+  const h = hostState(); let added = 0, bad = 0;
+  codes.forEach(c => { const r = readCode(c); if (!r){ bad++; return; }
+    const i = h.members.findIndex(x => x.n === r.n); if (i >= 0) h.members[i] = r; else h.members.push(r); added++; });
+  lsSet("ff1_host", h); $("paste").value = "";
+  toast(`${added}명 추가${bad ? ` · 읽지 못한 코드 ${bad}개` : ""}`);
+  renderMembers(); renderMap();
+};
+function renderMap(){
+  const h = hostState(), ms = h.members, fam = h.fam || "우리 가족", box = $("mapBox");
+  if (ms.length < 2){ box.innerHTML = ms.length ? `<div class="card"><p class="muted">한 명이 더 모이면 가족 지도가 나타나요.</p></div>` : ""; return; }
+  const by = {P:[],S:[],F:[],T:[]}; ms.forEach(m => by[m.w].push(m));
+  const present = KEYS.filter(k => by[k].length), missing = KEYS.filter(k => !by[k].length);
+  const summary = KEYS.filter(k => by[k].length).sort((a,b) => by[b].length - by[a].length).map(k => `${TENSES[k].name} ${by[k].length}`).join(" · ");
+  const board = KEYS.map(k => `<div class="col ${by[k].length ? "" : "empty"}" style="background:${TENSES[k].color}">
+      <div class="ct">${TENSES[k].name}</div><div class="cs">${TENSES[k].title}</div>
+      <div class="chips">${by[k].map(m => `<span class="chip">${esc(m.n)}</span>`).join("") || `<span class="cs">아직 없어요</span>`}</div></div>`).join("");
+
+  // 번역이 필요한 짝: 종류별로 묶고 대극(과거↔미래, 현재↔초월)을 먼저
+  const groups = {};
+  for (let i = 0; i < ms.length; i++) for (let j = i + 1; j < ms.length; j++){
+    const key = [ms[i].w, ms[j].w].sort((a,b) => KEYS.indexOf(a) - KEYS.indexOf(b)).join("");
+    (groups[key] = groups[key] || []).push([ms[i], ms[j]]);
+  }
+  const rank = k => PAIR[k].opp ? 0 : (PAIR[k].same ? 2 : 1);
+  const keys = Object.keys(groups).sort((a,b) => rank(a) - rank(b) || groups[b].length - groups[a].length).slice(0, 3);
+  const pairs = keys.map(k => {
+    const P0 = PAIR[k], ex = groups[k].slice(0,2).map(([x,y]) => `${esc(x.n)} × ${esc(y.n)}`).join(", ");
+    const [t1, t2] = [k[0], k[1]];
+    return `<div class="pair"><b class="pt">${TENSES[t1].name} × ${TENSES[t2].name}</b> <span class="small">(${ex})</span>
+      <p class="say" style="margin-top:6px">${P0.mis}</p>
+      <p class="say">${P0.a}</p>${P0.b ? `<p class="say">${P0.b}</p>` : ""}</div>`;
+  }).join("");
+
+  const missHtml = missing.length
+    ? missing.map(k => `<p><b>${TENSES[k].name}이 없어요.</b> ${MISSING[k]}</p>`).join("")
+    : `<p>네 가지 시제가 모두 모인 가족이에요! 서로가 서로의 빈칸을 채워 줄 수 있어요.</p>`;
+  const promise = missing.length ? MISSING[missing[0]].replace(/^.*?요\. /, "") : "하루에 한 번, 가족 중 한 사람의 시제로 오늘 일을 이야기해 보세요.";
+  const shareSummary = `[${fam} 가족 시제 지도] ${summary}\n` + KEYS.map(k => by[k].length ? `${TENSES[k].name}: ${by[k].map(m => m.n).join(", ")}` : "").filter(Boolean).join("\n") +
+    (missing.length ? `\n없는 시제: ${missing.map(k => TENSES[k].name).join(", ")}` : "") + `\n우리 가족 약속: ${promise}`;
+
+  box.innerHTML = `
+    <div class="card">
+      <span class="small">${esc(fam)} 가족 · ${ms.length}명</span>
+      <h2 style="font-size:22px">우리 집 시제 지도</h2>
+      <p><b>${summary}</b></p>
+      <div class="board">${board}</div>
+    </div>
+    <div class="card"><h2>우리 집에 없는 시제</h2>${missHtml}</div>
+    <div class="card"><h2>번역이 필요한 짝</h2>
+      <p class="muted">‘안 맞는다’는 뜻이 아니에요. 서로 다른 문법으로 말할 때 어떻게 번역하면 좋은지 알려 주는 말이에요.</p>${pairs}</div>
+    <div class="card"><h2>이번 여행 우리 가족 약속</h2><p>${esc(promise)}</p>
+      <div class="stack"><button class="btn" id="btnShareMap">가족 지도 요약을 단톡방에 보내기</button></div>
+      <p class="small" style="margin-top:10px">${esc(CFG.NEXT_SERIES_NOTE)}</p></div>`;
+  $("btnShareMap").onclick = () => shareOrCopy(shareSummary);
+}
+
+/* 개발 확인용: 주소 끝에 &dev=1 을 붙이면 무작위 응답으로 채우는 버튼이 나타납니다 */
+if (params.get("dev") === "1"){
+  const b = document.createElement("button"); b.className = "linkbtn"; b.textContent = "[dev] 무작위로 채우기";
+  b.onclick = () => { nick = $("nick").value.trim() || "테스트"; picks = QUESTIONS.map(q => Math.random() < .5 ? q.a[1] : q.b[1]);
+    const {share} = tally(picks), L = leaders(share); finishGame(L[Math.floor(Math.random() * L.length)]); };
+  document.querySelector(".top").appendChild(b);
+}
+</script>
+</body>
+</html>
